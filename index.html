@@ -173,7 +173,6 @@
         // ==========================================
         // [單一資料源原則 Single Source of Truth]
         // 將應用程式的所有靜態資料集中於 TRIP_DATA 常數物件中管理。
-        // 優點：若需修改行程、新增地點或調整時間，只需修改此處 JSON 結構，無需更動渲染邏輯。
         const TRIP_DATA = {
             // [航班資訊陣列]
             flights: [
@@ -186,10 +185,6 @@
                 { name: "REF 京都八條口 by VESSEL HOTELS", engName: "REF Kyoto Hachijoguchi", dates: "1/1 - 1/4 (3晚)", location: "京都市南區 (京都站八條口)", features: ["大浴場", "現代日式", "免費迎賓飲料"], note: "靠近京都車站八條口，方便前往神戶(搭新快速)、奈良(搭近鐵)與搭乘 Haruka 回機場。", image: "Kyoto.jpg" }
             ],
             // [核心行程資料]
-            // 結構：Array<DayObject>
-            // id: 用於 DOM 識別與狀態切換的唯一鍵值
-            // weather/temp: 用於頂部 Header 的狀態顯示
-            // items: Array<ItemObject> 當日的詳細行程列表
             itinerary: [
                 { id: "day1", date: "12/27", dayOfWeek: "六", location: "大阪 ➔ 滋賀", weather: "sunny", temp: "8°C", items: [
                     { type: "transport", time: "11:15", title: "搭乘 CX564 飛往大阪", note: "預計 14:55 抵達關西機場 T1。出關後請先至「臨空城」方向移動。" },
@@ -365,6 +360,42 @@
                     { title: "右轉禮讓", content: "右轉（跨越對向車道）時，必須禮讓直行車與左轉車。若無右轉燈號，需等待空檔或變燈時儘速通過。" },
                     { title: "平交道", content: "通過平交道前，必須「完全停車」，開窗聽是否有火車聲，確認無誤後才通過。" }
                 ],
+                // [新增：加油指南]
+                refueling: [
+                    {
+                        type: "self",
+                        title: "自助加油 (Self / セルフ)",
+                        steps: [
+                            "1. 認明「セルフ (Self)」招牌駛入。",
+                            "2. 螢幕操作：先選擇支付方式 (現金/信用卡)。",
+                            "3. 選擇油種：通常租車加「紅色 Regular (レギュラー)」。",
+                            "4. 選擇油量：通常選「滿坦 (満タン)」。",
+                            "5. 觸摸除靜電鈕 (黑色圓形)。",
+                            "6. 拿起紅色油槍加油，跳停即可。",
+                            "7. 取收據 (現金找零需至精算機掃描收據)。"
+                        ]
+                    },
+                    {
+                        type: "manual",
+                        title: "人工加油 (Full Service)",
+                        steps: [
+                            "1. 駛入無「Self」標示的車道，店員會引導。",
+                            "2. 搖下車窗說：「Regular, Mantan (紅色的，加滿)」。",
+                            "3. 店員可能會問是否丟垃圾或擦窗戶。",
+                            "4. 加完後車內付款。",
+                            "5. 離場時店員通常會引導交通。"
+                        ]
+                    },
+                    {
+                        type: "types",
+                        title: "油種辨識 (重要！)",
+                        steps: [
+                            "🔴 紅色 (Regular / レギュラー)：一般汽油 (租車最常用)。",
+                            "🟡 黃色 (High Octane / ハイオク)：高辛烷值汽油。",
+                            "🟢 綠色 (Diesel / 軽油)：柴油。⚠️ 千萬別加錯！"
+                        ]
+                    }
+                ],
                 signs: [
                     { label: "一時停止 (Stop)", desc: "務必完全煞停，確認安全後再開。", type: "stop" },
                     { label: "徐行 (Slow)", desc: "減速慢行（通常指10km/h以下），隨時可停車的狀態。", type: "slow" },
@@ -420,18 +451,20 @@
         // 2. 向量圖形在任何解析度下都不會模糊 (Retina Display Ready)。
         // 3. 可透過 CSS 輕鬆修改顏色與樣式。
         function renderTrafficSign(type, limit) {
-            // 根據傳入的 type 返回對應的 SVG 字串
+            // [尺寸放大調整] 
+            // 為了讓號誌在手機上更清晰，將基礎 SVG 畫布尺寸從 40x40 放大至 80x80
+            // 所有的內部座標與線條寬度也進行了相應的倍率調整 (x2)
             switch(type) {
-                case 'stop': return `<svg width="40" height="40" viewBox="0 0 40 40"><polygon points="20,38 2,5 38,5" fill="#ef4444" stroke="none"/><text x="50%" y="35%" dominant-baseline="middle" text-anchor="middle" fill="white" font-size="9" font-weight="bold">止まれ</text><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" fill="white" font-size="6" font-weight="bold">STOP</text></svg>`;
-                case 'slow': return `<svg width="40" height="40" viewBox="0 0 40 40"><polygon points="20,38 2,5 38,5" fill="white" stroke="#ef4444" stroke-width="3"/><text x="50%" y="35%" dominant-baseline="middle" text-anchor="middle" fill="#1c1917" font-size="10" font-weight="bold">徐行</text><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" fill="#1c1917" font-size="5" font-weight="bold">SLOW</text></svg>`;
-                case 'no-entry': return `<svg width="40" height="40" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="#ef4444" /><rect x="8" y="17" width="24" height="6" fill="white" /></svg>`;
-                case 'speed': return `<svg width="40" height="40" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="white" stroke="#ef4444" stroke-width="3" /><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" fill="#3b82f6" font-size="16" font-weight="bold">${limit}</text></svg>`;
-                case 'one-way': return `<svg width="40" height="40" viewBox="0 0 40 40"><rect x="2" y="8" width="36" height="24" rx="2" fill="#3b82f6" /><path d="M10 20 L24 20 M24 20 L18 14 M24 20 L18 26" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-                case 'no-parking': return `<svg width="40" height="40" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="#3b82f6" stroke="#ef4444" stroke-width="3" /><line x1="8" y1="8" x2="32" y2="32" stroke="#ef4444" stroke-width="3" /></svg>`;
-                case 'no-uturn': return `<svg width="40" height="40" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="white" stroke="#ef4444" stroke-width="3" /><path d="M24 16 C24 12 16 12 16 16 L16 26" stroke="#3b82f6" stroke-width="3" fill="none" /><polygon points="16,28 12,22 20,22" fill="#3b82f6" /><line x1="8" y1="32" x2="32" y2="8" stroke="#ef4444" stroke-width="3" /></svg>`;
-                case 'pedestrian': return `<svg width="40" height="40" viewBox="0 0 40 40"><rect x="4" y="4" width="32" height="32" rx="2" fill="#3b82f6" /><path d="M14 28 L20 12 L26 28 M20 12 L20 10 M14 20 L26 20" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z" fill="white"/></svg>`;
-                case 'construction': return `<svg width="40" height="40" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="white" stroke="#eab308" stroke-width="3" /><path d="M14 28 L20 12 L26 28" stroke="black" stroke-width="2" fill="none"/><line x1="28" y1="28" x2="12" y2="28" stroke="black" stroke-width="2" /><path d="M12 28 q2 -4 4 -4 t4 4" fill="black" /><path d="M26 28 q-2 -4 -4 -4 t-4 4" fill="black" /></svg>`;
-                case 'railroad': return `<svg width="40" height="40" viewBox="0 0 40 40"><rect x="20" y="2" width="20" height="20" fill="#eab308" transform="rotate(45 20 20)" rx="2" /><path d="M16 26 L24 26 M18 26 L18 14 L22 14 L22 26" stroke="black" stroke-width="2" /><circle cx="16" cy="26" r="2" fill="black" /><circle cx="24" cy="26" r="2" fill="black" /></svg>`;
+                case 'stop': return `<svg width="80" height="80" viewBox="0 0 80 80"><polygon points="40,76 4,10 76,10" fill="#ef4444" stroke="none"/><text x="50%" y="35%" dominant-baseline="middle" text-anchor="middle" fill="white" font-size="18" font-weight="bold">止まれ</text><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" fill="white" font-size="12" font-weight="bold">STOP</text></svg>`;
+                case 'slow': return `<svg width="80" height="80" viewBox="0 0 80 80"><polygon points="40,76 4,10 76,10" fill="white" stroke="#ef4444" stroke-width="6"/><text x="50%" y="35%" dominant-baseline="middle" text-anchor="middle" fill="#1c1917" font-size="20" font-weight="bold">徐行</text><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" fill="#1c1917" font-size="10" font-weight="bold">SLOW</text></svg>`;
+                case 'no-entry': return `<svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="36" fill="#ef4444" /><rect x="16" y="34" width="48" height="12" fill="white" /></svg>`;
+                case 'speed': return `<svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="36" fill="white" stroke="#ef4444" stroke-width="6" /><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" fill="#3b82f6" font-size="32" font-weight="bold">${limit}</text></svg>`;
+                case 'one-way': return `<svg width="80" height="80" viewBox="0 0 80 80"><rect x="4" y="16" width="72" height="48" rx="4" fill="#3b82f6" /><path d="M20 40 L48 40 M48 40 L36 28 M48 40 L36 52" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+                case 'no-parking': return `<svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="36" fill="#3b82f6" stroke="#ef4444" stroke-width="6" /><line x1="16" y1="16" x2="64" y2="64" stroke="#ef4444" stroke-width="6" /></svg>`;
+                case 'no-uturn': return `<svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="36" fill="white" stroke="#ef4444" stroke-width="6" /><path d="M48 32 C48 24 32 24 32 32 L32 52" stroke="#3b82f6" stroke-width="6" fill="none" /><polygon points="32,56 24,44 40,44" fill="#3b82f6" /><line x1="16" y1="64" x2="64" y2="16" stroke="#ef4444" stroke-width="6" /></svg>`;
+                case 'pedestrian': return `<svg width="80" height="80" viewBox="0 0 80 80"><rect x="8" y="8" width="64" height="64" rx="4" fill="#3b82f6" /><path d="M28 56 L40 24 L52 56 M40 24 L40 20 M28 40 L52 40" stroke="white" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M40 18a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" fill="white"/></svg>`;
+                case 'construction': return `<svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="36" fill="white" stroke="#eab308" stroke-width="6" /><path d="M28 56 L40 24 L52 56" stroke="black" stroke-width="4" fill="none"/><line x1="56" y1="56" x2="24" y2="56" stroke="black" stroke-width="4" /><path d="M24 56 q4 -8 8 -8 t8 8" fill="black" /><path d="M52 56 q-4 -8 -8 -8 t-8 8" fill="black" /></svg>`;
+                case 'railroad': return `<svg width="80" height="80" viewBox="0 0 80 80"><rect x="40" y="4" width="40" height="40" fill="#eab308" transform="rotate(45 40 40)" rx="4" /><path d="M32 52 L48 52 M36 52 L36 28 L44 28 L44 52" stroke="black" stroke-width="4" /><circle cx="32" cy="52" r="4" fill="black" /><circle cx="48" cy="52" r="4" fill="black" /></svg>`;
                 default: return '';
             }
         }
@@ -655,7 +688,7 @@
         }
 
         // [渲染函式：自駕指南頁面]
-        // 包含文字提示、SVG 交通號誌網格與高速公路指南
+        // 包含文字提示、加油指南、SVG 交通號誌網格與高速公路指南
         function renderDrivingView() {
             const tipsHtml = TRIP_DATA.drivingGuide.tips.map(tip => `
                 <div class="bg-white/95 backdrop-blur-sm rounded-xl shadow-sm border border-stone-200 overflow-hidden p-4 border-l-4 border-l-lime-500">
@@ -667,10 +700,23 @@
                 </div>
              `).join('');
 
+            // [新增區塊：加油指南渲染]
+            const refuelingHtml = TRIP_DATA.drivingGuide.refueling.map(item => `
+                <div class="bg-white/95 backdrop-blur-sm rounded-xl shadow-sm border border-stone-200 overflow-hidden p-4 border-l-4 ${item.type === 'types' ? 'border-l-red-500 bg-red-50/20' : 'border-l-sky-500'}">
+                    <h3 class="font-bold ${item.type === 'types' ? 'text-red-700' : 'text-sky-800'} mb-2 flex items-center gap-2">
+                        ${getIcon(item.type === 'types' ? 'fuel' : 'droplet', "", 18)}
+                        ${item.title}
+                    </h3>
+                    <ul class="text-sm text-stone-600 leading-relaxed space-y-1 list-disc list-inside pl-1">
+                        ${item.steps.map(step => `<li>${step}</li>`).join('')}
+                    </ul>
+                </div>
+            `).join('');
+
             // 渲染 SVG 交通號誌網格
             const signsHtml = TRIP_DATA.drivingGuide.signs.map(sign => `
                 <div class="bg-white/95 backdrop-blur-sm rounded-xl shadow-sm border border-stone-200 overflow-hidden p-3 flex flex-col items-center text-center">
-                    <div class="mb-2 drop-shadow-sm scale-90">${renderTrafficSign(sign.type, sign.limit)}</div>
+                    <div class="mb-2 drop-shadow-sm">${renderTrafficSign(sign.type, sign.limit)}</div>
                     <div class="text-sm font-bold text-stone-800 mb-1">${sign.label}</div>
                     <div class="text-[10px] text-stone-500 leading-tight">${sign.desc}</div>
                 </div>
@@ -698,6 +744,14 @@
 
                     <div class="space-y-3">
                         ${tipsHtml}
+                    </div>
+
+                    <!-- 加油指南區塊 -->
+                    <div>
+                        <h3 class="text-lg font-bold text-stone-700 mb-3 px-1 border-l-4 border-sky-400 pl-2">加油站使用指南</h3>
+                        <div class="space-y-3">
+                            ${refuelingHtml}
+                        </div>
                     </div>
 
                     <div>
@@ -796,7 +850,7 @@
                             <a href="${link.url}" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-3 bg-white border border-indigo-100 rounded-lg shadow-sm active:bg-indigo-50 transition-colors">
                                 <div class="flex flex-col">
                                     <span class="text-base text-indigo-700 font-bold flex items-center gap-2">${link.title}${getIcon('external-link', "opacity-50", 14)}</span>
-                                    ${link.note ? `<span class="text-xs text-stone-500 mt-0.5">${link.note}</span>` : ''}
+                                    ${link.note ? `<span class="text-[10px] text-stone-500 mt-0.5">${link.note}</span>` : ''}
                                 </div>
                             </a>
                         `).join('')}
@@ -806,10 +860,10 @@
                 // 子區塊 2: 餐飲資訊 (Dining) - 巢狀結構 (地區 -> 店家列表)
                 if (day.dining) {
                     content += `<div class="bg-orange-50/50 rounded-lg p-3 border border-orange-100 mt-4">
-                        <h4 class="text-sm font-bold text-orange-600 mb-2 uppercase tracking-wide flex items-center gap-1">${getIcon('utensils', "", 12)} 餐飲資訊</h4>
+                        <h4 class="text-xs font-bold text-orange-600 mb-2 uppercase tracking-wide flex items-center gap-1">${getIcon('utensils', "", 12)} 餐飲資訊</h4>
                         ${day.dining.map(areaGroup => `
                             <div class="mb-4 last:mb-0">
-                                <div class="text-xs font-bold text-stone-500 mb-1 border-b border-orange-200 inline-block">${areaGroup.area}</div>
+                                <div class="text-[10px] font-bold text-stone-500 mb-1 border-b border-orange-200 inline-block">${areaGroup.area}</div>
                                 <ul class="space-y-2 pl-2">
                                     ${areaGroup.spots.map(spot => `
                                         <li class="flex justify-between items-center text-sm">
@@ -818,7 +872,7 @@
                                                     <span class="text-base text-stone-800 font-bold">${spot.name}</span>
                                                     ${spot.cuisine ? `<span class="text-[10px] px-1.5 py-0.5 bg-orange-100 text-orange-700 rounded-md font-bold">${spot.cuisine}</span>` : ''}
                                                 </div>
-                                                <span class="text-xs font-mono text-stone-500 mt-0.5">${spot.hours}</span>
+                                                <span class="text-[10px] font-mono text-stone-500 mt-0.5">${spot.hours}</span>
                                                 ${spot.note ? `<span class="text-sm text-stone-600 mt-1 leading-relaxed">${spot.note}</span>` : ''}
                                             </div>
                                             <a href="${spot.mapUrl || getGoogleMapUrl(spot.name)}" target="_blank" rel="noopener noreferrer" 
@@ -843,7 +897,7 @@ class="p-2 bg-blue-50 text-blue-600 rounded-full active:scale-95 hover:bg-blue-1
                                             <div class="absolute -left-[21px] top-1.5 w-2 h-2 rounded-full bg-sky-300"></div>
                                             <div class="flex-1 pr-2">
                                                 <div class="flex items-center gap-2"><div class="text-base font-bold text-stone-700">${spot.name}</div>${spot.cuisine ? `<span class="text-[10px] px-1.5 py-0.5 bg-orange-100 text-orange-700 rounded-md font-bold">${spot.cuisine}</span>` : ''}</div>
-                                                <div class="text-xs text-stone-500 font-mono mt-0.5">${spot.hours}</div>
+                                                <div class="text-[10px] text-stone-500 font-mono mt-0.5">${spot.hours}</div>
                                                 ${spot.note ? `<div class="text-sm text-stone-600 mt-1 leading-relaxed">${spot.note}</div>` : ''}
                                             </div>
                                             <a href="${spot.mapUrl || getGoogleMapUrl(spot.name)}" target="_blank" rel="noopener noreferrer" 
