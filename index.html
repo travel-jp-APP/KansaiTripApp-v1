@@ -6,15 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Kansai Trip 2025-2026</title>
     
-    <!-- iOS Web App 設定 -->
+    <!-- iOS Web App 設定：全螢幕模式 -->
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <!-- 設定狀態列為半透明黑，讓內容延伸至頂部，模擬全螢幕 -->
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Kansai Trip">
     <link rel="apple-touch-icon" href="Japan.jpg">
     <link rel="icon" href="Japan.jpg">
 
-    <!-- PWA Manifest (使用 Data URI 內嵌，無需外部檔案) -->
-    <link rel="manifest" href='data:application/json;base64,ewogICJuYW1lIjogIkthbnNhaSBUcmlwIDIwMjUtMjAyNiIsCiAgInNob3J0X25hbWUiOiAiS2Fuc2FpIFRyaXAiLAogICJzdGFydF91cmwiOiAiLiIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiI2Q2ZDNkMSIsCiAgInRoZW1lX2NvbG9yIjogIiNkNmQzZDEiLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJKYXBhbi5qcGciLAogICAgICAic2l6ZXMiOiAiMTkyeDE5MiIsCiAgICAgICJ0eXBlIjogImltYWdlL2pwZWciCiAgICB9CiAgXQp9'>
+    <!-- PWA Manifest (使用 Data URI 內嵌) -->
+    <!-- 修改重點：將 display 設為 "fullscreen" 以強制隱藏系統 UI -->
+    <link rel="manifest" href='data:application/json;base64,ewogICJuYW1lIjogIkthbnNhaSBUcmlwIDIwMjUtMjAyNiIsCiAgInNob3J0X25hbWUiOiAiS2Fuc2FpIFRyaXAiLAogICJzdGFydF91cmwiOiAiLiIsCiAgImRpc3BsYXkiOiAicHVsbHNjcmVlbiIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiI2Q2ZDNkMSIsCiAgInRoZW1lX2NvbG9yIjogIiNkNmQzZDEiLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJKYXBhbi5qcGciLAogICAgICAic2l6ZXMiOiAiMTkyeDE5MiIsCiAgICAgICJ0eXBlIjogImltYWdlL2pwZWciCiAgICB9CiAgXQp9'>
     
     <!-- 外部資源庫：Tailwind CSS, Google Fonts, Lucide Icons -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -50,6 +52,7 @@
 <body>
 
     <!-- PWA 引導安裝提示層 (預設隱藏，透過 JS 判斷顯示) -->
+    <!-- 修改重點：移除關閉按鈕，強制使用者必須安裝才能使用 -->
     <div id="pwa-prompt" class="fixed inset-0 z-[100] bg-stone-900/95 text-white flex flex-col items-center justify-center p-6 hidden backdrop-blur-sm">
         <div class="w-full max-w-sm bg-stone-800 rounded-2xl p-6 shadow-2xl border border-stone-700">
             <div class="flex flex-col items-center text-center mb-6">
@@ -57,8 +60,8 @@
                 <div class="w-16 h-16 bg-stone-200 rounded-xl mb-4 flex items-center justify-center overflow-hidden">
                    <img src="Japan.jpg" onerror="this.style.display='none';this.parentElement.innerHTML='🌸'" class="w-full h-full object-cover">
                 </div>
-                <h2 class="text-xl font-bold mb-2">安裝應用程式</h2>
-                <p class="text-stone-400 text-sm">為了獲得最佳的全螢幕瀏覽體驗，請將此網頁加入您的主畫面。</p>
+                <h2 class="text-xl font-bold mb-2">請安裝應用程式</h2>
+                <p class="text-stone-400 text-sm">本應用程式僅支援全螢幕模式。<br>請依照下方指示加入主畫面以繼續使用。</p>
             </div>
             
             <div class="space-y-4">
@@ -83,11 +86,8 @@
                     </div>
                 </div>
             </div>
-
-            <!-- 略過按鈕 (為了預覽方便保留此按鈕，實際強制的 App 可考慮隱藏) -->
-            <button onclick="document.getElementById('pwa-prompt').classList.add('hidden')" class="mt-6 w-full py-3 rounded-lg text-sm font-medium text-stone-500 hover:text-stone-300 hover:bg-white/5 transition-colors">
-                暫時略過 (預覽模式)
-            </button>
+            
+            <!-- 已移除略過按鈕，強制執行 -->
         </div>
     </div>
 
