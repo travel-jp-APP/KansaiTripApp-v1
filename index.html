@@ -5,57 +5,64 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Kansai Trip 2025-2026</title>
     
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Kansai Trip">
-    <meta name="mobile-web-app-capable" content="yes">
-
     <link rel="apple-touch-icon" href="Japan.jpg">
     <link rel="icon" href="Japan.jpg">
     
     <script src="https://cdn.tailwindcss.com"></script>
+    
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
+        /* --- 全域樣式設定 --- */
         body {
+            /* 設定預設字體堆疊，確保在不同系統都有良好的顯示效果 */
             font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background-color: #d6d3d1;
-            color: #1c1917;
-            overscroll-behavior: none;
-            -webkit-user-select: none;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
+            background-color: #d6d3d1; /* stone-300 背景色 */
+            color: #1c1917; /* stone-900 文字色 */
+            overscroll-behavior: none; /* 防止手機瀏覽器下拉時出現重新整理的空白效果 */
         }
-        .select-text { -webkit-user-select: text; user-select: text; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* --- 隱藏滾動條樣式 (UX 優化) --- */
+        /* 針對 Webkit 瀏覽器 (Chrome, Safari) */
+        .no-scrollbar::-webkit-scrollbar { 
+            display: none; 
+        }
+        /* 針對 IE, Edge, Firefox */
+        .no-scrollbar { 
+            -ms-overflow-style: none; 
+            scrollbar-width: none; 
+        }
+
+        /* --- 動畫效果 --- */
+        /* 定義淡入並向上浮動的關鍵影格 */
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .animate-fade-in-up { animation: fadeInUp 0.4s ease-out forwards; }
-        .animate-fade-in { animation: fadeInUp 0.4s ease-out forwards; }
-        .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
+        /* 套用動畫：0.4秒完成，緩出效果 */
+        .animate-fade-in-up, .animate-fade-in { 
+            animation: fadeInUp 0.4s ease-out forwards; 
+        }
+        
+        /* --- iOS 安全區域適配 --- */
+        /* 確保內容不會被 iPhone 底部的 Home Indicator 遮擋 */
+        .pb-safe { 
+            padding-bottom: env(safe-area-inset-bottom); 
+        }
     </style>
-
-    <script>
-        window.onerror = function(msg, url, line, col, error) {
-            alert("發生錯誤：\n" + msg + "\n行數：" + line);
-            return false;
-        };
-    </script>
 </head>
 <body>
 
-    <div class="h-[100dvh] flex flex-col md:max-w-md md:mx-auto shadow-2xl overflow-hidden relative bg-stone-300">
+    <div class="h-[100dvh] flex flex-col md:max-w-md md:mx-auto shadow-2xl overflow-hidden relative select-none bg-stone-300">
         
         <div class="fixed inset-0 z-0 pointer-events-none md:max-w-md md:mx-auto">
             <img src="https://tw.wamazing.com/media/wp-content/uploads/sites/4/2022/12/shigatravel_pixta_62991025_L-853x569.jpg.webp" alt="Shiga Scenery" class="w-full h-full object-cover opacity-90"/>
             <div class="absolute inset-0 bg-stone-300/85 backdrop-blur-[2px]"></div>
         </div>
 
-        <div class="shrink-0 bg-white/80 backdrop-blur-md border-b border-stone-200/50 shadow-sm z-50 pt-[env(safe-area-inset-top)]">
+        <div class="shrink-0 bg-white/80 backdrop-blur-md border-b border-stone-200/50 shadow-sm z-50">
             <div class="px-4 py-3 flex justify-between items-center">
                 <div>
                     <h1 class="text-xl font-black tracking-tighter text-indigo-900">KANSAI TRIP</h1>
@@ -67,54 +74,36 @@
             
             <div id="date-scroller-container" class="hidden">
                 <div id="date-scroller" class="flex overflow-x-auto gap-3 px-4 pb-3 no-scrollbar snap-x">
-                </div>
+                    </div>
             </div>
         </div>
 
         <div id="main-content" class="flex-1 overflow-y-auto overflow-x-hidden p-4 space-y-4 no-scrollbar overscroll-contain relative z-10 pb-24">
-        </div>
+            </div>
 
         <div class="absolute bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-stone-200/50 pb-safe z-50 overflow-x-auto no-scrollbar">
             <div class="flex justify-between items-center h-16 min-w-max px-2" id="bottom-nav">
-            </div>
+                </div>
         </div>
     </div>
 
     <script>
         // ==========================================
-        // --- 0. [PWA 強制行為] ---
+        // --- 1. 資料來源 (Data Source) ---
         // ==========================================
-        (function() {
-            const isStandalone = window.navigator.standalone || (window.matchMedia('(display-mode: standalone)').matches);
-            if (isStandalone) {
-                document.addEventListener('click', function(event) {
-                    const anchor = event.target.closest('a');
-                    if (!anchor || !anchor.href) return;
-                    if (anchor.getAttribute('target') === '_blank' || !anchor.href.includes(window.location.host)) {
-                        return; 
-                    }
-                    event.preventDefault();
-                    window.location.href = anchor.href;
-                }, false);
-            }
-        })();
-
-        // ==========================================
-        // --- 1. 資料來源 (Data) ---
-        // ==========================================
-        
-        // [修正] 這裡原本少了 $ 符號，已補上
-        const getGoogleMapUrl = (name) => `http://googleusercontent.com/maps.google.com/search?q=${encodeURIComponent(name)}`;
-
+        // 使用 const 宣告常數物件，儲存所有應用程式的靜態資料
         const TRIP_DATA = {
+            // 航班資訊陣列
             flights: [
                 { type: "Departure", date: "2025/12/27 (六)", code: "CX564", airline: "國泰航空", route: "TPE 台北 (11:15) ➔ KIX 大阪 (14:55)", terminal: "TPE T1 / KIX T1", duration: "2h 40m", aircraft: "Airbus A330-300", class: "經濟 Q" },
                 { type: "Return", date: "2026/01/04 (日)", code: "CX565", airline: "國泰航空", route: "KIX 大阪 (16:15) ➔ TPE 台北 (18:30)", terminal: "KIX T1 / TPE T1", duration: "3h 25m", aircraft: "Airbus A330-300", class: "經濟 S" }
             ],
+            // 飯店資訊陣列
             hotels: [
                 { name: "草津波士頓廣場飯店", engName: "Hotel Boston Plaza Kusatsu", dates: "12/27 - 1/1 (5晚)", location: "滋賀縣草津市 (JR草津站旁)", features: ["交通便利", "美式風格", "適合自駕"], note: "作為滋賀縣人孔蓋卡收集的基地非常合適。", image: "Boston.jpg" },
                 { name: "REF 京都八條口 by VESSEL HOTELS", engName: "REF Kyoto Hachijoguchi", dates: "1/1 - 1/4 (3晚)", location: "京都市南區 (京都站八條口)", features: ["大浴場", "現代日式", "免費迎賓飲料"], note: "靠近京都車站，方便前往神戶、奈良與回程機場。", image: "Kyoto.jpg" }
             ],
+            // 每日行程細節 (核心資料)
             itinerary: [
                 { id: "day1", date: "12/27", dayOfWeek: "六", location: "大阪 ➔ 滋賀", weather: "sunny", temp: "8°C", items: [
                     { type: "transport", time: "11:15", title: "搭乘 CX564 飛往大阪", note: "預計 14:55 抵達關西機場 T1" },
@@ -197,6 +186,7 @@
                     { type: "transport", time: "16:15", title: "搭乘 CX565 返台", note: "再見關西！預計 18:30 抵達台北。" }
                 ]}
             ],
+            // 人孔蓋卡收集資訊
             manholeStock: [
                 { name: "臨空城案內所", region: "大阪", hours: "09:00–20:00", url: "https://www.city.izumisano.lg.jp/kakuka/jogesuidokyoku/jogesui/menu/1511934914176.html" },
                 { name: "大津車站觀光案内所", region: "滋賀", hours: "09:00–18:00", url: "https://www.city.otsu.lg.jp/kigyo/about/koho/68041.html", highlight: true },
@@ -223,6 +213,7 @@
                 { name: "まちの駅かいづか", region: "大阪", hours: "10:00–19:00", url: "https://www.city.kaizuka.lg.jp/kakuka/jogesuido/gesuisuisin/topics/manholucard.html" },
                 { name: "泉佐野市観光情報センター", region: "大阪", hours: "10:00–16:00", url: "https://www.city.izumisano.lg.jp/kakuka/jogesuidokyoku/jogesui/menu/1511934914176.html" },
             ],
+            // 外部地圖連結
             mapLinks: [
                 { title: "關西周遊路線圖", url: "https://www.surutto.com/kansai_rw/assets/pdf/areamap2024_tw.pdf" },
                 { title: "Osaka Metro路線圖", url: "https://subway.osakametro.co.jp/img/osakametro_rosenzu_20250404.pdf" },
@@ -233,6 +224,7 @@
                 { title: "紀念幣地圖", url: "https://www.stampmedal.com/map.htm" },
                 { title: "永旺夢樂城Kyoto 4F (轉蛋屋)", url: "https://maps.app.goo.gl/8NoQd7g6H5cn7UiG7" }
             ],
+            // 詳細筆記與餐廳
             notes: [
                 {
                     date: "12/27（六）",
@@ -271,6 +263,7 @@
                     dining: [{ area: "京都 - 嵐山", spots: [{ name: "嵯峨豆腐 稻 本店", cuisine: "豆腐料理/豆皮", hours: "11:00–18:30", mapUrl: "https://maps.app.goo.gl/BBCfdetuL8rNMevf7" }, { name: "蕎麥麵 嵐山よしむら", cuisine: "景觀蕎麥麵", hours: "11:00–16:00", mapUrl: "https://maps.app.goo.gl/p47zjGPbRoUSY4Cp8" }, { name: "鯛匠 HANANA", cuisine: "鯛魚茶泡飯", hours: "11:00–16:30", mapUrl: "https://maps.app.goo.gl/5wxGFRvQ2TwzryT48" }] }]
                 }
             ],
+            // 自駕指南資料
             drivingGuide: {
                 tips: [
                     { title: "右駕左行", content: "日本車輛為右駕，請務必靠左行駛。口訣：「左轉小彎、右轉大彎」。轉彎時請打方向燈（雨刷通常在左邊，方向燈在右邊，小心打錯）。" },
@@ -302,42 +295,46 @@
             }
         };
 
+        // 輔助函式：產生 Google Map 連結，透過 encodeURIComponent 處理特殊字元
+        const getGoogleMapUrl = (name) => `https://www.google.com/maps/search/?api=1&query=$$${encodeURIComponent(name)}`;
+
         // ==========================================
-        // --- 2. 狀態管理 (State) ---
+        // --- 2. 狀態管理 (State Management) ---
         // ==========================================
         let state = {
-            activeTab: 'itinerary',
-            selectedDayId: 'day1'
+            activeTab: 'itinerary', // 當前標籤頁 (itinerary, flights, driving, etc.)
+            selectedDayId: 'day1'   // 當前選中的日期 (僅在 itinerary 模式下有效)
         };
 
         // ==========================================
-        // --- 3. 組件渲染 (Renderers) ---
+        // --- 3. 組件渲染函數 (Component Renderers) ---
         // ==========================================
         
+        // 輔助函式：生成 Lucide Icon HTML 結構
+        // 使用 i 標籤並配合 data-lucide 屬性，讓 Lucide 腳本自動替換為 SVG
         function getIcon(name, classes = "", size = 24) {
             return `<i data-lucide="${name}" class="${classes}" width="${size}" height="${size}"></i>`;
         }
 
+        // 輔助函式：渲染 SVG 交通號誌
+        // 為了不依賴外部圖片，直接使用 SVG 字串繪製日本交通號誌
         function renderTrafficSign(type, limit) {
-            const size = 40;
-            const svgStart = `<svg width="${size}" height="${size}" viewBox="0 0 40 40">`;
-            const svgEnd = `</svg>`;
-            let content = '';
-            
-            if (type === 'stop') content = `<polygon points="20,38 2,5 38,5" fill="#ef4444" stroke="none"/><text x="50%" y="35%" dominant-baseline="middle" text-anchor="middle" fill="white" font-size="9" font-weight="bold">止まれ</text><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" fill="white" font-size="6" font-weight="bold">STOP</text>`;
-            else if (type === 'slow') content = `<polygon points="20,38 2,5 38,5" fill="white" stroke="#ef4444" stroke-width="3"/><text x="50%" y="35%" dominant-baseline="middle" text-anchor="middle" fill="#1c1917" font-size="10" font-weight="bold">徐行</text><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" fill="#1c1917" font-size="5" font-weight="bold">SLOW</text>`;
-            else if (type === 'no-entry') content = `<circle cx="20" cy="20" r="18" fill="#ef4444" /><rect x="8" y="17" width="24" height="6" fill="white" />`;
-            else if (type === 'speed') content = `<circle cx="20" cy="20" r="18" fill="white" stroke="#ef4444" stroke-width="3" /><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" fill="#3b82f6" font-size="16" font-weight="bold">${limit}</text>`;
-            else if (type === 'one-way') content = `<rect x="2" y="8" width="36" height="24" rx="2" fill="#3b82f6" /><path d="M10 20 L24 20 M24 20 L18 14 M24 20 L18 26" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>`;
-            else if (type === 'no-parking') content = `<circle cx="20" cy="20" r="18" fill="#3b82f6" stroke="#ef4444" stroke-width="3" /><line x1="8" y1="8" x2="32" y2="32" stroke="#ef4444" stroke-width="3" />`;
-            else if (type === 'no-uturn') content = `<circle cx="20" cy="20" r="18" fill="white" stroke="#ef4444" stroke-width="3" /><path d="M24 16 C24 12 16 12 16 16 L16 26" stroke="#3b82f6" stroke-width="3" fill="none" /><polygon points="16,28 12,22 20,22" fill="#3b82f6" /><line x1="8" y1="32" x2="32" y2="8" stroke="#ef4444" stroke-width="3" />`;
-            else if (type === 'pedestrian') content = `<rect x="4" y="4" width="32" height="32" rx="2" fill="#3b82f6" /><path d="M14 28 L20 12 L26 28 M20 12 L20 10 M14 20 L26 20" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z" fill="white"/>`;
-            else if (type === 'construction') content = `<circle cx="20" cy="20" r="18" fill="white" stroke="#eab308" stroke-width="3" /><path d="M14 28 L20 12 L26 28" stroke="black" stroke-width="2" fill="none"/><line x1="28" y1="28" x2="12" y2="28" stroke="black" stroke-width="2" /><path d="M12 28 q2 -4 4 -4 t4 4" fill="black" /><path d="M26 28 q-2 -4 -4 -4 t-4 4" fill="black" />`;
-            else if (type === 'railroad') content = `<rect x="20" y="2" width="20" height="20" fill="#eab308" transform="rotate(45 20 20)" rx="2" /><path d="M16 26 L24 26 M18 26 L18 14 L22 14 L22 26" stroke="black" stroke-width="2" /><circle cx="16" cy="26" r="2" fill="black" /><circle cx="24" cy="26" r="2" fill="black" />`;
-            
-            return svgStart + content + svgEnd;
+            switch(type) {
+                case 'stop': return `<svg width="40" height="40" viewBox="0 0 40 40"><polygon points="20,38 2,5 38,5" fill="#ef4444" stroke="none"/><text x="50%" y="35%" dominant-baseline="middle" text-anchor="middle" fill="white" font-size="9" font-weight="bold">止まれ</text><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" fill="white" font-size="6" font-weight="bold">STOP</text></svg>`;
+                case 'slow': return `<svg width="40" height="40" viewBox="0 0 40 40"><polygon points="20,38 2,5 38,5" fill="white" stroke="#ef4444" stroke-width="3"/><text x="50%" y="35%" dominant-baseline="middle" text-anchor="middle" fill="#1c1917" font-size="10" font-weight="bold">徐行</text><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" fill="#1c1917" font-size="5" font-weight="bold">SLOW</text></svg>`;
+                case 'no-entry': return `<svg width="40" height="40" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="#ef4444" /><rect x="8" y="17" width="24" height="6" fill="white" /></svg>`;
+                case 'speed': return `<svg width="40" height="40" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="white" stroke="#ef4444" stroke-width="3" /><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" fill="#3b82f6" font-size="16" font-weight="bold">${limit}</text></svg>`;
+                case 'one-way': return `<svg width="40" height="40" viewBox="0 0 40 40"><rect x="2" y="8" width="36" height="24" rx="2" fill="#3b82f6" /><path d="M10 20 L24 20 M24 20 L18 14 M24 20 L18 26" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+                case 'no-parking': return `<svg width="40" height="40" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="#3b82f6" stroke="#ef4444" stroke-width="3" /><line x1="8" y1="8" x2="32" y2="32" stroke="#ef4444" stroke-width="3" /></svg>`;
+                case 'no-uturn': return `<svg width="40" height="40" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="white" stroke="#ef4444" stroke-width="3" /><path d="M24 16 C24 12 16 12 16 16 L16 26" stroke="#3b82f6" stroke-width="3" fill="none" /><polygon points="16,28 12,22 20,22" fill="#3b82f6" /><line x1="8" y1="32" x2="32" y2="8" stroke="#ef4444" stroke-width="3" /></svg>`;
+                case 'pedestrian': return `<svg width="40" height="40" viewBox="0 0 40 40"><rect x="4" y="4" width="32" height="32" rx="2" fill="#3b82f6" /><path d="M14 28 L20 12 L26 28 M20 12 L20 10 M14 20 L26 20" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z" fill="white"/></svg>`;
+                case 'construction': return `<svg width="40" height="40" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="white" stroke="#eab308" stroke-width="3" /><path d="M14 28 L20 12 L26 28" stroke="black" stroke-width="2" fill="none"/><line x1="28" y1="28" x2="12" y2="28" stroke="black" stroke-width="2" /><path d="M12 28 q2 -4 4 -4 t4 4" fill="black" /><path d="M26 28 q-2 -4 -4 -4 t-4 4" fill="black" /></svg>`;
+                case 'railroad': return `<svg width="40" height="40" viewBox="0 0 40 40"><rect x="20" y="2" width="20" height="20" fill="#eab308" transform="rotate(45 20 20)" rx="2" /><path d="M16 26 L24 26 M18 26 L18 14 L22 14 L22 26" stroke="black" stroke-width="2" /><circle cx="16" cy="26" r="2" fill="black" /><circle cx="24" cy="26" r="2" fill="black" /></svg>`;
+                default: return '';
+            }
         }
 
+        // 輔助函式：根據天氣代碼渲染對應的圖標
         function renderWeatherIcon(type) {
             switch (type) {
                 case 'sunny': return getIcon('sun', "w-5 h-5 text-orange-500");
@@ -348,31 +345,45 @@
             }
         }
 
+        // 渲染：單個行程項目 (Itinerary Item)
         function renderItineraryItem(item) {
             let iconName = 'map-pin';
             let iconColor = "text-stone-400";
             let borderColor = "border-stone-200";
 
-            if (item.type === 'food') { iconName = 'utensils'; iconColor = "text-red-400"; borderColor="border-l-red-400"; }
-            else if (item.type === 'shop') { iconName = 'shopping-bag'; iconColor = "text-yellow-500"; borderColor="border-l-yellow-500"; }
-            else if (item.type === 'visit') { iconName = 'camera'; iconColor = "text-emerald-500"; borderColor="border-l-emerald-500"; }
-            else if (item.type === 'hotel') { iconName = 'bed-double'; iconColor = "text-purple-400"; borderColor="border-l-purple-400"; }
-            else if (item.type === 'transport') {
+            // 根據類型 (type) 設定圖標與顏色樣式
+            if (item.type === 'food') { 
+                iconName = 'utensils'; iconColor = "text-red-400"; borderColor="border-l-red-400"; 
+            } else if (item.type === 'shop') { 
+                iconName = 'shopping-bag'; iconColor = "text-yellow-500"; borderColor="border-l-yellow-500"; 
+            } else if (item.type === 'visit') { 
+                iconName = 'camera'; iconColor = "text-emerald-500"; borderColor="border-l-emerald-500"; 
+            } else if (item.type === 'hotel') { 
+                iconName = 'bed-double'; iconColor = "text-purple-400"; borderColor="border-l-purple-400"; 
+            } else if (item.type === 'transport') {
                 const isFlight = item.title.includes("CX564") || item.title.includes("CX565");
                 const isCarRelated = item.title.includes("租車") || item.title.includes("還車") || item.title.includes("駐車場");
                 
-                if (isFlight) { iconName = 'plane'; iconColor = "text-red-500"; borderColor = "border-l-red-500"; } 
-                else if (isCarRelated) { iconName = 'car'; iconColor = "text-lime-600"; borderColor = "border-l-lime-600"; } 
-                else { iconName = 'train-front'; iconColor = "text-indigo-400"; borderColor = "border-l-indigo-400"; }
+                if (isFlight) { 
+                    iconName = 'plane'; iconColor = "text-red-500"; borderColor = "border-l-red-500"; 
+                } else if (isCarRelated) { 
+                    iconName = 'car'; iconColor = "text-lime-600"; borderColor = "border-l-lime-600"; 
+                } else { 
+                    iconName = 'train-front'; iconColor = "text-indigo-400"; borderColor = "border-l-indigo-400"; 
+                }
             }
 
             const isCollection = item.tag === "收集";
-            if (isCollection) { iconName = 'star'; iconColor = "text-amber-500"; borderColor = "border-l-amber-500"; }
+            if (isCollection) { 
+                iconName = 'star'; iconColor = "text-amber-500"; borderColor = "border-l-amber-500";
+            }
 
+            // 判斷是否顯示導航按鈕 (過濾掉飛機或一般無地標移動)
             const titlesWithoutNavigation = ["搭乘 CX564 飛往大阪", "搭乘 CX565 返台", "前往草津", "前往大阪"];
             const showNavigation = !titlesWithoutNavigation.includes(item.title) && item.mapUrl !== null;
             const destinationUrl = item.mapUrl || getGoogleMapUrl(item.title);
 
+            // 回傳 Template Literal (樣板字串) HTML
             return `
             <div class="flex gap-4 p-4 bg-white/95 backdrop-blur-sm rounded-lg border-l-4 shadow-sm mb-3 ${borderColor} active:bg-stone-50 transition-colors">
                 <div class="flex flex-col items-center min-w-[50px]">
@@ -415,10 +426,12 @@
             </div>`;
         }
 
+        // 渲染：每日行程總覽 (Daily View)
         function renderItineraryView(dayId) {
             const currentDayData = TRIP_DATA.itinerary.find(d => d.id === dayId);
             if (!currentDayData) return '';
 
+            // 更新 Header 的狀態 (天氣、地點)
             const headerStatus = document.getElementById('header-status');
             headerStatus.innerHTML = `
                 ${renderWeatherIcon(currentDayData.weather)}
@@ -442,7 +455,9 @@
             `;
         }
 
+        // 渲染：航班與住宿頁面
         function renderFlightsView() {
+            // 使用 map 將航班資料轉換為 HTML
             const flightsHtml = TRIP_DATA.flights.map(flight => `
                 <div class="bg-white/95 backdrop-blur-sm rounded-xl shadow-sm border border-stone-200 overflow-hidden p-5 mb-4">
                     <div class="flex items-center justify-between mb-4 border-b border-stone-100 pb-3">
@@ -463,6 +478,7 @@
                 </div>
             `).join('');
 
+            // 使用 map 將飯店資料轉換為 HTML
             const hotelsHtml = TRIP_DATA.hotels.map(hotel => `
                 <div class="bg-white/95 backdrop-blur-sm rounded-xl shadow-sm border border-stone-200 overflow-hidden p-0 mb-4">
                     <div class="h-60 bg-stone-200 relative overflow-hidden">
@@ -485,13 +501,13 @@
                             <span>${hotel.location}</span>
                         </div>
                         <div class="flex flex-wrap gap-2 mb-4">
-                            ${hotel.features.map(f => `<span class="text-[10px] px-2 py-1 bg-indigo-50 text-indigo-600 rounded">${f}</span>`).join('')}
+                             ${hotel.features.map(f => `<span class="text-[10px] px-2 py-1 bg-indigo-50 text-indigo-600 rounded">${f}</span>`).join('')}
                         </div>
                         <div class="bg-amber-50 p-3 rounded text-xs text-amber-800 border border-amber-100 flex gap-2">
                             ${getIcon('info', "shrink-0 mt-0.5", 14)}
                             ${hotel.note}
                         </div>
-                        <a href="http://googleusercontent.com/maps.google.com/search?q=${encodeURIComponent(hotel.name)}" target="_blank" rel="noreferrer" class="mt-4 block w-full py-3 bg-stone-800 text-white text-center rounded-lg text-sm font-bold active:bg-stone-900 transition active:scale-[0.98]">導航至飯店</a>
+                        <a href="https://www.google.com/maps/search/?api=1&query=$$${encodeURIComponent(hotel.name)}" target="_blank" rel="noreferrer" class="mt-4 block w-full py-3 bg-stone-800 text-white text-center rounded-lg text-sm font-bold active:bg-stone-900 transition active:scale-[0.98]">導航至飯店</a>
                     </div>
                 </div>
             `).join('');
@@ -506,7 +522,7 @@
             `;
         }
 
-        // [修正] 修正了圖片標籤重複 class 的問題
+        // 渲染：自駕指南頁面
         function renderDrivingView() {
             const tipsHtml = TRIP_DATA.drivingGuide.tips.map(tip => `
                 <div class="bg-white/95 backdrop-blur-sm rounded-xl shadow-sm border border-stone-200 overflow-hidden p-4 border-l-4 border-l-lime-500">
@@ -516,7 +532,7 @@
                     </h3>
                     <p class="text-sm text-stone-600 leading-relaxed">${tip.content}</p>
                 </div>
-            `).join('');
+             `).join('');
 
             const signsHtml = TRIP_DATA.drivingGuide.signs.map(sign => `
                 <div class="bg-white/95 backdrop-blur-sm rounded-xl shadow-sm border border-stone-200 overflow-hidden p-3 flex flex-col items-center text-center">
@@ -543,10 +559,7 @@
                         日本自駕注意事項
                     </h2>
                       <div class="mb-2">
-                    <img 
-                        src="car.jpg" 
-                        alt="Driving Visual Guide" 
-                        class="w-full h-auto rounded-xl object-cover">
+                    <img src="car.jpg" alt="Driving Visual Guide" class="w-full h-auto rounded-xl">
                     </div>
 
                     <div class="space-y-3">
@@ -570,6 +583,7 @@
             `;
         }
 
+        // 渲染：人孔蓋庫存清單 (表格樣式)
         function renderManholeView() {
             const rowsHtml = TRIP_DATA.manholeStock.map(item => `
                 <tr class="hover:bg-indigo-50/50 transition-colors">
@@ -609,6 +623,7 @@
             `;
         }
 
+        // 渲染：地圖連結列表
         function renderMapView() {
             const linksHtml = TRIP_DATA.mapLinks.map(link => `
                 <a href="${link.url}" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-4 bg-white/95 backdrop-blur-sm border border-stone-200 rounded-xl shadow-sm active:bg-stone-50 transition-colors">
@@ -633,10 +648,12 @@
             `;
         }
 
+        // 渲染：筆記與餐廳頁面
         function renderNotesView() {
             const daysHtml = TRIP_DATA.notes.map(day => {
                 let content = '';
 
+                // 連結區塊
                 if (day.links) {
                     content += `<div class="space-y-2">
                         ${day.links.map(link => `
@@ -650,6 +667,7 @@
                     </div>`;
                 }
 
+                // 餐飲區塊
                 if (day.dining) {
                     content += `<div class="bg-orange-50/50 rounded-lg p-3 border border-orange-100 mt-4">
                         <h4 class="text-xs font-bold text-orange-600 mb-2 uppercase tracking-wide flex items-center gap-1">${getIcon('utensils', "", 12)} 餐飲資訊</h4>
@@ -667,7 +685,8 @@
                                                 <span class="text-[11px] font-mono text-stone-500 mt-0.5">${spot.hours}</span>
                                                 ${spot.note ? `<span class="text-[10px] mt-0.5 text-orange-600">${spot.note}</span>` : ''}
                                             </div>
-                                            <a href="${spot.mapUrl || getGoogleMapUrl(spot.name)}" target="_blank" rel="noopener noreferrer" class="p-2 bg-blue-50 text-blue-600 rounded-full active:scale-95 hover:bg-blue-100 transition-colors shrink-0">${getIcon('navigation', "", 16)}</a>
+                                            <a href="${spot.mapUrl || getGoogleMapUrl(spot.name)}" target="_blank" rel="noopener noreferrer" 
+class="p-2 bg-blue-50 text-blue-600 rounded-full active:scale-95 hover:bg-blue-100 transition-colors shrink-0">${getIcon('navigation', "", 16)}</a>
                                         </li>
                                     `).join('')}
                                 </ul>
@@ -676,6 +695,7 @@
                     </div>`;
                 }
 
+                // 路線區塊
                 if (day.routes) {
                     content += `<div class="space-y-4 mt-4">
                         ${day.routes.map(route => `
@@ -690,7 +710,8 @@
                                                 <div class="text-[11px] text-stone-500 font-mono mt-0.5">${spot.hours}</div>
                                                 ${spot.note ? `<div class="text-[10px] text-amber-600 mt-0.5">${spot.note}</div>` : ''}
                                             </div>
-                                            <a href="${spot.mapUrl || getGoogleMapUrl(spot.name)}" target="_blank" rel="noopener noreferrer" class="p-2 bg-blue-50 text-blue-600 rounded-full active:scale-95 hover:bg-blue-100 transition-colors shrink-0">${getIcon('navigation', "", 16)}</a>
+                                            <a href="${spot.mapUrl || getGoogleMapUrl(spot.name)}" target="_blank" rel="noopener noreferrer" 
+class="p-2 bg-blue-50 text-blue-600 rounded-full active:scale-95 hover:bg-blue-100 transition-colors shrink-0">${getIcon('navigation', "", 16)}</a>
                                         </li>
                                     `).join('')}
                                 </ul>
@@ -720,6 +741,7 @@
             `;
         }
 
+        // 渲染：頁尾 (Footer)
         function renderFooter() {
             return `
                 <div class="text-center pt-8 pb-4 opacity-80 mb-16">
@@ -732,21 +754,24 @@
         }
 
         // ==========================================
-        // --- 4. 控制器 (Controller) ---
+        // --- 4. 主控制邏輯 (Main Controller) ---
         // ==========================================
 
+        // 更新主視圖：根據 activeTab 重新渲染 DOM
         function updateView() {
             const mainContent = document.getElementById('main-content');
             const scrollerContainer = document.getElementById('date-scroller-container');
             const headerStatus = document.getElementById('header-status');
 
+            // 重置捲軸位置到頂部，確保切換分頁時視野正確
             mainContent.scrollTop = 0;
 
+            // 根據目前選中的 Tab 決定要渲染哪個 HTML 字串
             let contentHtml = '';
             switch(state.activeTab) {
                 case 'itinerary': 
                     contentHtml = renderItineraryView(state.selectedDayId);
-                    scrollerContainer.classList.remove('hidden');
+                    scrollerContainer.classList.remove('hidden'); // 只有行程頁需要顯示日期捲軸
                     updateDateScroller();
                     break;
                 case 'flights': 
@@ -778,22 +803,22 @@
                     contentHtml = renderItineraryView(state.selectedDayId);
             }
             
+            // 將生成的 HTML 注入到主容器中
             mainContent.innerHTML = contentHtml + renderFooter();
+            
+            // 更新底部導航欄的啟用狀態
             updateBottomNav();
             
-            // [防呆] 如果 Lucide 圖示庫沒載入，這行會錯，我們把它包起來
-            if (typeof lucide !== 'undefined') {
-                lucide.createIcons();
-            } else {
-                console.warn("Lucide 圖示庫載入失敗，圖示將無法顯示。");
-            }
+            // 重要：因為 innerHTML 重繪了 DOM，需要重新呼叫 Lucide 解析新的 icon 標籤
+            lucide.createIcons();
         }
 
+        // 更新頂部日期捲軸 (Date Scroller)
         function updateDateScroller() {
             const scroller = document.getElementById('date-scroller');
-            
             const buttonsHtml = TRIP_DATA.itinerary.map(day => {
                 const isActive = state.selectedDayId === day.id;
+                // 根據是否選中切換 CSS 類別 (Active 狀態有陰影與深色背景)
                 const activeClasses = isActive 
                     ? "bg-indigo-600/90 backdrop-blur border-indigo-600 text-white shadow-lg shadow-indigo-200" 
                     : "bg-white/60 backdrop-blur border-stone-200 text-stone-400";
@@ -812,6 +837,7 @@
             
             scroller.innerHTML = buttonsHtml;
             
+            // UX 優化：自動滾動使選中的日期按鈕居中
             setTimeout(() => {
                 const selectedBtn = document.getElementById(`btn-${state.selectedDayId}`);
                 if (selectedBtn) {
@@ -820,6 +846,7 @@
             }, 50);
         }
 
+        // 更新底部導航欄 (Bottom Nav)
         function updateBottomNav() {
             const nav = document.getElementById('bottom-nav');
             const tabs = [
@@ -830,9 +857,10 @@
                 { id: 'map', label: '地圖', icon: 'map', color: 'text-emerald-600' },
                 { id: 'notes', label: '備註', icon: 'notebook-pen', color: 'text-pink-600' }
             ];
-
+            
             const html = tabs.map(tab => {
                 const isActive = state.activeTab === tab.id;
+                // 處理選中狀態的顏色邏輯
                 const defaultColor = isActive ? 'text-indigo-600' : 'text-stone-400';
                 const activeColor = (tab.color && isActive) ? tab.color : defaultColor;
                 
@@ -851,26 +879,28 @@
         }
 
         // ==========================================
-        // --- 5. 事件處理 (Actions) ---
+        // --- 5. 事件處理 (Event Handlers) ---
         // ==========================================
 
+        // 切換底部標籤頁，更新狀態後重繪
         function switchTab(tabId) {
             state.activeTab = tabId;
             updateView();
         }
 
+        // 切換日期 (行程模式)，更新狀態後重繪
         function switchDay(dayId) {
             state.selectedDayId = dayId;
             updateView();
         }
 
         // ==========================================
-        // --- 6. 初始化 (Init) ---
+        // --- 6. 初始化 (Initialization) ---
         // ==========================================
+        // 當 DOM 完全載入後，執行初次渲染
         document.addEventListener('DOMContentLoaded', () => {
             updateView();
         });
-
     </script>
 </body>
 </html>
