@@ -2,58 +2,94 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <!-- 更新：加入 viewport-fit=cover 以支援全螢幕顯示 -->
+    <!-- 
+        [Viewport 設定詳解]
+        - width=device-width: 設定視口寬度等於裝置螢幕寬度，實現響應式佈局基礎。
+        - initial-scale=1.0: 初始縮放比例為 1:1，無縮放。
+        - maximum-scale=1.0, user-scalable=no: 關鍵設定！禁止使用者透過雙指縮放，讓網頁操作手感接近原生 App (Native App)。
+        - viewport-fit=cover: iOS 專屬設定，讓網頁內容延伸至全螢幕（包含瀏海兩側與圓角區域），需配合安全區域 (Safe Area) CSS 使用。
+    -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Kansai Trip 2025-2026</title>
     
-    <!-- iOS PWA 設定 (新增) -->
+    <!-- 
+        [iOS PWA (Progressive Web App) 核心設定]
+        - apple-mobile-web-app-capable: "yes" 宣告此網頁支援 Web App 模式。當使用者將網頁「加入主畫面」後，開啟時將移除瀏覽器網址列與工具列，提供沉浸式體驗。
+        - apple-mobile-web-app-status-bar-style: 控制 iOS 頂部狀態列 (顯示時間、電量處) 的文字顏色風格。
+          - 'default': 白色背景，黑色文字。
+          - 'black': 黑色背景，白色文字。
+          - 'black-translucent': 內容會延伸至狀態列下方 (全螢幕)，狀態列文字為白色。
+        - apple-mobile-web-app-title: 定義 App Icon 在主畫面上顯示的簡短名稱。
+    -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Kansai Trip">
     
+    <!-- 網站識別圖示 (Favicon & iOS Touch Icon) -->
+    <!-- rel="apple-touch-icon": 當使用者將網頁加入 iOS 主畫面時，會使用此圖片作為 App Icon -->
     <link rel="apple-touch-icon" href="Japan.jpg">
     <link rel="icon" href="Japan.jpg">
     
+    <!-- 引入 Tailwind CSS (Utility-First CSS 框架) -->
+    <!-- 直接透過 CDN 引入，用於快速構建樣式，無需撰寫大量自定義 CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
+    <!-- 引入 Google Fonts -->
+    <!-- 'Dancing Script': 用於簽名檔的手寫風格字體，增加視覺層次 -->
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
     
+    <!-- 引入 Lucide Icons -->
+    <!-- 輕量級 SVG 圖標庫，透過 data-lucide 屬性在執行時期動態生成 SVG -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
-        /* --- 全域樣式設定 --- */
+        /* --- CSS 全域樣式優化 --- */
         body {
-            /* 設定預設字體堆疊，確保在不同系統都有良好的顯示效果 */
+            /* [字體堆疊策略 Font Stack] */
+            /* 優先順序：Tailwind 預設無襯線字體 -> 系統 UI 字體 (SF Pro/Segoe UI) -> 備用字體 */
+            /* 目的：確保在 iOS, Android, Windows, macOS 上都能呈現最原生的閱讀體驗 */
             font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background-color: #d6d3d1; /* stone-300 背景色 */
-            color: #1c1917; /* stone-900 文字色 */
-            overscroll-behavior: none; /* 防止手機瀏覽器下拉時出現重新整理的空白效果 */
+            
+            background-color: #d6d3d1; /* 對應 Tailwind: stone-300 */
+            color: #1c1917; /* 對應 Tailwind: stone-900 */
+            
+            /* [滾動行為優化] */
+            /* none: 停用瀏覽器預設的邊界回彈效果 (Rubber-banding) 與下拉刷新 (Pull-to-refresh) */
+            /* 這是為了避免在 PWA 模式下，下拉操作意外觸發瀏覽器行為，破壞 App 般的體驗 */
+            overscroll-behavior: none; 
         }
 
-        /* --- 隱藏滾動條樣式 (UX 優化) --- */
-        /* 針對 Webkit 瀏覽器 (Chrome, Safari) */
+        /* --- 隱藏滾動條樣式 (Scrollbar Hiding) --- */
+        /* 目的：保留滾動功能，但隱藏視覺上的滾動條，使介面更簡潔美觀 */
+        
+        /* 針對 Webkit 核心瀏覽器 (Chrome, Safari, iOS Safari) */
         .no-scrollbar::-webkit-scrollbar { 
             display: none; 
         }
-        /* 針對 IE, Edge, Firefox */
+        /* 針對 Firefox, IE, Edge */
         .no-scrollbar { 
-            -ms-overflow-style: none; 
-            scrollbar-width: none; 
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none;    /* Firefox */
         }
 
-        /* --- 動畫效果 --- */
-        /* 定義淡入並向上浮動的關鍵影格 */
+        /* --- 動畫效果定義 (CSS Keyframes) --- */
+        /* [fadeInUp] */
+        /* 效果：元素從透明且下方 10px 的位置，過渡到不透明且原始位置 */
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        /* 套用動畫：0.4秒完成，緩出效果 */
+        
+        /* [動畫類別封裝] */
+        /* 使用 ease-out 減速曲線讓動畫結尾更自然，forwards 確保動畫結束後停留在最終狀態 */
         .animate-fade-in-up, .animate-fade-in { 
             animation: fadeInUp 0.4s ease-out forwards; 
         }
         
-        /* --- iOS 安全區域適配 --- */
-        /* 確保內容不會被 iPhone 底部的 Home Indicator 遮擋 */
+        /* --- iOS 安全區域 (Safe Area) 適配 --- */
+        /* [iPhone X+ 適配關鍵] */
+        /* env(safe-area-inset-bottom): 瀏覽器環境變數，代表底部 Home Indicator (黑條) 的高度 */
+        /* 為底部導航欄加入對應的 padding，防止按鈕被系統黑條遮擋無法點擊 */
         .pb-safe { 
             padding-bottom: env(safe-area-inset-bottom); 
         }
@@ -61,35 +97,58 @@
 </head>
 <body>
 
+    <!-- [App 主容器佈局] -->
+    <!-- h-[100dvh]: 使用 Dynamic Viewport Height，解決行動瀏覽器網址列伸縮導致高度計算錯誤的問題 -->
+    <!-- md:max-w-md md:mx-auto: 在桌機版限制寬度並置中，模擬手機介面 -->
     <div class="h-[100dvh] flex flex-col md:max-w-md md:mx-auto shadow-2xl overflow-hidden relative select-none bg-stone-300">
         
+        <!-- [背景圖層] -->
+        <!-- fixed inset-0: 固定定位填滿容器，確保背景不隨內容滾動 -->
+        <!-- pointer-events-none: 讓點擊事件穿透背景層，直達下方內容 -->
         <div class="fixed inset-0 z-0 pointer-events-none md:max-w-md md:mx-auto">
             <img src="https://tw.wamazing.com/media/wp-content/uploads/sites/4/2022/12/shigatravel_pixta_62991025_L-853x569.jpg.webp" alt="Shiga Scenery" class="w-full h-full object-cover opacity-90"/>
+            <!-- 疊加半透明模糊遮罩 (Backdrop Blur)，提升前景文字的可讀性與對比度 -->
             <div class="absolute inset-0 bg-stone-300/85 backdrop-blur-[2px]"></div>
         </div>
 
+        <!-- [頂部導航列 (Header)] -->
+        <!-- z-50: 確保層級最高，不被內容遮擋 -->
+        <!-- backdrop-blur-md: 讓滑過下方的內容產生毛玻璃效果 -->
         <div class="shrink-0 bg-white/80 backdrop-blur-md border-b border-stone-200/50 shadow-sm z-50">
             <div class="px-4 py-3 flex justify-between items-center">
                 <div>
                     <h1 class="text-xl font-black tracking-tighter text-indigo-900">KANSAI TRIP</h1>
                     <p class="text-xs text-stone-400 font-medium tracking-widest">DEC 27 - JAN 04</p>
                 </div>
+                <!-- 動態狀態欄容器：用於 JS 動態注入天氣、氣溫與地點資訊 (僅在行程分頁顯示) -->
                 <div id="header-status" class="hidden flex items-center gap-2 bg-white/50 px-3 py-1.5 rounded-full border border-stone-100">
                 </div>
             </div>
             
+            <!-- 日期橫向捲軸容器 -->
+            <!-- snap-x: 啟用 CSS Scroll Snap，讓滾動停止時自動對齊子元素 -->
             <div id="date-scroller-container" class="hidden">
                 <div id="date-scroller" class="flex overflow-x-auto gap-3 px-4 pb-3 no-scrollbar snap-x">
-                    </div>
+                    <!-- [JS 注入點] 日期按鈕將由此處動態生成 -->
+                </div>
             </div>
         </div>
 
+        <!-- [主要內容區域 (Main Content)] -->
+        <!-- flex-1: 佔據剩餘垂直空間 -->
+        <!-- overflow-y-auto: 允許垂直滾動 -->
+        <!-- overscroll-contain: 阻止滾動鏈 (Scroll Chaining) 傳遞給 body，將滾動行為限制在此容器內 -->
         <div id="main-content" class="flex-1 overflow-y-auto overflow-x-hidden p-4 space-y-4 no-scrollbar overscroll-contain relative z-10 pb-24">
-            </div>
+            <!-- [JS 注入點] 根據 activeTab 狀態，動態渲染行程、航班或地圖等不同視圖 -->
+        </div>
 
+        <!-- [底部導航欄 (Bottom Tab Bar)] -->
+        <!-- absolute bottom-0: 絕對定位於容器底部 -->
+        <!-- pb-safe: 套用前面定義的 iOS 安全區域 padding -->
         <div class="absolute bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-stone-200/50 pb-safe z-50 overflow-x-auto no-scrollbar">
             <div class="flex justify-between items-center h-16 min-w-max px-2" id="bottom-nav">
-                </div>
+                <!-- [JS 注入點] 底部導航按鈕將由此處動態生成 -->
+            </div>
         </div>
     </div>
 
@@ -97,23 +156,29 @@
         // ==========================================
         // --- 1. 資料來源 (Data Source) ---
         // ==========================================
-        // 使用 const 宣告常數物件，儲存所有應用程式的靜態資料
+        // [單一資料源原則 Single Source of Truth]
+        // 將應用程式的所有靜態資料集中於 TRIP_DATA 常數物件中管理。
+        // 優點：若需修改行程、新增地點或調整時間，只需修改此處 JSON 結構，無需更動渲染邏輯。
         const TRIP_DATA = {
-            // 航班資訊陣列
+            // [航班資訊陣列]
             flights: [
                 { type: "Departure", date: "2025/12/27 (六)", code: "CX564", airline: "國泰航空", route: "TPE 台北 (11:15) ➔ KIX 大阪 (14:55)", terminal: "TPE T1 / KIX T1", duration: "2h 40m", aircraft: "Airbus A330-300", class: "經濟 Q" },
                 { type: "Return", date: "2026/01/04 (日)", code: "CX565", airline: "國泰航空", route: "KIX 大阪 (16:15) ➔ TPE 台北 (18:30)", terminal: "KIX T1 / TPE T1", duration: "3h 25m", aircraft: "Airbus A330-300", class: "經濟 S" }
             ],
-            // 飯店資訊陣列
+            // [飯店資訊陣列]
             hotels: [
                 { name: "草津波士頓廣場飯店", engName: "Hotel Boston Plaza Kusatsu", dates: "12/27 - 1/1 (5晚)", location: "滋賀縣草津市 (JR草津站旁)", features: ["交通便利", "美式風格", "適合自駕"], note: "作為滋賀縣人孔蓋卡收集的基地非常合適。", image: "Boston.jpg" },
                 { name: "REF 京都八條口 by VESSEL HOTELS", engName: "REF Kyoto Hachijoguchi", dates: "1/1 - 1/4 (3晚)", location: "京都市南區 (京都站八條口)", features: ["大浴場", "現代日式", "免費迎賓飲料"], note: "靠近京都車站，方便前往神戶、奈良與回程機場。", image: "Kyoto.jpg" }
             ],
-            // 每日行程細節 (核心資料)
+            // [核心行程資料]
+            // 結構：Array<DayObject>
+            // id: 用於 DOM 識別與狀態切換的唯一鍵值
+            // weather/temp: 用於頂部 Header 的狀態顯示
+            // items: Array<ItemObject> 當日的詳細行程列表
             itinerary: [
                 { id: "day1", date: "12/27", dayOfWeek: "六", location: "大阪 ➔ 滋賀", weather: "sunny", temp: "8°C", items: [
                     { type: "transport", time: "11:15", title: "搭乘 CX564 飛往大阪", note: "預計 14:55 抵達關西機場 T1" },
-                    { type: "visit", time: "15:30", title: "臨空城觀光案內所", tag: "收集", note: "領取人孔蓋卡/紀念品。營業至20:00。", mapUrl: "https://maps.app.goo.gl/AFLxB4tBLNV1DPb79" },
+                    { type: "visit", time: "15:30", title: "臨空城觀光案內所", tag: "收集", note: "🔥 領取人孔蓋卡/紀念品。營業至20:00。", mapUrl: "https://maps.app.goo.gl/AFLxB4tBLNV1DPb79" },
                     { type: "shop", time: "16:00", title: "臨空城 Outlet", highlight: "必買: 運動品牌、日系服飾", note: "晚餐可在此解決。營業至20:00。" },
                     { type: "transport", time: "19:00", title: "前往草津", note: "關西機場 → 京都車站 → 草津車站" },
                     { type: "hotel", time: "21:30", title: "入住：草津波士頓廣場飯店", note: "位於草津站西口，休息準備明日自駕。" }
@@ -192,7 +257,8 @@
                     { type: "transport", time: "16:15", title: "搭乘 CX565 返台", note: "再見關西！預計 18:30 抵達台北。" }
                 ]}
             ],
-            // 人孔蓋卡收集資訊
+            // [人孔蓋卡庫存資訊]
+            // 用於 renderManholeView 表格渲染
             manholeStock: [
                 { name: "臨空城案內所", region: "大阪", hours: "09:00–20:00", url: "https://www.city.izumisano.lg.jp/kakuka/jogesuidokyoku/jogesui/menu/1511934914176.html" },
                 { name: "大津車站觀光案内所", region: "滋賀", hours: "09:00–18:00", url: "https://www.city.otsu.lg.jp/kigyo/about/koho/68041.html", highlight: true },
@@ -219,7 +285,7 @@
                 { name: "まちの駅かいづか", region: "大阪", hours: "10:00–19:00", url: "https://www.city.kaizuka.lg.jp/kakuka/jogesuido/gesuisuisin/topics/manholucard.html" },
                 { name: "泉佐野市観光情報センター", region: "大阪", hours: "10:00–16:00", url: "https://www.city.izumisano.lg.jp/kakuka/jogesuidokyoku/jogesui/menu/1511934914176.html" },
             ],
-            // 外部地圖連結
+            // [外部地圖連結清單]
             mapLinks: [
                 { title: "關西周遊路線圖", url: "https://www.surutto.com/kansai_rw/assets/pdf/areamap2024_tw.pdf" },
                 { title: "Osaka Metro路線圖", url: "https://subway.osakametro.co.jp/img/osakametro_rosenzu_20250404.pdf" },
@@ -230,7 +296,8 @@
                 { title: "紀念幣地圖", url: "https://www.stampmedal.com/map.htm" },
                 { title: "永旺夢樂城Kyoto 4F (轉蛋屋)", url: "https://maps.app.goo.gl/8NoQd7g6H5cn7UiG7" }
             ],
-            // 詳細筆記與餐廳
+            // [備註頁面資料]
+            // 結構較為巢狀，包含日期、連結區塊 (links)、餐飲區塊 (dining) 與路線區塊 (routes)
             notes: [
                 {
                     date: "12/27（六）",
@@ -269,7 +336,8 @@
                     dining: [{ area: "京都 - 嵐山", spots: [{ name: "嵯峨豆腐 稻 本店", cuisine: "豆腐料理/豆皮", hours: "11:00–18:30", mapUrl: "https://maps.app.goo.gl/BBCfdetuL8rNMevf7" }, { name: "蕎麥麵 嵐山よしむら", cuisine: "景觀蕎麥麵", hours: "11:00–16:00", mapUrl: "https://maps.app.goo.gl/p47zjGPbRoUSY4Cp8" }, { name: "鯛匠 HANANA", cuisine: "鯛魚茶泡飯", hours: "11:00–16:30", mapUrl: "https://maps.app.goo.gl/5wxGFRvQ2TwzryT48" }] }]
                 }
             ],
-            // 自駕指南資料
+            // [自駕指南與交通號誌]
+            // SVG 繪製所需的數據源
             drivingGuide: {
                 tips: [
                     { title: "右駕左行", content: "日本車輛為右駕，請務必靠左行駛。口訣：「左轉小彎、右轉大彎」。轉彎時請打方向燈（雨刷通常在左邊，方向燈在右邊，小心打錯）。" },
@@ -301,15 +369,19 @@
             }
         };
 
-        // 輔助函式：產生 Google Map 連結，透過 encodeURIComponent 處理特殊字元
+        // 輔助函式：產生 Google Map 連結
+        // [encodeURIComponent 的必要性]
+        // 確保地名中的特殊字元（如空格、斜線、中文字）被正確編碼，避免破壞 URL 結構導致導航失敗。
         const getGoogleMapUrl = (name) => `https://www.google.com/maps/search/?api=1&query=$$${encodeURIComponent(name)}`;
 
         // ==========================================
         // --- 2. 狀態管理 (State Management) ---
         // ==========================================
+        // [簡易狀態管理系統]
+        // 不依賴 React/Vue 等重型框架，使用單一物件儲存當前的 UI 狀態，決定渲染邏輯。
         let state = {
-            activeTab: 'itinerary', // 當前標籤頁 (itinerary, flights, driving, etc.)
-            selectedDayId: 'day1'   // 當前選中的日期 (僅在 itinerary 模式下有效)
+            activeTab: 'itinerary', // 當前底部導航選中的標籤 (控制主要視圖切換)
+            selectedDayId: 'day1'   // 當前選中的日期 (僅在 itinerary 模式下有效，控制行程切換)
         };
 
         // ==========================================
@@ -317,14 +389,19 @@
         // ==========================================
         
         // 輔助函式：生成 Lucide Icon HTML 結構
-        // 使用 i 標籤並配合 data-lucide 屬性，讓 Lucide 腳本自動替換為 SVG
+        // 注意：此函數僅返回帶有 data-lucide 屬性的 <i> 標籤，真正的 SVG 生成是在 lucide.createIcons() 被呼叫時發生的。
         function getIcon(name, classes = "", size = 24) {
             return `<i data-lucide="${name}" class="${classes}" width="${size}" height="${size}"></i>`;
         }
 
-        // 輔助函式：渲染 SVG 交通號誌
-        // 為了不依賴外部圖片，直接使用 SVG 字串繪製日本交通號誌
+        // 輔助函式：繪製 SVG 交通號誌
+        // [SVG 內嵌優勢]
+        // 直接使用 SVG 向量代碼繪製日本交通號誌，優點包括：
+        // 1. 無需發送額外的圖片 HTTP 請求，加快載入速度。
+        // 2. 向量圖形在任何解析度下都不會模糊 (Retina Display Ready)。
+        // 3. 可透過 CSS 輕鬆修改顏色與樣式。
         function renderTrafficSign(type, limit) {
+            // 根據傳入的 type 返回對應的 SVG 字串
             switch(type) {
                 case 'stop': return `<svg width="40" height="40" viewBox="0 0 40 40"><polygon points="20,38 2,5 38,5" fill="#ef4444" stroke="none"/><text x="50%" y="35%" dominant-baseline="middle" text-anchor="middle" fill="white" font-size="9" font-weight="bold">止まれ</text><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" fill="white" font-size="6" font-weight="bold">STOP</text></svg>`;
                 case 'slow': return `<svg width="40" height="40" viewBox="0 0 40 40"><polygon points="20,38 2,5 38,5" fill="white" stroke="#ef4444" stroke-width="3"/><text x="50%" y="35%" dominant-baseline="middle" text-anchor="middle" fill="#1c1917" font-size="10" font-weight="bold">徐行</text><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" fill="#1c1917" font-size="5" font-weight="bold">SLOW</text></svg>`;
@@ -340,7 +417,7 @@
             }
         }
 
-        // 輔助函式：根據天氣代碼渲染對應的圖標
+        // 輔助函式：根據資料中的天氣代碼 (code string) 渲染對應的 Lucide 圖標
         function renderWeatherIcon(type) {
             switch (type) {
                 case 'sunny': return getIcon('sun', "w-5 h-5 text-orange-500");
@@ -351,13 +428,21 @@
             }
         }
 
-        // 渲染：單個行程項目 (Itinerary Item)
+        // [核心渲染函式：單個行程項目卡片]
+        // 這是行程列表中的最小視覺單位，包含時間軸、圖標、標題、標籤與備註。
+        // @param {Object} item - 行程項目物件
         function renderItineraryItem(item) {
             let iconName = 'map-pin';
             let iconColor = "text-stone-400";
             let borderColor = "border-stone-200";
 
-            // 根據類型 (type) 設定圖標與顏色樣式
+            // [動態樣式邏輯]
+            // 根據項目類型 (type) 動態設定圖標與顏色主題 (Tailwind Classes)
+            // - food: 紅色系 (utensils)
+            // - shop: 黃色系 (shopping-bag)
+            // - visit: 綠色系 (camera)
+            // - hotel: 紫色系 (bed-double)
+            // - transport: 藍/靛色系，並區分飛機與租車
             if (item.type === 'food') { 
                 iconName = 'utensils'; iconColor = "text-red-400"; borderColor="border-l-red-400"; 
             } else if (item.type === 'shop') { 
@@ -379,51 +464,68 @@
                 }
             }
 
+            // 特殊邏輯：如果是「收集」任務 (例如收集人孔蓋卡)，強制使用星星圖標強調
             const isCollection = item.tag === "收集";
             if (isCollection) { 
                 iconName = 'star'; iconColor = "text-amber-500"; borderColor = "border-l-amber-500";
             }
 
-            // 判斷是否顯示導航按鈕 (過濾掉飛機或一般無地標移動)
+            // [導航按鈕顯示邏輯]
+            // 過濾掉不需要導航的項目 (如搭飛機過程或單純移動描述)
+            // 優先使用資料中的自定義 mapUrl，若無則使用 Google Search 連結
             const titlesWithoutNavigation = ["搭乘 CX564 飛往大阪", "搭乘 CX565 返台", "前往草津", "前往大阪"];
             const showNavigation = !titlesWithoutNavigation.includes(item.title) && item.mapUrl !== null;
             const destinationUrl = item.mapUrl || getGoogleMapUrl(item.title);
 
-            // 回傳 Template Literal (樣板字串) HTML
+            // 回傳 Template Literal (樣板字串) HTML：使用反引號 (`) 包裹，允許換行與變數插入 (${})
             return `
             <div class="flex gap-4 p-4 bg-white/95 backdrop-blur-sm rounded-lg border-l-4 shadow-sm mb-3 ${borderColor} active:bg-stone-50 transition-colors">
+                <!-- 左側欄位：時間與類型圖標 -->
                 <div class="flex flex-col items-center min-w-[50px]">
                     <span class="text-sm font-bold text-stone-600 font-mono">${item.time}</span>
                     <div class="mt-2 p-1.5 rounded-full bg-stone-50 ${iconColor}">
                         ${getIcon(iconName, "", 18)}
                     </div>
+                    <!-- 若為收集任務，顯示 "GET!" 文字 -->
                     ${isCollection ? '<span class="text-[9px] text-amber-600 font-bold mt-1">GET!</span>' : ''}
                 </div>
                 
+                <!-- 右側欄位：主要資訊內容 -->
                 <div class="flex-1">
                     <div class="flex items-start justify-between">
+                        <!-- 標題：支援文字選取 (select-text) -->
                         <h3 class="font-bold text-stone-800 text-lg leading-tight w-[calc(100%-70px)] sm:w-[calc(100%-110px)] select-text">${item.title}</h3>
+                        
+                        <!-- 導航/連結按鈕群組 -->
                         <div class="flex gap-2 shrink-0"> 
+                            <!-- 停車資訊按鈕 -->
                             ${item.parkingUrl ? `
                                 <a href="${item.parkingUrl}" target="_blank" rel="noopener noreferrer" class="p-2 bg-sky-50 text-sky-600 rounded-full active:scale-95 hover:bg-sky-100 transition-colors shrink-0">
                                     ${getIcon('square-parking', "", 18)}
                                 </a>` : ''}
+                            <!-- 導航按鈕 -->
                             ${showNavigation ? `
                                 <a href="${destinationUrl}" target="_blank" rel="noopener noreferrer" class="p-2 bg-blue-50 text-blue-600 rounded-full active:scale-95 hover:bg-blue-100 transition-colors shrink-0">
                                     ${getIcon('navigation', "", 18)}
                                 </a>` : '<div class="w-8 h-8 shrink-0"></div>'}
                         </div>
                     </div>
+                    
+                    <!-- 標籤 (Tag) 顯示 -->
                     ${item.tag ? `
                         <div class="mt-1">
                             <span class="text-[10px] px-2 py-0.5 rounded-full border font-medium mr-2 ${isCollection ? "border-amber-400 text-amber-600 bg-amber-50" : "border-stone-300 text-stone-500"}">
                                 ${item.tag}
                             </span>
                         </div>` : ''}
+                        
+                    <!-- 重點 (Highlight) 顯示 -->
                     ${item.highlight ? `
                         <div class="mt-2 inline-block px-3 py-1 bg-red-50 text-red-600 text-xs rounded-md font-bold select-text">
                             ★ ${item.highlight}
                         </div>` : ''}
+                        
+                    <!-- 詳細備註 (Note) 顯示區塊 -->
                     ${item.note ? `
                         <p class="mt-2 text-sm text-stone-500 leading-relaxed bg-stone-50 p-2 rounded border border-stone-100 select-text">
                             ${item.note}
@@ -432,12 +534,14 @@
             </div>`;
         }
 
-        // 渲染：每日行程總覽 (Daily View)
+        // [渲染函式：每日行程視圖 (Daily View)]
+        // 負責組合 Header 資訊與當天的所有行程卡片
         function renderItineraryView(dayId) {
             const currentDayData = TRIP_DATA.itinerary.find(d => d.id === dayId);
             if (!currentDayData) return '';
 
-            // 更新 Header 的狀態 (天氣、地點)
+            // [DOM 操作]
+            // 更新 Header 右側的狀態欄 (天氣、溫度、地點)
             const headerStatus = document.getElementById('header-status');
             headerStatus.innerHTML = `
                 ${renderWeatherIcon(currentDayData.weather)}
@@ -446,6 +550,7 @@
             `;
             headerStatus.classList.remove('hidden');
 
+            // 將當天的所有 items 轉換為 HTML 字串並串接
             const itemsHtml = currentDayData.items.map(item => renderItineraryItem(item)).join('');
             
             return `
@@ -461,9 +566,10 @@
             `;
         }
 
-        // 渲染：航班與住宿頁面
+        // [渲染函式：航班與住宿頁面]
+        // 展示航班卡片與飯店卡片
         function renderFlightsView() {
-            // 使用 map 將航班資料轉換為 HTML
+            // 使用 Array.map 將航班資料轉換為 HTML 卡片
             const flightsHtml = TRIP_DATA.flights.map(flight => `
                 <div class="bg-white/95 backdrop-blur-sm rounded-xl shadow-sm border border-stone-200 overflow-hidden p-5 mb-4">
                     <div class="flex items-center justify-between mb-4 border-b border-stone-100 pb-3">
@@ -484,9 +590,10 @@
                 </div>
             `).join('');
 
-            // 使用 map 將飯店資料轉換為 HTML
+            // 使用 Array.map 將飯店資料轉換為 HTML 卡片
             const hotelsHtml = TRIP_DATA.hotels.map(hotel => `
                 <div class="bg-white/95 backdrop-blur-sm rounded-xl shadow-sm border border-stone-200 overflow-hidden p-0 mb-4">
+                    <!-- 飯店圖片區塊：若無圖片則顯示 placeholder -->
                     <div class="h-60 bg-stone-200 relative overflow-hidden">
                         ${hotel.image ? `
                             <img src="${hotel.image}" alt="${hotel.name}" class="w-full h-full object-cover">` 
@@ -528,7 +635,8 @@
             `;
         }
 
-        // 渲染：自駕指南頁面
+        // [渲染函式：自駕指南頁面]
+        // 包含文字提示、SVG 交通號誌網格與高速公路指南
         function renderDrivingView() {
             const tipsHtml = TRIP_DATA.drivingGuide.tips.map(tip => `
                 <div class="bg-white/95 backdrop-blur-sm rounded-xl shadow-sm border border-stone-200 overflow-hidden p-4 border-l-4 border-l-lime-500">
@@ -540,6 +648,7 @@
                 </div>
              `).join('');
 
+            // 渲染 SVG 交通號誌網格
             const signsHtml = TRIP_DATA.drivingGuide.signs.map(sign => `
                 <div class="bg-white/95 backdrop-blur-sm rounded-xl shadow-sm border border-stone-200 overflow-hidden p-3 flex flex-col items-center text-center">
                     <div class="mb-2 drop-shadow-sm scale-90">${renderTrafficSign(sign.type, sign.limit)}</div>
@@ -589,7 +698,8 @@
             `;
         }
 
-        // 渲染：人孔蓋庫存清單 (表格樣式)
+        // [渲染函式：人孔蓋庫存清單]
+        // 使用表格 (Table) 樣式展示
         function renderManholeView() {
             const rowsHtml = TRIP_DATA.manholeStock.map(item => `
                 <tr class="hover:bg-indigo-50/50 transition-colors">
@@ -629,7 +739,7 @@
             `;
         }
 
-        // 渲染：地圖連結列表
+        // [渲染函式：地圖連結列表]
         function renderMapView() {
             const linksHtml = TRIP_DATA.mapLinks.map(link => `
                 <a href="${link.url}" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-4 bg-white/95 backdrop-blur-sm border border-stone-200 rounded-xl shadow-sm active:bg-stone-50 transition-colors">
@@ -654,12 +764,13 @@
             `;
         }
 
-        // 渲染：筆記與餐廳頁面
+        // [渲染函式：筆記與餐廳頁面]
+        // 結構較為複雜，包含三個動態子區塊 (Links, Dining, Routes)
         function renderNotesView() {
             const daysHtml = TRIP_DATA.notes.map(day => {
                 let content = '';
 
-                // 連結區塊
+                // 子區塊 1: 外部連結 (Links)
                 if (day.links) {
                     content += `<div class="space-y-2">
                         ${day.links.map(link => `
@@ -673,7 +784,7 @@
                     </div>`;
                 }
 
-                // 餐飲區塊
+                // 子區塊 2: 餐飲資訊 (Dining) - 巢狀結構 (地區 -> 店家列表)
                 if (day.dining) {
                     content += `<div class="bg-orange-50/50 rounded-lg p-3 border border-orange-100 mt-4">
                         <h4 class="text-xs font-bold text-orange-600 mb-2 uppercase tracking-wide flex items-center gap-1">${getIcon('utensils', "", 12)} 餐飲資訊</h4>
@@ -701,7 +812,7 @@ class="p-2 bg-blue-50 text-blue-600 rounded-full active:scale-95 hover:bg-blue-1
                     </div>`;
                 }
 
-                // 路線區塊
+                // 子區塊 3: 逛街路線 (Routes) - 視覺化的時間軸樣式
                 if (day.routes) {
                     content += `<div class="space-y-4 mt-4">
                         ${day.routes.map(route => `
@@ -747,7 +858,7 @@ class="p-2 bg-blue-50 text-blue-600 rounded-full active:scale-95 hover:bg-blue-1
             `;
         }
 
-        // 渲染：頁尾 (Footer)
+        // [渲染函式：頁尾 (Footer)]
         function renderFooter() {
             return `
                 <div class="text-center pt-8 pb-4 opacity-80 mb-16">
@@ -763,16 +874,18 @@ class="p-2 bg-blue-50 text-blue-600 rounded-full active:scale-95 hover:bg-blue-1
         // --- 4. 主控制邏輯 (Main Controller) ---
         // ==========================================
 
-        // 更新主視圖：根據 activeTab 重新渲染 DOM
+        // [核心視圖更新函式 updateView]
+        // 運作原理：類似 Virtual DOM 的簡化版，根據當前 State 清空並重繪整個 #main-content
         function updateView() {
             const mainContent = document.getElementById('main-content');
             const scrollerContainer = document.getElementById('date-scroller-container');
             const headerStatus = document.getElementById('header-status');
 
-            // 重置捲軸位置到頂部，確保切換分頁時視野正確
+            // [UX 優化] 重置滾動位置到頂部，確保切換分頁時視野從頭開始
             mainContent.scrollTop = 0;
 
-            // 根據目前選中的 Tab 決定要渲染哪個 HTML 字串
+            // [路由邏輯]
+            // 根據目前 state.activeTab 決定要呼叫哪個 Render 函式生成 HTML 字串
             let contentHtml = '';
             switch(state.activeTab) {
                 case 'itinerary': 
@@ -809,22 +922,24 @@ class="p-2 bg-blue-50 text-blue-600 rounded-full active:scale-95 hover:bg-blue-1
                     contentHtml = renderItineraryView(state.selectedDayId);
             }
             
-            // 將生成的 HTML 注入到主容器中
+            // [DOM 重繪] 將生成的 HTML 注入到主容器中
             mainContent.innerHTML = contentHtml + renderFooter();
             
-            // 更新底部導航欄的啟用狀態
+            // 更新底部導航欄的樣式 (Highlight Active Tab)
             updateBottomNav();
             
-            // 重要：因為 innerHTML 重繪了 DOM，需要重新呼叫 Lucide 解析新的 icon 標籤
+            // [關鍵步驟：圖標渲染]
+            // 因為 innerHTML 重繪了 DOM，原本的 <i data-lucide> 標籤已被重置為純 HTML 標籤
+            // 需要重新呼叫 lucide.createIcons() 讓腳本掃描新 DOM 並將其轉換為 SVG 向量圖
             lucide.createIcons();
         }
 
-        // 更新頂部日期捲軸 (Date Scroller)
+        // [更新頂部日期捲軸 (Date Scroller)]
         function updateDateScroller() {
             const scroller = document.getElementById('date-scroller');
             const buttonsHtml = TRIP_DATA.itinerary.map(day => {
                 const isActive = state.selectedDayId === day.id;
-                // 根據是否選中切換 CSS 類別 (Active 狀態有陰影與深色背景)
+                // [樣式切換] 根據是否選中切換 CSS 類別 (Active 狀態有陰影與深色背景)
                 const activeClasses = isActive 
                     ? "bg-indigo-600/90 backdrop-blur border-indigo-600 text-white shadow-lg shadow-indigo-200" 
                     : "bg-white/60 backdrop-blur border-stone-200 text-stone-400";
@@ -843,7 +958,8 @@ class="p-2 bg-blue-50 text-blue-600 rounded-full active:scale-95 hover:bg-blue-1
             
             scroller.innerHTML = buttonsHtml;
             
-            // UX 優化：自動滾動使選中的日期按鈕居中
+            // [UX 優化：自動捲動]
+            // 當切換日期時，確保選中的日期按鈕自動捲動到畫面中央
             setTimeout(() => {
                 const selectedBtn = document.getElementById(`btn-${state.selectedDayId}`);
                 if (selectedBtn) {
@@ -852,7 +968,7 @@ class="p-2 bg-blue-50 text-blue-600 rounded-full active:scale-95 hover:bg-blue-1
             }, 50);
         }
 
-        // 更新底部導航欄 (Bottom Nav)
+        // [更新底部導航欄 (Bottom Nav)]
         function updateBottomNav() {
             const nav = document.getElementById('bottom-nav');
             const tabs = [
@@ -866,7 +982,7 @@ class="p-2 bg-blue-50 text-blue-600 rounded-full active:scale-95 hover:bg-blue-1
             
             const html = tabs.map(tab => {
                 const isActive = state.activeTab === tab.id;
-                // 處理選中狀態的顏色邏輯
+                // [樣式切換] 處理選中狀態的顏色邏輯 (部分 Tab 有特定主題色，如自駕為綠色)
                 const defaultColor = isActive ? 'text-indigo-600' : 'text-stone-400';
                 const activeColor = (tab.color && isActive) ? tab.color : defaultColor;
                 
@@ -888,13 +1004,15 @@ class="p-2 bg-blue-50 text-blue-600 rounded-full active:scale-95 hover:bg-blue-1
         // --- 5. 事件處理 (Event Handlers) ---
         // ==========================================
 
-        // 切換底部標籤頁，更新狀態後重繪
+        // [切換底部標籤頁]
+        // 更新全域狀態 state.activeTab -> 觸發 updateView 重繪
         function switchTab(tabId) {
             state.activeTab = tabId;
             updateView();
         }
 
-        // 切換日期 (行程模式)，更新狀態後重繪
+        // [切換日期 (行程模式)]
+        // 更新全域狀態 state.selectedDayId -> 觸發 updateView 重繪
         function switchDay(dayId) {
             state.selectedDayId = dayId;
             updateView();
@@ -903,7 +1021,8 @@ class="p-2 bg-blue-50 text-blue-600 rounded-full active:scale-95 hover:bg-blue-1
         // ==========================================
         // --- 6. 初始化 (Initialization) ---
         // ==========================================
-        // 當 DOM 完全載入後，執行初次渲染
+        // [應用程式啟動入口]
+        // 當 DOM 結構完全載入後，執行初次渲染，啟動應用程式
         document.addEventListener('DOMContentLoaded', () => {
             updateView();
         });
