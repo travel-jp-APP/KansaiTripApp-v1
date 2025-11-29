@@ -2,146 +2,100 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <!-- 設定視窗寬度，禁止縮放以模擬 App 體驗 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Kansai Trip 2025-2026</title>
     
-    <!-- iOS Web App 設定：全螢幕模式 -->
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <!-- 設定狀態列為半透明黑，讓內容延伸至頂部，模擬全螢幕 -->
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Kansai Trip">
+
     <link rel="apple-touch-icon" href="Japan.jpg">
     <link rel="icon" href="Japan.jpg">
-
-    <!-- PWA Manifest (使用 Data URI 內嵌) -->
-    <!-- 修改重點：將 display 設為 "fullscreen" 以強制隱藏系統 UI -->
-    <link rel="manifest" href='data:application/json;base64,ewogICJuYW1lIjogIkthbnNhaSBUcmlwIDIwMjUtMjAyNiIsCiAgInNob3J0X25hbWUiOiAiS2Fuc2FpIFRyaXAiLAogICJzdGFydF91cmwiOiAiLiIsCiAgImRpc3BsYXkiOiAicHVsbHNjcmVlbiIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiI2Q2ZDNkMSIsCiAgInRoZW1lX2NvbG9yIjogIiNkNmQzZDEiLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJKYXBhbi5qcGciLAogICAgICAic2l6ZXMiOiAiMTkyeDE5MiIsCiAgICAgICJ0eXBlIjogImltYWdlL2pwZWciCiAgICB9CiAgXQp9'>
     
-    <!-- 外部資源庫：Tailwind CSS, Google Fonts, Lucide Icons -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
-        /* --- 全域樣式設定 --- */
+        /* --- 基礎全域設定 --- */
         body {
             font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background-color: #d6d3d1; /* stone-300 */
-            color: #1c1917; /* stone-900 */
-            overscroll-behavior: none; /* 防止 iOS 下拉回彈效果 */
-            -webkit-tap-highlight-color: transparent; /* 移除點擊高亮 */
+            background-color: #d6d3d1; /* 背景色 stone-300 */
+            color: #1c1917; /* 文字色 stone-900 */
+            overscroll-behavior: none; /* [重要] 防止手機下拉時出現瀏覽器的重新整理效果 */
         }
 
-        /* 隱藏滾動條但保留功能 */
+        /* --- 隱藏滾動條 (Scrollbar) --- */
+        /* 讓畫面看起來更像 App，不會出現醜醜的捲軸 */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* 動畫效果 */
+        /* --- 動畫設定：淡入並上浮 --- */
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .animate-fade-in { animation: fadeInUp 0.4s ease-out forwards; }
         .animate-fade-in-up { animation: fadeInUp 0.4s ease-out forwards; }
+        .animate-fade-in { animation: fadeInUp 0.4s ease-out forwards; }
         
-        /* iOS 底部安全區域適配 */
+        /* --- iOS 安全區域設定 (Safe Area) --- */
+        /* 避免內容被 iPhone 底部的 Home Bar (黑線) 擋住 */
         .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
     </style>
 </head>
 <body>
 
-    <!-- PWA 引導安裝提示層 (預設隱藏，透過 JS 判斷顯示) -->
-    <!-- 修改重點：移除關閉按鈕，強制使用者必須安裝才能使用 -->
-    <div id="pwa-prompt" class="fixed inset-0 z-[100] bg-stone-900/95 text-white flex flex-col items-center justify-center p-6 hidden backdrop-blur-sm">
-        <div class="w-full max-w-sm bg-stone-800 rounded-2xl p-6 shadow-2xl border border-stone-700">
-            <div class="flex flex-col items-center text-center mb-6">
-                <!-- 這裡使用預設圖示或文字代替圖片，確保無圖時也有顯示 -->
-                <div class="w-16 h-16 bg-stone-200 rounded-xl mb-4 flex items-center justify-center overflow-hidden">
-                   <img src="Japan.jpg" onerror="this.style.display='none';this.parentElement.innerHTML='🌸'" class="w-full h-full object-cover">
-                </div>
-                <h2 class="text-xl font-bold mb-2">請安裝應用程式</h2>
-                <p class="text-stone-400 text-sm">本應用程式僅支援全螢幕模式。<br>請依照下方指示加入主畫面以繼續使用。</p>
-            </div>
-            
-            <div class="space-y-4">
-                <!-- iOS 教學 -->
-                <div class="flex items-start gap-3 p-3 bg-white/5 rounded-lg border border-white/10">
-                    <div class="text-xl shrink-0">🍎</div>
-                    <div class="text-left">
-                        <h3 class="font-bold text-sm mb-1 text-stone-200">iOS 使用者</h3>
-                        <p class="text-xs text-stone-400 leading-relaxed">
-                            點擊下方工具列的 <span class="inline-block bg-stone-700 px-1 rounded"><i data-lucide="share" class="inline w-3 h-3"></i> 分享</span> 按鈕，然後選擇 <span class="font-bold text-white">「加入主畫面」</span>。
-                        </p>
-                    </div>
-                </div>
-                <!-- Android 教學 -->
-                <div class="flex items-start gap-3 p-3 bg-white/5 rounded-lg border border-white/10">
-                    <div class="text-xl shrink-0">🤖</div>
-                    <div class="text-left">
-                        <h3 class="font-bold text-sm mb-1 text-stone-200">Android 使用者</h3>
-                        <p class="text-xs text-stone-400 leading-relaxed">
-                            點擊瀏覽器選單 <i data-lucide="more-vertical" class="inline w-3 h-3"></i>，選擇 <span class="font-bold text-white">「安裝應用程式」</span> 或 <span class="font-bold text-white">「加入主畫面」</span>。
-                        </p>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- 已移除略過按鈕，強制執行 -->
-        </div>
-    </div>
-
-    <!-- 主應用程式容器 -->
     <div class="h-[100dvh] flex flex-col md:max-w-md md:mx-auto shadow-2xl overflow-hidden relative select-none bg-stone-300">
         
-        <!-- 背景圖層 -->
         <div class="fixed inset-0 z-0 pointer-events-none md:max-w-md md:mx-auto">
             <img src="https://tw.wamazing.com/media/wp-content/uploads/sites/4/2022/12/shigatravel_pixta_62991025_L-853x569.jpg.webp" alt="Shiga Scenery" class="w-full h-full object-cover opacity-90"/>
             <div class="absolute inset-0 bg-stone-300/85 backdrop-blur-[2px]"></div>
         </div>
 
-        <!-- 頂部標題列 -->
-        <div class="shrink-0 bg-white/80 backdrop-blur-md border-b border-stone-200/50 shadow-sm z-50">
+        <div class="shrink-0 bg-white/80 backdrop-blur-md border-b border-stone-200/50 shadow-sm z-50 pt-[env(safe-area-inset-top)]">
             <div class="px-4 py-3 flex justify-between items-center">
                 <div>
                     <h1 class="text-xl font-black tracking-tighter text-indigo-900">KANSAI TRIP</h1>
                     <p class="text-xs text-stone-400 font-medium tracking-widest">DEC 27 - JAN 04</p>
                 </div>
-                <!-- 動態狀態顯示 (天氣/地點) -->
-                <div id="header-status" class="hidden flex items-center gap-2 bg-white/50 px-3 py-1.5 rounded-full border border-stone-100"></div>
+                <div id="header-status" class="hidden flex items-center gap-2 bg-white/50 px-3 py-1.5 rounded-full border border-stone-100">
+                </div>
             </div>
             
-            <!-- 日期滾動條容器 -->
             <div id="date-scroller-container" class="hidden">
-                <div id="date-scroller" class="flex overflow-x-auto gap-3 px-4 pb-3 no-scrollbar snap-x"></div>
+                <div id="date-scroller" class="flex overflow-x-auto gap-3 px-4 pb-3 no-scrollbar snap-x">
+                    </div>
             </div>
         </div>
 
-        <!-- 主要內容區域 -->
-        <div id="main-content" class="flex-1 overflow-y-auto overflow-x-hidden p-4 space-y-4 no-scrollbar overscroll-contain relative z-10 pb-24"></div>
+        <div id="main-content" class="flex-1 overflow-y-auto overflow-x-hidden p-4 space-y-4 no-scrollbar overscroll-contain relative z-10 pb-24">
+            </div>
 
-        <!-- 底部導航列 -->
         <div class="absolute bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-stone-200/50 pb-safe z-50 overflow-x-auto no-scrollbar">
-            <div class="flex justify-between items-center h-16 min-w-max px-2" id="bottom-nav"></div>
+            <div class="flex justify-between items-center h-16 min-w-max px-2" id="bottom-nav">
+                </div>
         </div>
     </div>
 
     <script>
         // ==========================================
         // --- 1. 資料來源 (Source Data) ---
+        // 這是模擬的小型資料庫，所有的行程、航班、飯店資訊都存在這裡
         // ==========================================
         const TRIP_DATA = {
-            // 航班資訊
+            // [航班資訊]
             flights: [
                 { type: "Departure", date: "2025/12/27 (六)", code: "CX564", airline: "國泰航空", route: "TPE 台北 (11:15) ➔ KIX 大阪 (14:55)", terminal: "TPE T1 / KIX T1", duration: "2h 40m", aircraft: "Airbus A330-300", class: "經濟 Q" },
                 { type: "Return", date: "2026/01/04 (日)", code: "CX565", airline: "國泰航空", route: "KIX 大阪 (16:15) ➔ TPE 台北 (18:30)", terminal: "KIX T1 / TPE T1", duration: "3h 25m", aircraft: "Airbus A330-300", class: "經濟 S" }
             ],
-            // 飯店資訊
+            // [飯店資訊]
             hotels: [
                 { name: "草津波士頓廣場飯店", engName: "Hotel Boston Plaza Kusatsu", dates: "12/27 - 1/1 (5晚)", location: "滋賀縣草津市 (JR草津站旁)", features: ["交通便利", "美式風格", "適合自駕"], note: "作為滋賀縣人孔蓋卡收集的基地非常合適。", image: "Boston.jpg" },
                 { name: "REF 京都八條口 by VESSEL HOTELS", engName: "REF Kyoto Hachijoguchi", dates: "1/1 - 1/4 (3晚)", location: "京都市南區 (京都站八條口)", features: ["大浴場", "現代日式", "免費迎賓飲料"], note: "靠近京都車站，方便前往神戶、奈良與回程機場。", image: "Kyoto.jpg" }
             ],
-            // 每日行程細節
+            // [每日行程細節] - 核心資料結構
             itinerary: [
                 { id: "day1", date: "12/27", dayOfWeek: "六", location: "大阪 ➔ 滋賀", weather: "sunny", temp: "8°C", items: [
                     { type: "transport", time: "11:15", title: "搭乘 CX564 飛往大阪", note: "預計 14:55 抵達關西機場 T1" },
@@ -224,7 +178,7 @@
                     { type: "transport", time: "16:15", title: "搭乘 CX565 返台", note: "再見關西！預計 18:30 抵達台北。" }
                 ]}
             ],
-            // 人孔蓋卡收集資訊
+            // [人孔蓋卡收集庫存]
             manholeStock: [
                 { name: "臨空城案內所", region: "大阪", hours: "09:00–20:00", url: "https://www.city.izumisano.lg.jp/kakuka/jogesuidokyoku/jogesui/menu/1511934914176.html" },
                 { name: "大津車站觀光案内所", region: "滋賀", hours: "09:00–18:00", url: "https://www.city.otsu.lg.jp/kigyo/about/koho/68041.html", highlight: true },
@@ -251,7 +205,7 @@
                 { name: "まちの駅かいづか", region: "大阪", hours: "10:00–19:00", url: "https://www.city.kaizuka.lg.jp/kakuka/jogesuido/gesuisuisin/topics/manholucard.html" },
                 { name: "泉佐野市観光情報センター", region: "大阪", hours: "10:00–16:00", url: "https://www.city.izumisano.lg.jp/kakuka/jogesuidokyoku/jogesui/menu/1511934914176.html" },
             ],
-            // 外部地圖連結
+            // [外部地圖連結]
             mapLinks: [
                 { title: "關西周遊路線圖", url: "https://www.surutto.com/kansai_rw/assets/pdf/areamap2024_tw.pdf" },
                 { title: "Osaka Metro路線圖", url: "https://subway.osakametro.co.jp/img/osakametro_rosenzu_20250404.pdf" },
@@ -262,7 +216,7 @@
                 { title: "紀念幣地圖", url: "https://www.stampmedal.com/map.htm" },
                 { title: "永旺夢樂城Kyoto 4F (轉蛋屋)", url: "https://maps.app.goo.gl/8NoQd7g6H5cn7UiG7" }
             ],
-            // 詳細筆記與餐廳
+            // [詳細筆記與餐廳資料]
             notes: [
                 {
                     date: "12/27（六）",
@@ -301,7 +255,7 @@
                     dining: [{ area: "京都 - 嵐山", spots: [{ name: "嵯峨豆腐 稻 本店", cuisine: "豆腐料理/豆皮", hours: "11:00–18:30", mapUrl: "https://maps.app.goo.gl/BBCfdetuL8rNMevf7" }, { name: "蕎麥麵 嵐山よしむら", cuisine: "景觀蕎麥麵", hours: "11:00–16:00", mapUrl: "https://maps.app.goo.gl/p47zjGPbRoUSY4Cp8" }, { name: "鯛匠 HANANA", cuisine: "鯛魚茶泡飯", hours: "11:00–16:30", mapUrl: "https://maps.app.goo.gl/5wxGFRvQ2TwzryT48" }] }]
                 }
             ],
-            // 自駕指南
+            // [自駕指南]
             drivingGuide: {
                 tips: [
                     { title: "右駕左行", content: "日本車輛為右駕，請務必靠左行駛。口訣：「左轉小彎、右轉大彎」。轉彎時請打方向燈（雨刷通常在左邊，方向燈在右邊，小心打錯）。" },
@@ -337,14 +291,16 @@
 
         // ==========================================
         // --- 2. 狀態管理 (State Management) ---
+        // 用來記錄目前使用者停留在哪個頁面 (tab) 和哪一天 (day)
         // ==========================================
         let state = {
-            activeTab: 'itinerary', // 當前標籤頁 (行程, 航班, 自駕等)
-            selectedDayId: 'day1'   // 當前選中的日期 (僅在行程模式下有效)
+            activeTab: 'itinerary', // 當前標籤頁 (預設：行程)
+            selectedDayId: 'day1'   // 當前選中的日期 (預設：第一天)
         };
 
         // ==========================================
         // --- 3. 組件渲染函數 (Component Renderers) ---
+        // 負責將 Data 轉換成 HTML 顯示在畫面上
         // ==========================================
         
         // 輔助函數：生成 Lucide Icon HTML
@@ -352,33 +308,31 @@
             return `<i data-lucide="${name}" class="${classes}" width="${size}" height="${size}"></i>`;
         }
 
-        // 輔助函數：渲染 SVG 交通號誌 (已優化 SVG 代碼結構)
+        // 輔助函數：渲染 SVG 交通號誌 (直接繪製向量圖)
         function renderTrafficSign(type, limit) {
-            const svgBase = (content) => `<svg width="40" height="40" viewBox="0 0 40 40">${content}</svg>`;
             switch(type) {
-                case 'stop': return svgBase(`<polygon points="20,38 2,5 38,5" fill="#ef4444"/><text x="50%" y="35%" dominant-baseline="middle" text-anchor="middle" fill="white" font-size="9" font-weight="bold">止まれ</text><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" fill="white" font-size="6" font-weight="bold">STOP</text>`);
-                case 'slow': return svgBase(`<polygon points="20,38 2,5 38,5" fill="white" stroke="#ef4444" stroke-width="3"/><text x="50%" y="35%" dominant-baseline="middle" text-anchor="middle" fill="#1c1917" font-size="10" font-weight="bold">徐行</text><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" fill="#1c1917" font-size="5" font-weight="bold">SLOW</text>`);
-                case 'no-entry': return svgBase(`<circle cx="20" cy="20" r="18" fill="#ef4444"/><rect x="8" y="17" width="24" height="6" fill="white"/>`);
-                case 'speed': return svgBase(`<circle cx="20" cy="20" r="18" fill="white" stroke="#ef4444" stroke-width="3"/><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" fill="#3b82f6" font-size="16" font-weight="bold">${limit}</text>`);
-                case 'one-way': return svgBase(`<rect x="2" y="8" width="36" height="24" rx="2" fill="#3b82f6"/><path d="M10 20 L24 20 M24 20 L18 14 M24 20 L18 26" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>`);
-                case 'no-parking': return svgBase(`<circle cx="20" cy="20" r="18" fill="#3b82f6" stroke="#ef4444" stroke-width="3"/><line x1="8" y1="8" x2="32" y2="32" stroke="#ef4444" stroke-width="3"/>`);
-                case 'no-uturn': return svgBase(`<circle cx="20" cy="20" r="18" fill="white" stroke="#ef4444" stroke-width="3"/><path d="M24 16 C24 12 16 12 16 16 L16 26" stroke="#3b82f6" stroke-width="3" fill="none"/><polygon points="16,28 12,22 20,22" fill="#3b82f6"/><line x1="8" y1="32" x2="32" y2="8" stroke="#ef4444" stroke-width="3"/>`);
-                case 'pedestrian': return svgBase(`<rect x="4" y="4" width="32" height="32" rx="2" fill="#3b82f6"/><path d="M14 28 L20 12 L26 28 M20 12 L20 10 M14 20 L26 20" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z" fill="white"/>`);
-                case 'construction': return svgBase(`<circle cx="20" cy="20" r="18" fill="white" stroke="#eab308" stroke-width="3"/><path d="M14 28 L20 12 L26 28" stroke="black" stroke-width="2" fill="none"/><line x1="28" y1="28" x2="12" y2="28" stroke="black" stroke-width="2"/><path d="M12 28 q2 -4 4 -4 t4 4" fill="black"/><path d="M26 28 q-2 -4 -4 -4 t-4 4" fill="black"/>`);
-                case 'railroad': return svgBase(`<rect x="20" y="2" width="20" height="20" fill="#eab308" transform="rotate(45 20 20)" rx="2"/><path d="M16 26 L24 26 M18 26 L18 14 L22 14 L22 26" stroke="black" stroke-width="2"/><circle cx="16" cy="26" r="2" fill="black"/><circle cx="24" cy="26" r="2" fill="black"/>`);
+                case 'stop': return `<svg width="40" height="40" viewBox="0 0 40 40"><polygon points="20,38 2,5 38,5" fill="#ef4444" stroke="none"/><text x="50%" y="35%" dominant-baseline="middle" text-anchor="middle" fill="white" font-size="9" font-weight="bold">止まれ</text><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" fill="white" font-size="6" font-weight="bold">STOP</text></svg>`;
+                case 'slow': return `<svg width="40" height="40" viewBox="0 0 40 40"><polygon points="20,38 2,5 38,5" fill="white" stroke="#ef4444" stroke-width="3"/><text x="50%" y="35%" dominant-baseline="middle" text-anchor="middle" fill="#1c1917" font-size="10" font-weight="bold">徐行</text><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" fill="#1c1917" font-size="5" font-weight="bold">SLOW</text></svg>`;
+                case 'no-entry': return `<svg width="40" height="40" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="#ef4444" /><rect x="8" y="17" width="24" height="6" fill="white" /></svg>`;
+                case 'speed': return `<svg width="40" height="40" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="white" stroke="#ef4444" stroke-width="3" /><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" fill="#3b82f6" font-size="16" font-weight="bold">${limit}</text></svg>`;
+                case 'one-way': return `<svg width="40" height="40" viewBox="0 0 40 40"><rect x="2" y="8" width="36" height="24" rx="2" fill="#3b82f6" /><path d="M10 20 L24 20 M24 20 L18 14 M24 20 L18 26" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+                case 'no-parking': return `<svg width="40" height="40" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="#3b82f6" stroke="#ef4444" stroke-width="3" /><line x1="8" y1="8" x2="32" y2="32" stroke="#ef4444" stroke-width="3" /></svg>`;
+                case 'no-uturn': return `<svg width="40" height="40" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="white" stroke="#ef4444" stroke-width="3" /><path d="M24 16 C24 12 16 12 16 16 L16 26" stroke="#3b82f6" stroke-width="3" fill="none" /><polygon points="16,28 12,22 20,22" fill="#3b82f6" /><line x1="8" y1="32" x2="32" y2="8" stroke="#ef4444" stroke-width="3" /></svg>`;
+                case 'pedestrian': return `<svg width="40" height="40" viewBox="0 0 40 40"><rect x="4" y="4" width="32" height="32" rx="2" fill="#3b82f6" /><path d="M14 28 L20 12 L26 28 M20 12 L20 10 M14 20 L26 20" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z" fill="white"/></svg>`;
+                case 'construction': return `<svg width="40" height="40" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="white" stroke="#eab308" stroke-width="3" /><path d="M14 28 L20 12 L26 28" stroke="black" stroke-width="2" fill="none"/><line x1="28" y1="28" x2="12" y2="28" stroke="black" stroke-width="2" /><path d="M12 28 q2 -4 4 -4 t4 4" fill="black" /><path d="M26 28 q-2 -4 -4 -4 t-4 4" fill="black" /></svg>`;
+                case 'railroad': return `<svg width="40" height="40" viewBox="0 0 40 40"><rect x="20" y="2" width="20" height="20" fill="#eab308" transform="rotate(45 20 20)" rx="2" /><path d="M16 26 L24 26 M18 26 L18 14 L22 14 L22 26" stroke="black" stroke-width="2" /><circle cx="16" cy="26" r="2" fill="black" /><circle cx="24" cy="26" r="2" fill="black" /></svg>`;
                 default: return '';
             }
         }
 
         // 輔助函數：渲染天氣圖標
         function renderWeatherIcon(type) {
-            const size = "w-5 h-5";
             switch (type) {
-                case 'sunny': return getIcon('sun', `${size} text-orange-500`);
-                case 'cloudy': return getIcon('cloud', `${size} text-gray-500`);
-                case 'rain': return getIcon('cloud-rain', `${size} text-blue-500`);
-                case 'snow': return getIcon('snowflake', `${size} text-cyan-400`);
-                default: return getIcon('sun', `${size} text-orange-500`);
+                case 'sunny': return getIcon('sun', "w-5 h-5 text-orange-500");
+                case 'cloudy': return getIcon('cloud', "w-5 h-5 text-gray-500");
+                case 'rain': return getIcon('cloud-rain', "w-5 h-5 text-blue-500");
+                case 'snow': return getIcon('snowflake', "w-5 h-5 text-cyan-400");
+                default: return getIcon('sun', "w-5 h-5 text-orange-500");
             }
         }
 
@@ -388,7 +342,7 @@
             let iconColor = "text-stone-400";
             let borderColor = "border-stone-200";
 
-            // 根據類型設定樣式顏色
+            // 根據不同類型 (美食、購物、住宿等) 設定對應的顏色與圖示
             if (item.type === 'food') { iconName = 'utensils'; iconColor = "text-red-400"; borderColor="border-l-red-400"; }
             else if (item.type === 'shop') { iconName = 'shopping-bag'; iconColor = "text-yellow-500"; borderColor="border-l-yellow-500"; }
             else if (item.type === 'visit') { iconName = 'camera'; iconColor = "text-emerald-500"; borderColor="border-l-emerald-500"; }
@@ -410,6 +364,7 @@
             const showNavigation = !titlesWithoutNavigation.includes(item.title) && item.mapUrl !== null;
             const destinationUrl = item.mapUrl || getGoogleMapUrl(item.title);
 
+            // 回傳組合好的 HTML 字串
             return `
             <div class="flex gap-4 p-4 bg-white/95 backdrop-blur-sm rounded-lg border-l-4 shadow-sm mb-3 ${borderColor} active:bg-stone-50 transition-colors">
                 <div class="flex flex-col items-center min-w-[50px]">
@@ -457,7 +412,7 @@
             const currentDayData = TRIP_DATA.itinerary.find(d => d.id === dayId);
             if (!currentDayData) return '';
 
-            // 更新 Header 的狀態 (天氣、地點)
+            // 更新 Header 的狀態 (顯示天氣、溫度、地點)
             const headerStatus = document.getElementById('header-status');
             headerStatus.innerHTML = `
                 ${renderWeatherIcon(currentDayData.weather)}
@@ -582,17 +537,29 @@
                         ${getIcon('car', "text-lime-600", 24)}
                         日本自駕注意事項
                     </h2>
-                    <div class="mb-2">
-                        <img src="car.jpg" alt="Driving Visual Guide" class="w-full h-auto rounded-xl shadow-sm">
+                      <div class="mb-2">
+                    <img 
+                        src="car.jpg" 
+                        alt="Driving Visual Guide" 
+                        class="w-full h-auto rounded-xlGuide" class="w-full h-full object-cover">
                     </div>
-                    <div class="space-y-3">${tipsHtml}</div>
+
+                    <div class="space-y-3">
+                        ${tipsHtml}
+                    </div>
+
                     <div>
                         <h3 class="text-lg font-bold text-stone-700 mb-3 px-1 border-l-4 border-stone-400 pl-2">常用交通號誌</h3>
-                        <div class="grid grid-cols-2 gap-3">${signsHtml}</div>
+                        <div class="grid grid-cols-2 gap-3">
+                            ${signsHtml}
+                        </div>
                     </div>
+
                     <div>
                         <h3 class="text-lg font-bold text-stone-700 mb-3 px-1 border-l-4 border-indigo-400 pl-2">高速公路行駛指南</h3>
-                        <div class="space-y-3">${highwayHtml}</div>
+                        <div class="space-y-3">
+                            ${highwayHtml}
+                        </div>
                     </div>
                 </div>
             `;
@@ -656,7 +623,9 @@
                         ${getIcon('map', "text-emerald-600", 24)}
                         地圖與相關連結
                     </h2>
-                    <div class="space-y-3">${linksHtml}</div>
+                    <div class="space-y-3">
+                        ${linksHtml}
+                    </div>
                 </div>
             `;
         }
@@ -734,7 +703,9 @@
                 return `
                     <div class="bg-white/95 backdrop-blur-sm rounded-xl shadow-sm border border-stone-200 overflow-hidden p-0 border-l-4 border-l-pink-400">
                         <div class="bg-stone-50 px-4 py-2 border-b border-stone-100"><h3 class="font-bold text-stone-800">${day.date}</h3></div>
-                        <div class="p-4 space-y-4">${content}</div>
+                        <div class="p-4 space-y-4">
+                            ${content}
+                        </div>
                     </div>
                 `;
             }).join('');
@@ -764,28 +735,29 @@
 
         // ==========================================
         // --- 4. 主控制邏輯 (Main Controller) ---
+        // 負責協調使用者操作與畫面更新
         // ==========================================
 
-        // 更新主視圖：根據 activeTab 重新渲染內容
+        // 更新主視圖：根據 activeTab (當前分頁) 重新渲染內容
         function updateView() {
             const mainContent = document.getElementById('main-content');
             const scrollerContainer = document.getElementById('date-scroller-container');
             const headerStatus = document.getElementById('header-status');
 
-            // 重置捲軸位置到頂部
+            // 每次切換頁面時，將捲軸重置回到最上方
             mainContent.scrollTop = 0;
 
-            // 渲染指定標籤頁內容
+            // 判斷目前在哪個頁面，決定顯示什麼 HTML
             let contentHtml = '';
             switch(state.activeTab) {
                 case 'itinerary': 
                     contentHtml = renderItineraryView(state.selectedDayId);
-                    scrollerContainer.classList.remove('hidden'); // 顯示日期捲軸
+                    scrollerContainer.classList.remove('hidden'); // 只有行程頁面才顯示日期捲軸
                     updateDateScroller();
                     break;
                 case 'flights': 
                     contentHtml = renderFlightsView();
-                    scrollerContainer.classList.add('hidden');
+                    scrollerContainer.classList.add('hidden'); // 其他頁面隱藏日期捲軸
                     headerStatus.classList.add('hidden');
                     break;
                 case 'driving': 
@@ -812,10 +784,12 @@
                     contentHtml = renderItineraryView(state.selectedDayId);
             }
             
+            // 將生成的 HTML 塞入主畫面，並加上頁尾
             mainContent.innerHTML = contentHtml + renderFooter();
+            // 更新底部導航欄的按鈕狀態 (變色)
             updateBottomNav();
             
-            // 重新初始化圖標 (因為 innerHTML 重繪後圖標會消失，需重新呼叫 Lucide)
+            // 重新初始化圖標 (因為 innerHTML 重繪後，原本的圖標會消失，需重新呼叫 Lucide 函式庫)
             lucide.createIcons();
         }
 
@@ -825,7 +799,7 @@
             
             const buttonsHtml = TRIP_DATA.itinerary.map(day => {
                 const isActive = state.selectedDayId === day.id;
-                // 根據是否選中切換樣式
+                // 根據是否選中，切換按鈕的顏色樣式
                 const activeClasses = isActive 
                     ? "bg-indigo-600/90 backdrop-blur border-indigo-600 text-white shadow-lg shadow-indigo-200" 
                     : "bg-white/60 backdrop-blur border-stone-200 text-stone-400";
@@ -844,7 +818,7 @@
             
             scroller.innerHTML = buttonsHtml;
             
-            // 自動滾動使選中的日期居中
+            // 自動滾動效果：讓選中的日期按鈕自動捲動到畫面中間
             setTimeout(() => {
                 const selectedBtn = document.getElementById(`btn-${state.selectedDayId}`);
                 if (selectedBtn) {
@@ -856,6 +830,7 @@
         // 更新底部導航欄 (Bottom Nav)
         function updateBottomNav() {
             const nav = document.getElementById('bottom-nav');
+            // 定義底部按鈕的設定
             const tabs = [
                 { id: 'itinerary', label: '行程', icon: 'calendar' },
                 { id: 'flights', label: '航班/住宿', icon: 'plane' },
@@ -867,6 +842,7 @@
 
             const html = tabs.map(tab => {
                 const isActive = state.activeTab === tab.id;
+                // 處理按鈕顏色：預設為灰色，選中變深藍色 (除非有指定特殊色)
                 const defaultColor = isActive ? 'text-indigo-600' : 'text-stone-400';
                 const activeColor = (tab.color && isActive) ? tab.color : defaultColor;
                 
@@ -886,39 +862,27 @@
 
         // ==========================================
         // --- 5. 事件處理 (Actions) ---
+        // 接收使用者的點擊行為
         // ==========================================
 
-        // 切換底部標籤頁
+        // 使用者點擊底部導航欄
         function switchTab(tabId) {
             state.activeTab = tabId;
             updateView();
         }
 
-        // 切換日期 (行程模式)
+        // 使用者點擊頂部日期捲軸 (行程模式下)
         function switchDay(dayId) {
             state.selectedDayId = dayId;
             updateView();
         }
 
         // ==========================================
-        // --- 6. PWA 檢測與初始化 (PWA Logic & Init) ---
+        // --- 6. 程式初始化 (Init) ---
+        // 網頁載入完成後執行的第一步
         // ==========================================
-        
-        // 檢查是否為獨立 App 模式
-        function checkPWA() {
-            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || 
-                               window.navigator.standalone === true;
-            
-            // 如果不是 Standalone 模式，則顯示引導提示
-            if (!isStandalone) {
-                document.getElementById('pwa-prompt').classList.remove('hidden');
-            }
-        }
-
         document.addEventListener('DOMContentLoaded', () => {
-            updateView();
-            // 延遲一小段時間後檢查 PWA 狀態，避免畫面閃爍
-            setTimeout(checkPWA, 500);
+            updateView(); // 執行第一次畫面渲染
         });
 
     </script>
