@@ -190,7 +190,7 @@
                     { type: "transport", time: "11:15", title: "搭乘 CX564 飛往大阪", note: "預計 14:55 抵達關西機場 T1。出關後請先至「臨空城」方向移動。" },
                     { type: "visit", time: "15:30", title: "臨空城觀光案內所 (Rinku Machidokoro)", tag: "收集", note: "🔥 位於臨空城車站改札口外，務必先領取人孔蓋卡。營業至22:00 (卡片發放至20:00)。", mapUrl: "https://maps.app.goo.gl/AFLxB4tBLNV1DPb79" },
                     { type: "shop", time: "16:00", title: "臨空城 Outlet (Rinku Premium Outlets)", highlight: "必買: 運動品牌、日系服飾", note: "晚餐建議在此解決 (美食街或海邊餐廳)。營業至20:00。" },
-                    { type: "transport", time: "19:00", title: "前往草津 (JR關空快速+新快速)", note: "關西機場 →(關空快速)→ 大阪站 →(轉乘JR京都線新快速)→ 草津車站。車程約 1小時50分。" },
+                    { type: "transport", time: "19:00", title: "前往草津 (JR關空快速+新快速)", note: "關西機場 →(關空快速)→ 大阪站 →(轉乘JR京都線新快速)→ 草津車站。車程約 1小時50分。", mapUrl: null }, // 移除導航
                     { type: "hotel", time: "21:30", title: "入住：草津波士頓廣場飯店", note: "位於草津站西口，出站即達。Check-in 後請早點休息準備明日自駕。" }
                 ]},
                 { id: "day2", date: "12/28", dayOfWeek: "日", location: "滋賀自駕", weather: "cloudy", temp: "6°C", items: [
@@ -206,12 +206,13 @@
                     { type: "shop", time: "17:30", title: "MITSUI OUTLET PARK 滋賀龍王", highlight: "關西最大級 Outlet", note: "店鋪數多，晚餐推薦在此享用近江牛料理 (如近江牛岡喜)。" }
                 ]},
                 { id: "day3", date: "12/29", dayOfWeek: "一", location: "海之京都", weather: "rain", temp: "4°C", items: [
+                    { type: "transport", time: "06:30", title: "前往伊根灣", note: "從草津波士頓飯店出發 (不需導航)，預計車程約 2.5 小時，09:00 前抵達。", mapUrl: null },
                     { type: "visit", time: "09:00", title: "伊根灣賞景觀光船", highlight: "必拍: 舟屋群 & 餵海鷗", note: "每半小時一班，航程約25分鐘。船上有販售蝦味先可餵食海鷗與老鷹。" },
                     { type: "visit", time: "10:30", title: "道の駅 海の京都 宮津", tag: "收集", note: "位於宮津市區的休息站。內有觀光案內所可領取人孔蓋卡。", mapUrl: "https://maps.app.goo.gl/8o12WE4J7ZNhWoeWA" },
                     { type: "food", time: "12:00", title: "午餐：天橋立 / 宮津周邊", highlight: "必吃: 蛤蠣丼 (Asari Don) 或 海鮮丼", note: "推薦：富田屋 (宮津站前老舖)、Suginoya (天橋立站前)。" },
-                    { type: "visit", time: "13:30", title: "天橋立 傘松公園 (昇龍觀)", highlight: "日本三景", note: "搭乘纜車或吊椅上山，從胯下窺看「飛龍在天」的奇景。" },
+                    { type: "visit", time: "13:30", title: "天橋立 傘松公園 (昇龍觀)", highlight: "日本三景", note: "搭乘纜車或吊椅上山，從胯下窺看「飛龍在天」的奇景。", mapUrl: "https://maps.app.goo.gl/2UTtV1BR6svz4rQa6?g_st=ipc" },
                     { type: "visit", time: "15:00", title: "元伊勢 籠神社 & 智恩寺", note: "籠神社為丹後國一宮。智恩寺供奉文殊菩薩，以「智慧之餅」聞名。" },
-                    { type: "visit", time: "16:00", title: "天橋立 View Land (飛龍觀)", note: "位於車站後方，從另一側看沙洲。注意冬季纜車末班時間 (約16:30-17:00)。" }
+                    { type: "visit", time: "16:00", title: "天橋立 View Land (飛龍觀)", note: "位於車站後方，從另一側看沙洲。注意冬季纜車末班時間 (約16:30-17:00)。", mapUrl: "https://maps.app.goo.gl/jbcSfyaEcciWeSuGA?g_st=ipc" }
                 ]},
                 { id: "day4", date: "12/30", dayOfWeek: "二", location: "長濱/琵琶湖", weather: "cloudy", temp: "5°C", items: [
                     { type: "visit", time: "08:50", title: "竹生島觀光船 (長濱港出發)", note: "前往琵琶湖中的能量景點「竹生島」。請確認船班時間 (冬季班次較少)。" },
@@ -358,7 +359,7 @@
                     { title: "行人優先", content: "斑馬線若有行人準備過馬路，車輛「絕對必須」完全停止讓行。這是日本非常嚴格執行的交通規則。" },
                     { title: "止まれ (Stop)", content: "看到倒三角形的「止まれ」標誌，地面通常也有白色文字，車輪必須「完全停止」運轉，左右確認無車後再開。沒完全煞停若被警察看到會被罰。" },
                     { title: "右轉禮讓", content: "右轉（跨越對向車道）時，必須禮讓直行車與左轉車。若無右轉燈號，需等待空檔或變燈時儘速通過。" },
-                    { title: "平交道", content: "通過平交道前，必須「完全停車」，開窗聽是否有火車聲，確認無誤後才通過。" }
+                    // [移除平交道提示] (依需求調整)
                 ],
                 // [道路標線說明] (新功能 - 擴充版)
                 roadLines: [
@@ -407,6 +408,8 @@
                     }
                 ],
                 // [更新後的交通號誌列表]
+                // 移除：施工、平交道
+                // 新增：指定方向(直行)、駐停車禁止
                 signs: [
                     { label: "一時停止 (Stop)", desc: "務必完全煞停，確認安全後再開。", type: "stop" },
                     { label: "徐行 (Slow)", desc: "減速慢行（通常指10km/h以下），隨時可停車的狀態。", type: "slow" },
@@ -568,7 +571,7 @@
                 iconName = 'bed-double'; iconColor = "text-purple-400"; borderColor="border-l-purple-400"; 
             } else if (item.type === 'transport') {
                 const isFlight = item.title.includes("CX564") || item.title.includes("CX565");
-                const isCarRelated = item.title.includes("租車") || item.title.includes("還車") || item.title.includes("駐車場");
+                const isCarRelated = item.title.includes("租車") || item.title.includes("還車") || item.title.includes("駐車場") || item.title.includes("前往伊根灣");
                 
                 if (isFlight) { 
                     iconName = 'plane'; iconColor = "text-red-500"; borderColor = "border-l-red-500"; 
@@ -874,7 +877,7 @@
                 <div class="animate-fade-in space-y-4 pb-20">
                     <h2 class="text-xl font-bold text-stone-800 px-1 flex items-center gap-2">
                         ${getIcon('credit-card', "text-amber-500", 24)}
-                        マンホールカード 在庫状況
+                        マンホールカード 在庫狀況
                     </h2>
                     <div class="bg-white/95 backdrop-blur-sm rounded-xl shadow-sm border border-stone-200 overflow-hidden p-0">
                         <div class="overflow-x-auto">
@@ -1186,5 +1189,3 @@ class="p-2 bg-blue-50 text-blue-600 rounded-full active:scale-95 hover:bg-blue-1
     </script>
 </body>
 </html>
-
-
