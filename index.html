@@ -360,7 +360,17 @@
                     { title: "右轉禮讓", content: "右轉（跨越對向車道）時，必須禮讓直行車與左轉車。若無右轉燈號，需等待空檔或變燈時儘速通過。" },
                     { title: "平交道", content: "通過平交道前，必須「完全停車」，開窗聽是否有火車聲，確認無誤後才通過。" }
                 ],
-                // [新增：加油指南]
+                // [道路標線說明] (新功能 - 擴充版)
+                roadLines: [
+                    { type: "white-dotted", title: "白色虛線 (White Dotted)", desc: "可變換車道 (Lane Change OK)" },
+                    { type: "white-solid", title: "白色實線 (White Solid)", desc: "可變換車道 (但需注意安全)" },
+                    { type: "orange-solid", title: "橘黃色實線 (Orange Solid)", desc: "🚫 禁止變換車道 (No Lane Change)" },
+                    { type: "double-orange", title: "雙橘實線 (Double Orange)", desc: "⚠️ 嚴禁跨越/迴轉 (Strictly No Crossing)" },
+                    { type: "parking-kei", title: "停車格：軽 (Kei)", desc: "🟡 輕自動車專用 (K-Car Only)" },
+                    { type: "parking-handicap", title: "停車格：身障專用", desc: "♿️ 需有識別證才可停 (Handicapped Only)" },
+                    { type: "road-diamond", title: "菱形標記 (Diamond)", desc: "⚠️ 前方有斑馬線 (Crossing Ahead)" }
+                ],
+                // [加油指南]
                 refueling: [
                     {
                         type: "self",
@@ -396,6 +406,7 @@
                         ]
                     }
                 ],
+                // [更新後的交通號誌列表]
                 signs: [
                     { label: "一時停止 (Stop)", desc: "務必完全煞停，確認安全後再開。", type: "stop" },
                     { label: "徐行 (Slow)", desc: "減速慢行（通常指10km/h以下），隨時可停車的狀態。", type: "slow" },
@@ -405,8 +416,10 @@
                     { label: "駐車禁止", desc: "禁止停車（但可短暫臨時停車上下客）。", type: "no-parking" },
                     { label: "禁止迴轉", desc: "此路段禁止 U-Turn (迴轉)。", type: "no-uturn" },
                     { label: "橫斷步道", desc: "前方有行人穿越道，請減速並禮讓行人。", type: "pedestrian" },
-                    { label: "道路施工", desc: "前方施工中，請依照現場人員指示或徐行通過。", type: "construction" },
-                    { label: "平交道", desc: "前方有鐵路平交道，必須停車查看。", type: "railroad" },
+                    // [新增] 指定方向 (直行)
+                    { label: "指定方向 (直行)", desc: "僅能依箭頭方向行駛 (Only Straight)", type: "only-straight" },
+                    // [新增] 駐停車禁止
+                    { label: "駐停車禁止", desc: "禁止停車與臨時停車 (No Stopping)", type: "no-stopping" },
                 ],
                 highway: [
                     { title: "ETC 車道", content: "租車建議租用 ETC 卡。進入收費站請走紫色「ETC」專用道或「ETC/一般」共用道，減速至 20km/h 以下通過，柵欄升起後再加速。" },
@@ -444,6 +457,51 @@
             return `<i data-lucide="${name}" class="${classes}" width="${size}" height="${size}"></i>`;
         }
 
+        // [新增輔助函式]：繪製道路標線 SVG
+        // 模擬柏油路面背景，並在中間繪製對應類型的車道線與文字
+        function renderRoadLine(type) {
+            const bg = '<rect width="100%" height="100%" fill="#52525b" />'; // zinc-600 (深灰色柏油路)
+            let content = '';
+            
+            switch (type) {
+                case 'white-dotted':
+                    content = '<line x1="0" y1="20" x2="100%" y2="20" stroke="white" stroke-width="4" stroke-dasharray="12,12" />';
+                    break;
+                case 'white-solid':
+                    content = '<line x1="0" y1="20" x2="100%" y2="20" stroke="white" stroke-width="4" />';
+                    break;
+                case 'orange-solid':
+                    content = '<line x1="0" y1="20" x2="100%" y2="20" stroke="#f97316" stroke-width="4" />';
+                    break;
+                case 'double-orange':
+                    content = `
+                        <line x1="0" y1="16" x2="100%" y2="16" stroke="#f97316" stroke-width="3" />
+                        <line x1="0" y1="24" x2="100%" y2="24" stroke="#f97316" stroke-width="3" />
+                    `;
+                    break;
+                case 'parking-kei':
+                    content = `
+                        <rect x="20" y="5" width="30" height="30" fill="none" stroke="#fcd34d" stroke-width="2" />
+                        <text x="35" y="26" text-anchor="middle" fill="#fcd34d" font-size="20" font-weight="bold">軽</text>
+                    `;
+                    break;
+                case 'parking-handicap':
+                    content = `
+                        <rect x="20" y="5" width="30" height="30" rx="4" fill="#3b82f6" />
+                        <path d="M35 12 a3 3 0 1 0 0 6 3 3 0 0 0 0 -6 z M35 20 c-3 0 -5 2 -5 5 h2 c0 -1 1 -2 3 -2 s3 1 3 2 v4 h-2 v-4" stroke="white" stroke-width="2" fill="none" />
+                        <circle cx="35" cy="25" r="4" stroke="white" stroke-width="2" fill="none" />
+                    `;
+                    break;
+                case 'road-diamond':
+                    content = `
+                        <polygon points="35,5 25,20 35,35 45,20" fill="white" />
+                    `;
+                    break;
+            }
+            // preserveAspectRatio="none" 確保 SVG 寬度能自適應容器拉伸 (除了特定圖示保持比例)
+            return `<svg width="100%" height="40" class="rounded-md border border-stone-400 bg-zinc-600">${content}</svg>`;
+        }
+
         // 輔助函式：繪製 SVG 交通號誌
         // [SVG 內嵌優勢]
         // 直接使用 SVG 向量代碼繪製日本交通號誌，優點包括：
@@ -463,8 +521,13 @@
                 case 'no-parking': return `<svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="36" fill="#3b82f6" stroke="#ef4444" stroke-width="6" /><line x1="16" y1="16" x2="64" y2="64" stroke="#ef4444" stroke-width="6" /></svg>`;
                 case 'no-uturn': return `<svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="36" fill="white" stroke="#ef4444" stroke-width="6" /><path d="M48 32 C48 24 32 24 32 32 L32 52" stroke="#3b82f6" stroke-width="6" fill="none" /><polygon points="32,56 24,44 40,44" fill="#3b82f6" /><line x1="16" y1="64" x2="64" y2="16" stroke="#ef4444" stroke-width="6" /></svg>`;
                 case 'pedestrian': return `<svg width="80" height="80" viewBox="0 0 80 80"><rect x="8" y="8" width="64" height="64" rx="4" fill="#3b82f6" /><path d="M28 56 L40 24 L52 56 M40 24 L40 20 M28 40 L52 40" stroke="white" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M40 18a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" fill="white"/></svg>`;
-                case 'construction': return `<svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="36" fill="white" stroke="#eab308" stroke-width="6" /><path d="M14 28 L20 12 L26 28" stroke="black" stroke-width="2" fill="none"/><line x1="28" y1="28" x2="12" y2="28" stroke="black" stroke-width="2" /><path d="M12 28 q2 -4 4 -4 t4 4" fill="black" /><path d="M26 28 q-2 -4 -4 -4 t-4 4" fill="black" /></svg>`;
-                case 'railroad': return `<svg width="80" height="80" viewBox="0 0 80 80"><rect x="40" y="4" width="40" height="40" fill="#eab308" transform="rotate(45 40 40)" rx="4" /><path d="M32 52 L48 52 M36 52 L36 28 L44 28 L44 52" stroke="black" stroke-width="4" /><circle cx="32" cy="52" r="4" fill="black" /><circle cx="48" cy="52" r="4" fill="black" /></svg>`;
+                
+                // [新增] 指定方向 (Only Straight)
+                case 'only-straight': return `<svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="36" fill="#3b82f6" stroke="white" stroke-width="2" /><path d="M40 20 L40 60 M28 32 L40 20 L52 32" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>`;
+                
+                // [新增] 駐停車禁止 (No Stopping)
+                case 'no-stopping': return `<svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="36" fill="#3b82f6" stroke="#ef4444" stroke-width="6" /><line x1="20" y1="20" x2="60" y2="60" stroke="#ef4444" stroke-width="6" /><line x1="60" y1="20" x2="20" y2="60" stroke="#ef4444" stroke-width="6" /></svg>`;
+                
                 default: return '';
             }
         }
@@ -713,6 +776,19 @@
                 </div>
             `).join('');
 
+            // [新增：道路標線渲染]
+            const roadLinesHtml = TRIP_DATA.drivingGuide.roadLines.map(line => `
+                <div class="flex items-center gap-3 bg-white/95 backdrop-blur-sm rounded-xl shadow-sm border border-stone-200 p-3">
+                    <div class="w-16 shrink-0 shadow-inner rounded overflow-hidden">
+                        ${renderRoadLine(line.type)}
+                    </div>
+                    <div>
+                        <div class="font-bold text-stone-800 text-sm">${line.title}</div>
+                        <div class="text-[10px] text-stone-500">${line.desc}</div>
+                    </div>
+                </div>
+            `).join('');
+
             // 渲染 SVG 交通號誌網格
             const signsHtml = TRIP_DATA.drivingGuide.signs.map(sign => `
                 <div class="bg-white/95 backdrop-blur-sm rounded-xl shadow-sm border border-stone-200 overflow-hidden p-3 flex flex-col items-center text-center">
@@ -757,6 +833,14 @@
                         <h3 class="text-lg font-bold text-stone-700 mb-3 px-1 border-l-4 border-indigo-400 pl-2">高速公路行駛指南</h3>
                         <div class="space-y-3">
                             ${highwayHtml}
+                        </div>
+                    </div>
+
+                    <!-- 道路標線區塊 (新增於此) -->
+                    <div>
+                        <h3 class="text-lg font-bold text-stone-700 mb-3 px-1 border-l-4 border-orange-400 pl-2">道路標線辨識</h3>
+                        <div class="space-y-3">
+                            ${roadLinesHtml}
                         </div>
                     </div>
 
