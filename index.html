@@ -93,7 +93,7 @@
             itinerary: [
                 { id: "day1", date: "12/27", dayOfWeek: "六", location: "大阪 ➔ 滋賀", weather: "sunny", temp: "8°C", items: [
                     { type: "transport", time: "11:15", title: "搭乘 CX564 飛往大阪", note: "預計 14:55 抵達關西機場 T1" },
-                    { type: "visit", time: "15:30", title: "臨空城觀光案內所", tag: "收集", note: "領取人孔蓋卡/紀念品。營業至20:00。", mapUrl: "https://maps.app.goo.gl/AFLxB4tBLNV1DPb79" },
+                    { type: "visit", time: "15:30", title: "臨空城觀光案內所", tag: "收集", note: "🔥 領取人孔蓋卡/紀念品。營業至20:00。", mapUrl: "https://maps.app.goo.gl/AFLxB4tBLNV1DPb79" },
                     { type: "shop", time: "16:00", title: "臨空城 Outlet", highlight: "必買: 運動品牌、日系服飾", note: "晚餐可在此解決。營業至20:00。" },
                     { type: "transport", time: "19:00", title: "前往草津", note: "關西機場 → 京都車站 → 草津車站" },
                     { type: "hotel", time: "21:30", title: "入住：草津波士頓廣場飯店", note: "位於草津站西口，休息準備明日自駕。" }
@@ -822,9 +822,9 @@
                 { id: 'itinerary', label: '行程', icon: 'calendar' },
                 { id: 'flights', label: '航班/住宿', icon: 'plane' },
                 { id: 'driving', label: '自駕', icon: 'car', color: 'text-lime-600' },
+                { id: 'manhole', label: '庫存', icon: 'credit-card', sub: 'scale-90' },
                 { id: 'map', label: '地圖', icon: 'map', color: 'text-emerald-600' },
                 { id: 'notes', label: '備註', icon: 'notebook-pen', color: 'text-pink-600' }
-                { id: 'manhole', label: '庫存', icon: 'credit-card', sub: 'scale-90' },
             ];
 
             const html = tabs.map(tab => {
@@ -872,5 +872,3 @@
     </script>
 </body>
 </html>
-
-
