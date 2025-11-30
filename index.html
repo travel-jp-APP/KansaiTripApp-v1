@@ -190,7 +190,7 @@
                     { type: "transport", time: "11:15", title: "搭乘 CX564 飛往大阪", note: "預計 14:55 抵達關西機場 T1。出關後請先至「臨空城」方向移動。" },
                     { type: "visit", time: "15:30", title: "臨空城觀光案內所 (Rinku Machidokoro)", tag: "收集", note: "🔥 位於臨空城車站改札口外，務必先領取人孔蓋卡。營業至22:00 (卡片發放至20:00)。", mapUrl: "https://maps.app.goo.gl/AFLxB4tBLNV1DPb79" },
                     { type: "shop", time: "16:00", title: "臨空城 Outlet (Rinku Premium Outlets)", highlight: "必買: 運動品牌、日系服飾", note: "晚餐建議在此解決 (美食街或海邊餐廳)。營業至20:00。" },
-                    { type: "transport", time: "19:00", title: "前往草津 (JR關空快速+新快速)", note: "關西機場 →(關空快速)→ 大阪站 →(轉乘JR京都線新快速)→ 草津車站。車程約 1小時50分。", mapUrl: null }, // 移除導航
+                    { type: "transport", time: "19:00", title: "前往草津 (JR關空快速+新快速)", note: "關西機場 →(關空快速)→ 大阪站 →(轉乘JR京都線新快速)→ 草津車站。車程約 1小時50分。", mapUrl: null }, 
                     { type: "hotel", time: "21:30", title: "入住：草津波士頓廣場飯店", note: "位於草津站西口，出站即達。Check-in 後請早點休息準備明日自駕。" }
                 ]},
                 { id: "day2", date: "12/28", dayOfWeek: "日", location: "滋賀自駕", weather: "cloudy", temp: "6°C", items: [
@@ -202,7 +202,6 @@
                     { type: "visit", time: "13:00", title: "東近江市役所 (假日：守衛室)", tag: "收集", note: "假日需至市役所「宿直室 (守衛室)」領取。請導航至東近江市役所本廳。", mapUrl: "https://www.google.com/maps/search/?api=1&query=東近江市役所" },
                     { type: "visit", time: "14:00", title: "彥根市上下水道中心 (假日窗口)", tag: "收集", note: "假日需按門鈴請守衛開門領取。非一般觀光案內所，請注意位置。", mapUrl: "https://maps.app.goo.gl/mVScUD8s72aGcQTF9" },
                     { type: "visit", time: "14:30", title: "Hikonyan Museum (彥根貓博物館)", highlight: "必看: 彥根貓表演", note: "🔥 位於彥根城旁。請事先查詢彥根貓 (Hikonyan) 登場時間。", mapUrl: "https://maps.app.goo.gl/kkbKSaDFaAikUWC89" },
-                    { type: "visit", time: "15:30", title: "彥根城 (國寶五城)", highlight: "現存天守", note: "日本僅存五座國寶天守之一。可登上天守閣眺望琵琶湖。", mapUrl: "https://maps.app.goo.gl/oQ6LteKGpyHSDj7s5" },
                     { type: "shop", time: "17:30", title: "MITSUI OUTLET PARK 滋賀龍王", highlight: "關西最大級 Outlet", note: "店鋪數多，晚餐推薦在此享用近江牛料理 (如近江牛岡喜)。" }
                 ]},
                 { id: "day3", date: "12/29", dayOfWeek: "一", location: "海之京都", weather: "rain", temp: "4°C", items: [
@@ -218,15 +217,17 @@
                     { type: "visit", time: "08:50", title: "竹生島觀光船 (長濱港出發)", note: "前往琵琶湖中的能量景點「竹生島」。請確認船班時間 (冬季班次較少)。" },
                     { type: "visit", time: "10:00", title: "竹生島 寶嚴寺 & 都久夫須麻神社", highlight: "投擲瓦片祈福", note: "參拜弁財天。必試「瓦片投擲 (Kawarake Nage)」，投過鳥居可心想事成。" },
                     { type: "visit", time: "12:00", title: "黑壁廣場 (黑壁Square)", highlight: "大正浪漫老街", note: "以玻璃工藝聞名。必吃：96Cafe 黑咖哩、翼果樓 燒鯖魚素麵。" },
-                    { type: "visit", time: "14:30", title: "多賀大社", highlight: "長壽祈願", note: "滋賀縣第一大社，通稱「多賀公」。門口必買名產「糸切餅」。" },
-                    { type: "visit", time: "16:00", title: "近江神宮", highlight: "花牌情緣聖地", note: "競技歌牌 (百人一首) 的殿堂。建築風格為昭和造，朱紅美麗。" }
+                    // 多賀大社已移至 12/31
+                    { type: "visit", time: "14:30", title: "近江神宮", highlight: "花牌情緣聖地", note: "競技歌牌 (百人一首) 的殿堂。建築風格為昭和造，朱紅美麗。" }
                 ]},
                 { id: "day5", date: "12/31", dayOfWeek: "三", location: "近江八幡", weather: "snow", temp: "3°C", items: [
-                    { type: "transport", time: "08:00", title: "前往日牟禮八幡宮前停車場", note: "建議停在「日牟禮八幡宮」附近的免費停車場，或八幡公園停車場。", mapUrl: "https://maps.app.goo.gl/Sk3cyrf86bb4MXxx7?g_st=ipc" },
-                    { type: "visit", time: "09:00", title: "八幡山纜車 & 八幡山城跡", note: "搭纜車上山，可俯瞰琵琶湖、西之湖與近江八幡棋盤狀市景。", mapUrl: "https://www.google.com/maps/search/?api=1&query=八幡山纜車" },
-                    { type: "visit", time: "10:30", title: "八幡堀水鄉漫遊", highlight: "時代劇取景地", note: "沿著護城河散步或搭乘手搖船，感受江戶風情。" },
-                    { type: "visit", time: "12:30", title: "La Collina 近江八幡 (Club Harie)", highlight: "童話草屋甜點殿堂", note: "建築大師藤森照信設計。必吃：現烤年輪蛋糕 (Baumkuchen)。人潮眾多請預留排隊時間。" },
-                    { type: "food", time: "17:00", title: "跨年晚餐 (除夕)", note: "建議提前預訂餐廳，或在平和堂/超市購買壽司、熟食回飯店享用。日本餐廳除夕通常早關門。", mapUrl: null },
+                    { type: "visit", time: "08:30", title: "彥根城 (國寶五城)", highlight: "現存天守", note: "日本僅存五座國寶天守之一。可登上天守閣眺望琵琶湖。", mapUrl: "https://maps.app.goo.gl/oQ6LteKGpyHSDj7s5" },
+                    { type: "visit", time: "10:30", title: "多賀大社", highlight: "長壽祈願", note: "從彥根城出發約20分車程。滋賀縣第一大社，通稱「多賀公」。門口必買名產「糸切餅」。", mapUrl: "https://maps.app.goo.gl/TagaTaisha" },
+                    { type: "transport", time: "12:00", title: "前往近江八幡", note: "從多賀大社前往近江八幡，車程約 40 分鐘。", mapUrl: "https://maps.app.goo.gl/Sk3cyrf86bb4MXxx7?g_st=ipc" },
+                    { type: "visit", time: "13:00", title: "八幡山纜車 & 八幡山城跡", note: "搭纜車上山，可俯瞰琵琶湖、西之湖與近江八幡棋盤狀市景。", mapUrl: "https://www.google.com/maps/search/?api=1&query=八幡山纜車" },
+                    { type: "visit", time: "14:30", title: "八幡堀水鄉漫遊", highlight: "時代劇取景地", note: "沿著護城河散步或搭乘手搖船，感受江戶風情。" },
+                    { type: "visit", time: "16:00", title: "La Collina 近江八幡 (Club Harie)", highlight: "童話草屋甜點殿堂", note: "建築大師藤森照信設計。必吃：現烤年輪蛋糕 (Baumkuchen)。" },
+                    { type: "food", time: "17:30", title: "跨年晚餐 (除夕)", note: "建議提前預訂餐廳，或在平和堂/超市購買壽司、熟食回飯店享用。日本餐廳除夕通常早關門。", mapUrl: null },
                     { type: "transport", time: "20:00", title: "還車：Toyota Rent a Car 草津站前", note: "⚠️ 務必於 20:00 前完成加油與還車手續，結束自駕行程。", mapUrl: "https://maps.app.goo.gl/49vueN16a8RcXojK7" },
                     { type: "visit", time: "23:00", title: "跨年參拜 (除夜之鐘)", note: "可至附近的草津八幡宮或立木神社聆聽除夜鐘聲。" }
                 ]},
@@ -235,19 +236,26 @@
                     { type: "visit", time: "10:30", title: "生田神社 (初詣)", highlight: "戀愛結緣", note: "神戶最古老神社之一。新年參拜人潮眾多，請有排隊心理準備。", mapUrl: "https://maps.app.goo.gl/Qp6xcnbq8jurtKjr7" },
                     { type: "visit", time: "12:00", title: "北野異人館街 & 北野天滿神社", note: "參觀風見雞之館(外觀)，並至高點的天滿神社祈求學業，俯瞰神戶港。" },
                     { type: "visit", time: "13:00", title: "神戶港 / 美利堅公園 / BE KOBE", note: "神戶塔(整修中請確認)、BE KOBE 地標拍照。", mapUrl: "https://maps.app.goo.gl/UYp8chLFqd5stcB77" },
-                    { type: "visit", time: "14:00", title: "神戶機場 綜合案內所", tag: "收集", note: "搭乘 Port Liner 電車至神戶機場。領取神戶人孔蓋卡。", mapUrl: "https://maps.app.goo.gl/NNi4QQFVeQrsUWkb9" },
-                    { type: "visit", time: "16:30", title: "大鳥大社 (大阪堺市)", tag: "收集", note: "若時間允許，順路至鳳車站附近的案內所/大社領取。", mapUrl: "https://maps.app.goo.gl/kyxyYjHMVcdGzBZg6?g_st=ipc" },
-                    { type: "shop", time: "18:30", title: "寶可夢中心 大阪店 DX (大丸心齋橋9F)", highlight: "必買: 限定商品", note: "營業時間通常至20:00 (新年請確認)。晚餐可於心齋橋/道頓堀解決。", mapUrl: "https://maps.app.goo.gl/6XNEnaevDXWHBe1q9" },
-                    { type: "shop", time: "20:00", title: "寶可夢中心 大阪 (大丸梅田13F)", highlight: "注意營業時間", note: "⚠️ 兩家寶可夢中心皆約 20:00 打烊，建議依當下位置擇一前往。", mapUrl: "https://www.google.com/maps/search/?api=1&query=寶可夢中心+梅田" }
+                    { type: "visit", time: "14:00", title: "神戶機場 綜合案內所", tag: "收集", note: "搭乘 Port Liner 電車至神戶機場。領取神戶人孔蓋卡。", mapUrl: "https://maps.app.goo.gl/NNi4QQFVeQrsUWkb9" }
+                    // 後續三個行程已移至 1/2
                 ]},
                 { id: "day7", date: "1/2", dayOfWeek: "五", location: "奈良/宇治", weather: "sunny", temp: "6°C", items: [
                     { type: "visit", time: "08:30", title: "春日大社", highlight: "鹿與燈籠", note: "參道上有許多鹿群。春日大社的燈籠與朱紅迴廊非常美麗。" },
                     { type: "food", time: "11:00", title: "水谷茶屋", highlight: "茅草屋茶屋", note: "位於春日大社與若草山之間。必點：蕨餅、烏龍麵。拍照超美。" },
                     { type: "visit", time: "12:30", title: "東大寺 & 二月堂", highlight: "世界遺產", note: "大佛殿看世界最大青銅佛像。推薦走上二月堂，免費且可俯瞰奈良盆地。", mapUrl: "https://maps.app.goo.gl/uV4YfjDbdyKA6kJ36?g_st=ipc" },
+                    // [新增] 東大寺
+                    { type: "visit", time: "13:00", title: "東大寺", note: "大佛殿參拜。", mapUrl: "https://maps.app.goo.gl/uV4YfjDbdyKA6kJ36?g_st=ipc" },
                     { type: "visit", time: "13:30", title: "御霊神社 (奈良町)", note: "位於奈良町內的老街區，可順道散步。", mapUrl: "https://maps.app.goo.gl/H4zGYhXNHFs1SHbG7" },
                     { type: "visit", time: "14:30", title: "奈良町南観光案内所 (鹿之舟)", tag: "收集", note: "領取奈良市人孔蓋卡。建築本身也是景點。" },
-                    { type: "visit", time: "15:30", title: "宇治市観光センター", tag: "收集", note: "搭乘JR奈良線至宇治。領取宇治人孔蓋卡。中心內有免費茶水。" },
-                    { type: "shop", time: "16:30", title: "吉伊卡哇 (Chiikawa) 伏見店", highlight: "京都限定周邊", note: "Mogumogu 本舖。位於伏見稻荷大社附近，必買伏見稻荷限定狐狸造型周邊。" }
+                    
+                    // [時間重新計算] 不含備案
+                    { type: "visit", time: "16:30", title: "大鳥大社 (大阪堺市)", tag: "收集", note: "注意：時間可能較晚，請確認營業時間。若來不及可僅參拜。", mapUrl: "https://maps.app.goo.gl/kyxyYjHMVcdGzBZg6?g_st=ipc" },
+                    { type: "shop", time: "18:00", title: "寶可夢中心 大阪店 DX (大丸心齋橋9F)", highlight: "必買: 限定商品", note: "營業時間通常至20:00 (新年請確認)。晚餐可於心齋橋/道頓堀解決。", mapUrl: "https://maps.app.goo.gl/6XNEnaevDXWHBe1q9" },
+                    { type: "shop", time: "19:30", title: "寶可夢中心 大阪 (大丸梅田13F)", highlight: "注意營業時間", note: "⚠️ 兩家寶可夢中心皆約 20:00 打烊，時間較趕，建議依當下位置擇一前往。", mapUrl: "https://www.google.com/maps/search/?api=1&query=寶可夢中心+梅田" },
+                    
+                    // [備案] 移除時間
+                    { type: "visit", time: "", title: "宇治市観光センター", tag: "備案", note: "搭乘JR奈良線至宇治。領取宇治人孔蓋卡。中心內有免費茶水。" },
+                    { type: "shop", time: "", title: "吉伊卡哇 (Chiikawa) 伏見店", tag: "備案", highlight: "京都限定周邊", note: "Mogumogu 本舖。位於伏見稻荷大社附近，必買伏見稻荷限定狐狸造型周邊。" }
                 ]},
                 { id: "day8", date: "1/3", dayOfWeek: "六", location: "京都巡禮", weather: "cloudy", temp: "5°C", items: [
                     { type: "visit", time: "08:30", title: "天龍寺 (嵐山)", highlight: "曹源池庭園", note: "世界遺產。建議開門即入園，避開人潮，欣賞借景嵐山的庭園之美。" },
@@ -280,7 +288,7 @@
                 { name: "栗東市立図書館", region: "滋賀", hours: "10:00–17:00", url: "https://www.city.ritto.lg.jp/soshiki/jogeuido/jogesuido/oshirase/7224.html", highlight: true },
                 { name: "守山市駅前総合案内所", region: "滋賀", hours: "07:30–19:30", url: "https://www.city.moriyama.lg.jp/kurashitetsuzuki/jougesuido/1001701/1008797.html" },
                 { name: "八日市駅前観光交流施設", region: "滋賀", hours: "10:00–17:00", url: "https://www.city.higashiomi.shiga.jp/kurashi_tetsuzuki/jougesuidou/1008975/1009690.html" },
-                { name: "東近江市役所 守衛室", region: "滋賀", hours: "10:00–16:00", url: "https://www.city.higashiomi.shiga.jp/kurashi_tetsuzuki/jougesuidou/1008975/1008976.html", highlight: false },
+                { name: "東近江市役所 守衛室", region: "滋賀", hours: "10:00–16:00", url: "https://www.city.higashiomi.shiga.jp/kurashi_tetsuzuki/jougesuidou/1008975/1009690.html", highlight: false },
                 { name: "豊郷町観光案内所", region: "滋賀", hours: "09:00–17:00", url: "https://www.town.toyosato.shiga.jp/0000001749.html", highlight: true },
                 { name: "彥根市上下水道料金お客様サービスセンター", region: "滋賀", hours: "09:00–17:00", url: "https://www.city.hikone.lg.jp/kakuka/jogesuido/2/2219.html" },
                 { name: "ひこね食賓館四番町ダイニング", region: "滋賀", hours: "10:00–17:00", url: "https://www.city.hikone.lg.jp/kakuka/jogesuido/2/2219.html" },
@@ -331,7 +339,7 @@
                 },
                 {
                     date: "12/30 (二)",
-                    dining: [{ area: "滋賀 - 長濱", spots: [{ name: "翼果樓 (Yokarou)", cuisine: "燒鯖魚素麵 (Yakisaba Somen)", hours: "10:30–15:00", note: "長濱必吃名物！將燒烤過的鯖魚與素麵一同燉煮，鹹甜入味，位於黑壁廣場內的老屋餐廳。", mapUrl: "https://maps.app.goo.gl/M2b1zmTJekofTqZ8A" }, { name: "96CAFE (Kurokabe)", cuisine: "黑咖哩 / 黑霜淇淋", hours: "11:00–17:30", note: "黑壁廣場名物。使用竹炭製作的黑色咖哩飯與黑色霜淇淋，視覺效果十足。", mapUrl: "https://maps.app.goo.gl/MiHw3RWh5FEupBd89" }, { name: "芋平長浜店", cuisine: "芋頭金鍔燒", hours: "10:00–17:00", note: "現烤的番薯/芋頭甜點，散步美食。", mapUrl: "https://maps.app.goo.gl/p9WPAwh6gVX1eSdK7" }, { name: "炭火焼うなぎ料理 ざいもん (Zaimon)", cuisine: "鰻魚飯", hours: "11:00–14:00, 17:00–21:00", note: "使用炭火燒烤的關西風鰻魚飯，皮脆肉嫩。", mapUrl: "https://maps.app.goo.gl/2b38CdtSP6qpMFhT8" }, { name: "らうめん屋台屋", cuisine: "拉麵", hours: "請確認營業時間", note: "當地人氣拉麵店。", mapUrl: "https://maps.app.goo.gl/N33eYkm1SyxYhyoHA" }] }]
+                    dining: [{ area: "滋賀 - 長濱", spots: [{ name: "翼果樓 (Yokarou)", cuisine: "燒鯖魚素麵 (Yakisaba Somen)", hours: "10:30–15:00", note: "長濱必吃名物！將燒烤過的鯖魚與素麵一同燉煮，鹹甜入味，位於黑壁廣場內的老屋餐廳。", mapUrl: "https://maps.app.goo.gl/M2b1zmTJekofTqZ8A" }, { name: "96CAFE (Kurokabe)", cuisine: "黑咖哩 / 黑霜淇淋", hours: "11:00–17:30", note: "黑壁廣場名物。使用竹炭製作的黑色咖哩飯與黑色霜淇淋，視覺效果十足。", mapUrl: "https://maps.app.goo.gl/MiHw3RWh5FEupBd89" }, { name: "芋平長浜店", cuisine: "芋頭金鍔燒", hours: "10:00–17:00", note: "現烤的番薯/芋頭甜點，散步美食。", mapUrl: "https://maps.app.goo.gl/p9WPAwh6gVX1eSdK7" }, { name: "炭火焼うなぎ料理 ざいもん (Zaimon)", cuisine: "鰻魚飯", hours: "11:00–14:00, 17:00–21:00", note: "使用炭火燒烤的關西風鰻魚飯，皮脆肉嫩。", mapUrl: "https://maps.app.goo.gl/2b38CdtSP6qpMFhT8" }, { name: "らうめん屋台屋", cuisine: "拉麵", hours: "", note: "當地人氣拉麵店。", mapUrl: "https://maps.app.goo.gl/N33eYkm1SyxYhyoHA" }] }]
                 },
                 {
                     date: "12/31 (三)",
@@ -368,8 +376,8 @@
                     { type: "orange-solid", title: "橘黃色實線 (Orange Solid)", desc: "🚫 禁止變換車道 (No Lane Change)" },
                     { type: "double-orange", title: "雙橘實線 (Double Orange)", desc: "⚠️ 嚴禁跨越/迴轉 (Strictly No Crossing)" },
                     { type: "parking-kei", title: "停車格：軽 (Kei)", desc: "🟡 輕自動車專用 (K-Car Only)" },
-                    { type: "parking-handicap", title: "停車格：身障專用", desc: "♿️ 需有識別證才可停 (Handicapped Only)" },
-                    { type: "road-diamond", title: "菱形標記 (Diamond)", desc: "⚠️ 前方有斑馬線 (Crossing Ahead)" }
+                    // [移除] 停車格：身障專用
+                    // [移除] 菱形標記
                 ],
                 // [加油指南]
                 refueling: [
@@ -408,8 +416,8 @@
                     }
                 ],
                 // [更新後的交通號誌列表]
-                // 移除：施工、平交道
-                // 新增：指定方向(直行)、駐停車禁止
+                // 移除：施工、平交道、橫斷步道、注意危險 (!)
+                // 新增：指定方向(直行)、駐停車禁止、禁止右轉
                 signs: [
                     { label: "一時停止 (Stop)", desc: "務必完全煞停，確認安全後再開。", type: "stop" },
                     { label: "徐行 (Slow)", desc: "減速慢行（通常指10km/h以下），隨時可停車的狀態。", type: "slow" },
@@ -418,11 +426,15 @@
                     { label: "單行道", desc: "僅能依箭頭方向行駛。", type: "one-way" },
                     { label: "駐車禁止", desc: "禁止停車（但可短暫臨時停車上下客）。", type: "no-parking" },
                     { label: "禁止迴轉", desc: "此路段禁止 U-Turn (迴轉)。", type: "no-uturn" },
-                    { label: "橫斷步道", desc: "前方有行人穿越道，請減速並禮讓行人。", type: "pedestrian" },
+                    // [移除] 橫斷步道
+                    // [移除] 禁止右轉 (No Right Turn)
+                    
                     // [新增] 指定方向 (直行)
                     { label: "指定方向 (直行)", desc: "僅能依箭頭方向行駛 (Only Straight)", type: "only-straight" },
                     // [新增] 駐停車禁止
                     { label: "駐停車禁止", desc: "禁止停車與臨時停車 (No Stopping)", type: "no-stopping" },
+                    // [新增] 禁止超車
+                    { label: "禁止超車", desc: "禁止超車 (Overtaking Prohibited)", type: "no-overtaking" }
                 ],
                 highway: [
                     { title: "ETC 車道", content: "租車建議租用 ETC 卡。進入收費站請走紫色「ETC」專用道或「ETC/一般」共用道，減速至 20km/h 以下通過，柵欄升起後再加速。" },
@@ -483,21 +495,10 @@
                     `;
                     break;
                 case 'parking-kei':
+                    // [修正] 置中：使用 x=50% + text-anchor="middle" + translate
                     content = `
-                        <rect x="20" y="5" width="30" height="30" fill="none" stroke="#fcd34d" stroke-width="2" />
-                        <text x="35" y="26" text-anchor="middle" fill="#fcd34d" font-size="20" font-weight="bold">軽</text>
-                    `;
-                    break;
-                case 'parking-handicap':
-                    content = `
-                        <rect x="20" y="5" width="30" height="30" rx="4" fill="#3b82f6" />
-                        <path d="M35 12 a3 3 0 1 0 0 6 3 3 0 0 0 0 -6 z M35 20 c-3 0 -5 2 -5 5 h2 c0 -1 1 -2 3 -2 s3 1 3 2 v4 h-2 v-4" stroke="white" stroke-width="2" fill="none" />
-                        <circle cx="35" cy="25" r="4" stroke="white" stroke-width="2" fill="none" />
-                    `;
-                    break;
-                case 'road-diamond':
-                    content = `
-                        <polygon points="35,5 25,20 35,35 45,20" fill="white" />
+                        <rect x="50%" y="5" width="30" height="30" transform="translate(-15, 0)" fill="none" stroke="#fcd34d" stroke-width="2" />
+                        <text x="50%" y="26" text-anchor="middle" fill="#fcd34d" font-size="20" font-weight="bold">軽</text>
                     `;
                     break;
             }
@@ -520,16 +521,22 @@
                 case 'slow': return `<svg width="80" height="80" viewBox="0 0 80 80"><polygon points="40,76 4,10 76,10" fill="white" stroke="#ef4444" stroke-width="6"/><text x="50%" y="35%" dominant-baseline="middle" text-anchor="middle" fill="#1c1917" font-size="20" font-weight="bold">徐行</text><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" fill="#1c1917" font-size="10" font-weight="bold">SLOW</text></svg>`;
                 case 'no-entry': return `<svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="36" fill="#ef4444" /><rect x="16" y="34" width="48" height="12" fill="white" /></svg>`;
                 case 'speed': return `<svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="36" fill="white" stroke="#ef4444" stroke-width="6" /><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" fill="#3b82f6" font-size="32" font-weight="bold">${limit}</text></svg>`;
-                case 'one-way': return `<svg width="80" height="80" viewBox="0 0 80 80"><rect x="4" y="16" width="72" height="48" rx="4" fill="#3b82f6" /><path d="M20 40 L48 40 M48 40 L36 28 M48 40 L36 52" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+                case 'one-way': 
+                    // [修正] 箭頭置中：
+                    // 背景寬 72, 中心 36+4=40. 箭頭長度 28 (54-26).
+                    // 起點 26, 終點 54. 
+                    return `<svg width="80" height="80" viewBox="0 0 80 80"><rect x="4" y="16" width="72" height="48" rx="4" fill="#3b82f6" /><path d="M26 40 L54 40 M54 40 L42 28 M54 40 L42 52" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
                 case 'no-parking': return `<svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="36" fill="#3b82f6" stroke="#ef4444" stroke-width="6" /><line x1="16" y1="16" x2="64" y2="64" stroke="#ef4444" stroke-width="6" /></svg>`;
                 case 'no-uturn': return `<svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="36" fill="white" stroke="#ef4444" stroke-width="6" /><path d="M48 32 C48 24 32 24 32 32 L32 52" stroke="#3b82f6" stroke-width="6" fill="none" /><polygon points="32,56 24,44 40,44" fill="#3b82f6" /><line x1="16" y1="64" x2="64" y2="16" stroke="#ef4444" stroke-width="6" /></svg>`;
-                case 'pedestrian': return `<svg width="80" height="80" viewBox="0 0 80 80"><rect x="8" y="8" width="64" height="64" rx="4" fill="#3b82f6" /><path d="M28 56 L40 24 L52 56 M40 24 L40 20 M28 40 L52 40" stroke="white" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M40 18a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" fill="white"/></svg>`;
                 
                 // [新增] 指定方向 (Only Straight)
                 case 'only-straight': return `<svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="36" fill="#3b82f6" stroke="white" stroke-width="2" /><path d="M40 20 L40 60 M28 32 L40 20 L52 32" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>`;
                 
                 // [新增] 駐停車禁止 (No Stopping)
                 case 'no-stopping': return `<svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="36" fill="#3b82f6" stroke="#ef4444" stroke-width="6" /><line x1="20" y1="20" x2="60" y2="60" stroke="#ef4444" stroke-width="6" /><line x1="60" y1="20" x2="20" y2="60" stroke="#ef4444" stroke-width="6" /></svg>`;
+
+                // [新增] 禁止超車 (No Overtaking)
+                case 'no-overtaking': return `<svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="36" fill="white" stroke="#ef4444" stroke-width="6" /><text x="50%" y="32" text-anchor="middle" fill="#3b82f6" font-size="20" font-weight="bold">追越</text><text x="50%" y="58" text-anchor="middle" fill="#3b82f6" font-size="20" font-weight="bold">禁止</text></svg>`;
                 
                 default: return '';
             }
@@ -595,12 +602,16 @@
             const showNavigation = !titlesWithoutNavigation.includes(item.title) && item.mapUrl !== null;
             const destinationUrl = item.mapUrl || getGoogleMapUrl(item.title);
 
+            // [時間顯示邏輯優化]
+            // 若 item.time 為空字串，則不渲染時間文字 span，避免空白佔位
+            const timeHtml = item.time ? `<span class="text-sm font-bold text-stone-600 font-mono">${item.time}</span>` : '';
+
             // 回傳 Template Literal (樣板字串) HTML：使用反引號 (`) 包裹，允許換行與變數插入 (${})
             return `
             <div class="flex gap-4 p-4 bg-white/95 backdrop-blur-sm rounded-lg border-l-4 shadow-sm mb-3 ${borderColor} active:bg-stone-50 transition-colors">
                 <!-- 左側欄位：時間與類型圖標 -->
                 <div class="flex flex-col items-center min-w-[50px]">
-                    <span class="text-sm font-bold text-stone-600 font-mono">${item.time}</span>
+                    ${timeHtml}
                     <div class="mt-2 p-1.5 rounded-full bg-stone-50 ${iconColor}">
                         ${getIcon(iconName, "", 18)}
                     </div>
@@ -632,7 +643,7 @@
                     <!-- 標籤 (Tag) 顯示 -->
                     ${item.tag ? `
                         <div class="mt-1">
-                            <span class="text-[10px] px-2 py-0.5 rounded-full border font-medium mr-2 ${isCollection ? "border-amber-400 text-amber-600 bg-amber-50" : "border-stone-300 text-stone-500"}">
+                            <span class="text-[10px] px-2 py-0.5 rounded-full border font-medium mr-2 ${isCollection ? "border-amber-400 text-amber-600 bg-amber-50" : (item.tag === '備案' ? "border-stone-400 text-stone-500 bg-stone-100" : "border-stone-300 text-stone-500")}">
                                 ${item.tag}
                             </span>
                         </div>` : ''}
@@ -1189,3 +1200,5 @@ class="p-2 bg-blue-50 text-blue-600 rounded-full active:scale-95 hover:bg-blue-1
     </script>
 </body>
 </html>
+
+
