@@ -16,30 +16,22 @@
         [iOS PWA (Progressive Web App) 核心設定]
         - apple-mobile-web-app-capable: "yes" 宣告此網頁支援 Web App 模式。當使用者將網頁「加入主畫面」後，開啟時將移除瀏覽器網址列與工具列，提供沉浸式體驗。
         - apple-mobile-web-app-status-bar-style: 控制 iOS 頂部狀態列 (顯示時間、電量處) 的文字顏色風格。
-          - 'default': 白色背景，黑色文字。
-          - 'black': 黑色背景，白色文字。
-          - 'black-translucent': 內容會延伸至狀態列下方 (全螢幕)，狀態列文字為白色。
-        - apple-mobile-web-app-title: 定義 App Icon 在主畫面上顯示的簡短名稱。
     -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Kansai Trip">
     
-    <!-- 網站識別圖示 (Favicon & iOS Touch Icon) -->
-    <!-- rel="apple-touch-icon": 當使用者將網頁加入 iOS 主畫面時，會使用此圖片作為 App Icon -->
+    <!-- 網站識別圖示 -->
     <link rel="apple-touch-icon" href="Japan.jpg">
     <link rel="icon" href="Japan.jpg">
     
-    <!-- 引入 Tailwind CSS (Utility-First CSS 框架) -->
-    <!-- 直接透過 CDN 引入，用於快速構建樣式，無需撰寫大量自定義 CSS -->
+    <!-- 引入 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- 引入 Google Fonts -->
-    <!-- 'Dancing Script': 用於簽名檔的手寫風格字體，增加視覺層次 -->
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
     
     <!-- 引入 Lucide Icons -->
-    <!-- 輕量級 SVG 圖標庫，透過 data-lucide 屬性在執行時期動態生成 SVG -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
@@ -50,61 +42,39 @@
             width: 100%;
             height: 100%;
             overflow: hidden; /* 禁止最外層的文件捲動 */
-            position: fixed;  /* 強制鎖定頁面位置，防止橡皮筋效果回彈時的凍結 */
+            position: fixed;  /* 強制鎖定頁面位置 */
         }
 
         body {
-            /* [字體堆疊策略 Font Stack] */
-            /* 優先順序：Tailwind 預設無襯線字體 -> 系統 UI 字體 (SF Pro/Segoe UI) -> 備用字體 */
-            /* 目的：確保在 iOS, Android, Windows, macOS 上都能呈現最原生的閱讀體驗 */
+            /* [字體堆疊策略] 確保在 iOS, Android, Windows, macOS 上都能呈現最原生的閱讀體驗 */
             font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            
-            background-color: #d6d3d1; /* 對應 Tailwind: stone-300 */
-            color: #1c1917; /* 對應 Tailwind: stone-900 */
-            
-            /* [滾動行為優化] */
-            /* none: 停用瀏覽器預設的邊界回彈效果 (Rubber-banding) 與下拉刷新 (Pull-to-refresh) */
-            /* 這是為了避免在 PWA 模式下，下拉操作意外觸發瀏覽器行為，破壞 App 般的體驗 */
-            overscroll-behavior: none; 
+            background-color: #d6d3d1; /* stone-300 */
+            color: #1c1917; /* stone-900 */
+            overscroll-behavior: none; /* 停用瀏覽器預設的邊界回彈效果 */
         }
 
         /* --- 內部區域滾動優化 --- */
-        /* 明確指定內部滾動區域使用原生 Touch 慣性滾動，確保在 body 鎖定後，內容依然滑順 */
         #main-content, #date-scroller {
             -webkit-overflow-scrolling: touch;
         }
 
-        /* --- 隱藏滾動條樣式 (Scrollbar Hiding) --- */
-        /* 目的：保留滾動功能，但隱藏視覺上的滾動條，使介面更簡潔美觀 */
-        
-        /* 針對 Webkit 核心瀏覽器 (Chrome, Safari, iOS Safari) */
-        .no-scrollbar::-webkit-scrollbar { 
-            display: none; 
-        }
-        /* 針對 Firefox, IE, Edge */
+        /* --- 隱藏滾動條樣式 --- */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { 
-            -ms-overflow-style: none; /* IE and Edge */
-            scrollbar-width: none;    /* Firefox */
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
 
-        /* --- 動畫效果定義 (CSS Keyframes) --- */
-        /* [fadeInUp] */
-        /* 效果：元素從透明且下方 10px 的位置，過渡到不透明且原始位置 */
+        /* --- 動畫效果定義 --- */
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        
-        /* [動畫類別封裝] */
-        /* 使用 ease-out 減速曲線讓動畫結尾更自然，forwards 確保動畫結束後停留在最終狀態 */
         .animate-fade-in-up, .animate-fade-in { 
             animation: fadeInUp 0.4s ease-out forwards; 
         }
         
         /* --- iOS 安全區域 (Safe Area) 適配 --- */
-        /* [iPhone X+ 適配關鍵] */
-        /* env(safe-area-inset-bottom): 瀏覽器環境變數，代表底部 Home Indicator (黑條) 的高度 */
-        /* 為底部導航欄加入對應的 padding，防止按鈕被系統黑條遮擋無法點擊 */
         .pb-safe { 
             padding-bottom: env(safe-area-inset-bottom); 
         }
@@ -113,56 +83,42 @@
 <body>
 
     <!-- [App 主容器佈局] -->
-    <!-- h-[100dvh]: 使用 Dynamic Viewport Height，解決行動瀏覽器網址列伸縮導致高度計算錯誤的問題 -->
-    <!-- md:max-w-md md:mx-auto: 在桌機版限制寬度並置中，模擬手機介面 -->
     <div class="h-[100dvh] flex flex-col md:max-w-md md:mx-auto shadow-2xl overflow-hidden relative select-none bg-stone-300">
         
         <!-- [背景圖層] -->
-        <!-- fixed inset-0: 固定定位填滿容器，確保背景不隨內容滾動 -->
-        <!-- pointer-events-none: 讓點擊事件穿透背景層，直達下方內容 -->
         <div class="fixed inset-0 z-0 pointer-events-none md:max-w-md md:mx-auto">
-            <img src="https://tw.wamazing.com/media/wp-content/uploads/sites/4/2022/12/shigatravel_pixta_62991025_L-853x569.jpg.webp" alt="Shiga Scenery" class="w-full h-full object-cover opacity-90"/>
-            <!-- 疊加半透明模糊遮罩 (Backdrop Blur)，提升前景文字的可讀性與對比度 -->
+            <img src="Shirahige Jinja.jpg" alt="Shiga Scenery" class="w-full h-full object-cover opacity-90"/>
             <div class="absolute inset-0 bg-stone-300/85 backdrop-blur-[2px]"></div>
         </div>
 
         <!-- [頂部導航列 (Header)] -->
-        <!-- z-50: 確保層級最高，不被內容遮擋 -->
-        <!-- backdrop-blur-md: 讓滑過下方的內容產生毛玻璃效果 -->
         <div class="shrink-0 bg-white/80 backdrop-blur-md border-b border-stone-200/50 shadow-sm z-50">
             <div class="px-4 py-3 flex justify-between items-center">
                 <div>
                     <h1 class="text-xl font-black tracking-tighter text-indigo-900">KANSAI TRIP</h1>
                     <p class="text-xs text-stone-400 font-medium tracking-widest">DEC 27 - JAN 04</p>
                 </div>
-                <!-- 動態狀態欄容器：用於 JS 動態注入天氣、氣溫與地點資訊 (僅在行程分頁顯示) -->
-                <div id="header-status" class="hidden flex items-center gap-2 bg-white/50 px-3 py-1.5 rounded-full border border-stone-100">
-                </div>
+                <!-- 動態狀態欄容器 -->
+                <div id="header-status" class="hidden flex items-center gap-2 bg-white/50 px-3 py-1.5 rounded-full border border-stone-100"></div>
             </div>
             
             <!-- 日期橫向捲軸容器 -->
-            <!-- snap-x: 啟用 CSS Scroll Snap，讓滾動停止時自動對齊子元素 -->
             <div id="date-scroller-container" class="hidden">
                 <div id="date-scroller" class="flex overflow-x-auto gap-3 px-4 pb-3 no-scrollbar snap-x">
-                    <!-- [JS 注入點] 日期按鈕將由此處動態生成 -->
+                    <!-- [JS 注入點] 日期按鈕 -->
                 </div>
             </div>
         </div>
 
         <!-- [主要內容區域 (Main Content)] -->
-        <!-- flex-1: 佔據剩餘垂直空間 -->
-        <!-- overflow-y-auto: 允許垂直滾動 -->
-        <!-- overscroll-contain: 阻止滾動鏈 (Scroll Chaining) 傳遞給 body，將滾動行為限制在此容器內 -->
         <div id="main-content" class="flex-1 overflow-y-auto overflow-x-hidden p-4 space-y-4 no-scrollbar overscroll-contain relative z-10 pb-24">
-            <!-- [JS 注入點] 根據 activeTab 狀態，動態渲染行程、航班或地圖等不同視圖 -->
+            <!-- [JS 注入點] 動態視圖 -->
         </div>
 
         <!-- [底部導航欄 (Bottom Tab Bar)] -->
-        <!-- absolute bottom-0: 絕對定位於容器底部 -->
-        <!-- pb-safe: 套用前面定義的 iOS 安全區域 padding -->
         <div class="absolute bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-stone-200/50 pb-safe z-50 overflow-x-auto no-scrollbar">
             <div class="flex justify-between items-center h-16 min-w-max px-2" id="bottom-nav">
-                <!-- [JS 注入點] 底部導航按鈕將由此處動態生成 -->
+                <!-- [JS 注入點] 底部按鈕 -->
             </div>
         </div>
     </div>
@@ -171,27 +127,22 @@
         // ==========================================
         // --- 1. 資料來源 (Data Source) ---
         // ==========================================
-        // [單一資料源原則 Single Source of Truth]
-        // 將應用程式的所有靜態資料集中於 TRIP_DATA 常數物件中管理。
         const TRIP_DATA = {
-            // [航班資訊陣列]
             flights: [
                 { type: "Departure", date: "2025/12/27 (六)", code: "CX564", airline: "國泰航空", route: "TPE 台北 (11:15) ➔ KIX 大阪 (14:55)", terminal: "TPE T1 / KIX T1", duration: "2h 40m", aircraft: "Airbus A330-300", class: "經濟 Q" },
                 { type: "Return", date: "2026/01/04 (日)", code: "CX565", airline: "國泰航空", route: "KIX 大阪 (16:15) ➔ TPE 台北 (18:30)", terminal: "KIX T1 / TPE T1", duration: "3h 25m", aircraft: "Airbus A330-300", class: "經濟 S" }
             ],
-            // [飯店資訊陣列]
             hotels: [
                 { name: "草津波士頓廣場飯店", engName: "Hotel Boston Plaza Kusatsu", dates: "12/27 - 1/1 (5晚)", location: "滋賀縣草津市 (JR草津站旁)", features: ["交通便利", "美式風格", "適合自駕"], note: "作為滋賀縣人孔蓋卡收集的基地非常合適，飯店旁即有停車場與租車點。", image: "Boston.jpg" },
                 { name: "REF 京都八條口 by VESSEL HOTELS", engName: "REF Kyoto Hachijoguchi", dates: "1/1 - 1/4 (3晚)", location: "京都市南區 (京都站八條口)", features: ["大浴場", "現代日式", "免費迎賓飲料"], note: "靠近京都車站八條口，方便前往神戶(搭新快速)、奈良(搭近鐵)與搭乘 Haruka 回機場。", image: "Kyoto.jpg" }
             ],
-            // [核心行程資料]
             itinerary: [
                 { id: "day1", date: "12/27", dayOfWeek: "六", location: "大阪 ➔ 滋賀", weather: "sunny", temp: "8°C", items: [
                     { type: "transport", time: "11:15", title: "搭乘 CX564 飛往大阪", note: "預計 14:55 抵達關西機場 T1。出關後請先至「臨空城」方向移動。" },
-                    { type: "visit", time: "15:30", title: "臨空城觀光案內所 (Rinku Machidokoro)", tag: "收集", note: "🔥 位於臨空城車站改札口外，務必先領取人孔蓋卡。營業至22:00 (卡片發放至20:00)。", mapUrl: "https://maps.app.goo.gl/AFLxB4tBLNV1DPb79" },
+                    { type: "visit", time: "15:30", title: "臨空城觀光案內所 (Rinku Machidokoro)", tag: "收集", note: "位於臨空城車站改札口外，務必先領取人孔蓋卡。營業至22:00 (卡片發放至20:00)。", mapUrl: "https://maps.app.goo.gl/AFLxB4tBLNV1DPb79" },
                     { type: "shop", time: "16:00", title: "臨空城 Outlet (Rinku Premium Outlets)", highlight: "必買: 運動品牌、日系服飾", note: "晚餐建議在此解決 (美食街或海邊餐廳)。營業至20:00。" },
-                    { type: "transport", time: "19:00", title: "前往草津 (JR關空快速+新快速)", note: "關西機場 →(關空快速)→ 大阪站 →(轉乘JR京都線新快速)→ 草津車站。車程約 1小時50分。", mapUrl: null }, 
-                    { type: "hotel", time: "21:30", title: "入住：草津波士頓廣場飯店", note: "位於草津站西口，出站即達。Check-in 後請早點休息準備明日自駕。" }
+                    { type: "transport", time: "19:00", title: "前往草津", note: "關西機場 → 京都車站 → 草津車站。車程約 1小時50分。", mapUrl: null }, 
+                    { type: "hotel", time: "21:30", title: "入住：草津波士頓廣場飯店", note: "位於草津站西口，出站即達。" }
                 ]},
                 { id: "day2", date: "12/28", dayOfWeek: "日", location: "滋賀自駕", weather: "cloudy", temp: "6°C", items: [
                     { type: "transport", time: "08:00", title: "租車：Toyota Rent a Car 草津西口店", note: "攜帶：台灣駕照、日文譯本、護照、信用卡。檢查車況與 ETC 卡。", mapUrl: "https://maps.app.goo.gl/SDWrnzuSNuSV1V6V9" },
@@ -201,7 +152,7 @@
                     { type: "visit", time: "12:00", title: "八日市駅前観光交流施設", tag: "收集", note: "近江鐵道八日市站內。附近有大風箏博物館。" },
                     { type: "visit", time: "13:00", title: "東近江市役所 (假日：守衛室)", tag: "收集", note: "假日需至市役所「宿直室 (守衛室)」領取。請導航至東近江市役所本廳。", mapUrl: "https://www.google.com/maps/search/?api=1&query=東近江市役所" },
                     { type: "visit", time: "14:00", title: "彥根市上下水道中心 (假日窗口)", tag: "收集", note: "假日需按門鈴請守衛開門領取。非一般觀光案內所，請注意位置。", mapUrl: "https://maps.app.goo.gl/mVScUD8s72aGcQTF9" },
-                    { type: "visit", time: "14:30", title: "Hikonyan Museum (彥根貓博物館)", highlight: "必看: 彥根貓表演", note: "🔥 位於彥根城旁。請事先查詢彥根貓 (Hikonyan) 登場時間。", mapUrl: "https://maps.app.goo.gl/kkbKSaDFaAikUWC89" },
+                    { type: "visit", time: "14:30", title: "Hikonyan Museum (彥根貓博物館)", highlight: "必看: 彥根貓表演", note: "位於彥根城旁。請事先查詢彥根貓 (Hikonyan) 登場時間。", mapUrl: "https://maps.app.goo.gl/kkbKSaDFaAikUWC89" },
                     { type: "shop", time: "17:30", title: "MITSUI OUTLET PARK 滋賀龍王", highlight: "關西最大級 Outlet", note: "店鋪數多，晚餐推薦在此享用近江牛料理 (如近江牛岡喜)。" }
                 ]},
                 { id: "day3", date: "12/29", dayOfWeek: "一", location: "海之京都", weather: "rain", temp: "4°C", items: [
@@ -214,46 +165,41 @@
                     { type: "visit", time: "16:00", title: "天橋立 View Land (飛龍觀)", note: "位於車站後方，從另一側看沙洲。注意冬季纜車末班時間 (約16:30-17:00)。", mapUrl: "https://maps.app.goo.gl/jbcSfyaEcciWeSuGA?g_st=ipc" }
                 ]},
                 { id: "day4", date: "12/30", dayOfWeek: "二", location: "長濱/琵琶湖", weather: "cloudy", temp: "5°C", items: [
-                    { type: "visit", time: "08:50", title: "竹生島觀光船 (長濱港出發)", note: "前往琵琶湖中的能量景點「竹生島」。請確認船班時間 (冬季班次較少)。" },
-                    { type: "visit", time: "10:00", title: "竹生島 寶嚴寺 & 都久夫須麻神社", highlight: "投擲瓦片祈福", note: "參拜弁財天。必試「瓦片投擲 (Kawarake Nage)」，投過鳥居可心想事成。" },
+                    { type: "transport", time: "08:30前", title: "從草津波士頓廣場飯店到竹生島觀光船 (長濱港出發)", note: "前往琵琶湖中的能量景點「竹生島」。請確認船班時間 (冬季班次較少)。", mapUrl: "https://maps.app.goo.gl/uMrWCQdtjCGpAsvT8" },
+                    { type: "visit", time: "10:00", title: "竹生島 寶嚴寺", highlight: "投擲瓦片祈福", note: "參拜弁財天。必試「瓦片投擲 (Kawarake Nage)」，投過鳥居可心想事成。", mapUrl: "https://maps.app.goo.gl/q2TAryroG2QNfisY8" },
                     { type: "visit", time: "12:00", title: "黑壁廣場 (黑壁Square)", highlight: "大正浪漫老街", note: "以玻璃工藝聞名。必吃：96Cafe 黑咖哩、翼果樓 燒鯖魚素麵。" },
-                    // 多賀大社已移至 12/31
-                    { type: "visit", time: "14:30", title: "近江神宮", highlight: "花牌情緣聖地", note: "競技歌牌 (百人一首) 的殿堂。建築風格為昭和造，朱紅美麗。" }
+                    { type: "visit", time: "14:30", title: "道の駅 草津", tag: "收集", note: "營業時間 09:00–18:00。", mapUrl: "https://maps.app.goo.gl/ToBkBynpWX7XvhsF6" },
+                    { type: "visit", time: "15:30", title: "大津駅観光案内所", tag: "收集", note: "營業時間 09:00–18:00。30分鐘內停車免費。", mapUrl: "https://maps.app.goo.gl/3RaAV6qsSCDTrXgS9", parkingUrl: "https://maps.app.goo.gl/M5SQU6NfjnbUdTPB7" },
+                    { type: "visit", time: "16:15", title: "近江神宮", highlight: "花牌情緣聖地", note: "競技歌牌 (百人一首) 的殿堂。建築風格為昭和造，朱紅美麗。" }
                 ]},
                 { id: "day5", date: "12/31", dayOfWeek: "三", location: "近江八幡", weather: "snow", temp: "3°C", items: [
                     { type: "visit", time: "08:30", title: "彥根城 (國寶五城)", highlight: "現存天守", note: "日本僅存五座國寶天守之一。可登上天守閣眺望琵琶湖。", mapUrl: "https://maps.app.goo.gl/oQ6LteKGpyHSDj7s5" },
-                    { type: "visit", time: "10:30", title: "多賀大社", highlight: "長壽祈願", note: "從彥根城出發約20分車程。滋賀縣第一大社，通稱「多賀公」。門口必買名產「糸切餅」。", mapUrl: "https://maps.app.goo.gl/TagaTaisha" },
+                    { type: "visit", time: "10:30", title: "多賀大社", highlight: "長壽祈願", note: "從彥根城出發約20分車程。滋賀縣第一大社，通稱「多賀公」。門口必買名產「糸切餅」。", mapUrl: "https://maps.app.goo.gl/FyG9SYzgecBRXQ74A" },
                     { type: "transport", time: "12:00", title: "前往近江八幡", note: "從多賀大社前往近江八幡，車程約 40 分鐘。", mapUrl: "https://maps.app.goo.gl/Sk3cyrf86bb4MXxx7?g_st=ipc" },
                     { type: "visit", time: "13:00", title: "八幡山纜車 & 八幡山城跡", note: "搭纜車上山，可俯瞰琵琶湖、西之湖與近江八幡棋盤狀市景。", mapUrl: "https://www.google.com/maps/search/?api=1&query=八幡山纜車" },
                     { type: "visit", time: "14:30", title: "八幡堀水鄉漫遊", highlight: "時代劇取景地", note: "沿著護城河散步或搭乘手搖船，感受江戶風情。" },
-                    { type: "visit", time: "16:00", title: "La Collina 近江八幡 (Club Harie)", highlight: "童話草屋甜點殿堂", note: "建築大師藤森照信設計。必吃：現烤年輪蛋糕 (Baumkuchen)。" },
+                    { type: "visit", time: "16:00", title: "La Collina 近江八幡 (Club Harie)", highlight: "童話草屋甜點殿堂", note: "建築大師藤森照信設計。必吃：現烤年輪蛋糕 (Baumkuchen)。", mapUrl: "https://maps.app.goo.gl/3T9ntRLyvAFsjgHi8" },
                     { type: "food", time: "17:30", title: "跨年晚餐 (除夕)", note: "建議提前預訂餐廳，或在平和堂/超市購買壽司、熟食回飯店享用。日本餐廳除夕通常早關門。", mapUrl: null },
                     { type: "transport", time: "20:00", title: "還車：Toyota Rent a Car 草津站前", note: "⚠️ 務必於 20:00 前完成加油與還車手續，結束自駕行程。", mapUrl: "https://maps.app.goo.gl/49vueN16a8RcXojK7" },
-                    { type: "visit", time: "23:00", title: "跨年參拜 (除夜之鐘)", note: "可至附近的草津八幡宮或立木神社聆聽除夜鐘聲。" }
+                    { type: "visit", time: "23:00", title: "跨年參拜 (除夜之鐘)", note: "可至附近的草津八幡宮或立木神社聆聽除夜鐘聲。", mapUrl: null }
                 ]},
                 { id: "day6", date: "1/1", dayOfWeek: "四", location: "神戶/初詣", weather: "sunny", temp: "7°C", items: [
                     { type: "transport", time: "08:00", title: "移動至京都 (寄放行李) -> 神戶", note: "JR草津 -> JR京都 (Check-in REF飯店/寄放行李) -> JR新快速 -> JR三之宮。", mapUrl: "https://maps.app.goo.gl/wvQV78Z1MTSnDR3J6" },
                     { type: "visit", time: "10:30", title: "生田神社 (初詣)", highlight: "戀愛結緣", note: "神戶最古老神社之一。新年參拜人潮眾多，請有排隊心理準備。", mapUrl: "https://maps.app.goo.gl/Qp6xcnbq8jurtKjr7" },
-                    { type: "visit", time: "12:00", title: "北野異人館街 & 北野天滿神社", note: "參觀風見雞之館(外觀)，並至高點的天滿神社祈求學業，俯瞰神戶港。" },
+                    { type: "visit", time: "12:00", title: "北野異人館街 & 北野天滿神社", note: "參觀風見雞之館(外觀)，並至高點的天滿神社祈求學業，俯瞰神戶港。", mapUrl: "https://maps.app.goo.gl/UYp8chLFqd5stcB77" },
                     { type: "visit", time: "13:00", title: "神戶港 / 美利堅公園 / BE KOBE", note: "神戶塔(整修中請確認)、BE KOBE 地標拍照。", mapUrl: "https://maps.app.goo.gl/UYp8chLFqd5stcB77" },
                     { type: "visit", time: "14:00", title: "神戶機場 綜合案內所", tag: "收集", note: "搭乘 Port Liner 電車至神戶機場。領取神戶人孔蓋卡。", mapUrl: "https://maps.app.goo.gl/NNi4QQFVeQrsUWkb9" }
-                    // 後續三個行程已移至 1/2
                 ]},
                 { id: "day7", date: "1/2", dayOfWeek: "五", location: "奈良/宇治", weather: "sunny", temp: "6°C", items: [
                     { type: "visit", time: "08:30", title: "春日大社", highlight: "鹿與燈籠", note: "參道上有許多鹿群。春日大社的燈籠與朱紅迴廊非常美麗。" },
                     { type: "food", time: "11:00", title: "水谷茶屋", highlight: "茅草屋茶屋", note: "位於春日大社與若草山之間。必點：蕨餅、烏龍麵。拍照超美。" },
-                    { type: "visit", time: "12:30", title: "東大寺 & 二月堂", highlight: "世界遺產", note: "大佛殿看世界最大青銅佛像。推薦走上二月堂，免費且可俯瞰奈良盆地。", mapUrl: "https://maps.app.goo.gl/uV4YfjDbdyKA6kJ36?g_st=ipc" },
-                    // [新增] 東大寺
-                    { type: "visit", time: "13:00", title: "東大寺", note: "大佛殿參拜。", mapUrl: "https://maps.app.goo.gl/uV4YfjDbdyKA6kJ36?g_st=ipc" },
+                    { type: "visit", time: "12:30", title: "東大寺二月堂", highlight: "世界遺產", note: "大佛殿看世界最大青銅佛像。推薦走上二月堂，免費且可俯瞰奈良盆地。", mapUrl: "https://maps.app.goo.gl/NDEGsqMRrCt41PoT7" },
+                    { type: "visit", time: "13:00", title: "東大寺", note: "大佛殿參拜。", mapUrl: "https://maps.app.goo.gl/BzL6nTUyZgyjinjx5" },
                     { type: "visit", time: "13:30", title: "御霊神社 (奈良町)", note: "位於奈良町內的老街區，可順道散步。", mapUrl: "https://maps.app.goo.gl/H4zGYhXNHFs1SHbG7" },
-                    { type: "visit", time: "14:30", title: "奈良町南観光案内所 (鹿之舟)", tag: "收集", note: "領取奈良市人孔蓋卡。建築本身也是景點。" },
-                    
-                    // [時間重新計算] 不含備案
+                    { type: "visit", time: "14:30", title: "奈良町南観光案内所 (鹿之舟)", tag: "收集", note: "領取奈良市人孔蓋卡。建築本身也是景點。", mapUrl: "https://maps.app.goo.gl/uYGs9e48zbmCL9m18" },
                     { type: "visit", time: "16:30", title: "大鳥大社 (大阪堺市)", tag: "收集", note: "注意：時間可能較晚，請確認營業時間。若來不及可僅參拜。", mapUrl: "https://maps.app.goo.gl/kyxyYjHMVcdGzBZg6?g_st=ipc" },
                     { type: "shop", time: "18:00", title: "寶可夢中心 大阪店 DX (大丸心齋橋9F)", highlight: "必買: 限定商品", note: "營業時間通常至20:00 (新年請確認)。晚餐可於心齋橋/道頓堀解決。", mapUrl: "https://maps.app.goo.gl/6XNEnaevDXWHBe1q9" },
                     { type: "shop", time: "19:30", title: "寶可夢中心 大阪 (大丸梅田13F)", highlight: "注意營業時間", note: "⚠️ 兩家寶可夢中心皆約 20:00 打烊，時間較趕，建議依當下位置擇一前往。", mapUrl: "https://www.google.com/maps/search/?api=1&query=寶可夢中心+梅田" },
-                    
-                    // [備案] 移除時間
                     { type: "visit", time: "", title: "宇治市観光センター", tag: "備案", note: "搭乘JR奈良線至宇治。領取宇治人孔蓋卡。中心內有免費茶水。" },
                     { type: "shop", time: "", title: "吉伊卡哇 (Chiikawa) 伏見店", tag: "備案", highlight: "京都限定周邊", note: "Mogumogu 本舖。位於伏見稻荷大社附近，必買伏見稻荷限定狐狸造型周邊。" }
                 ]},
@@ -268,7 +214,7 @@
                     { type: "shop", time: "18:00", title: "吉伊卡哇 Land 京都 (四條河原町)", note: "位於 Kiddyland 內。繼續補貨京都限定商品。", mapUrl: "https://www.google.com/maps/search/?api=1&query=Kiddyland+京都" }
                 ]},
                 { id: "day9", date: "1/4", dayOfWeek: "日", location: "大阪 ➔ 台北", weather: "sunny", temp: "8°C", items: [
-                    { type: "transport", time: "08:12", title: "移動：京都 ➔ 大阪 ➔ 關西機場", note: "方案：先將行李寄放在大阪難波/天王寺，或直接帶去臨空城/機場寄放。" },
+                    { type: "transport", time: "08:12", title: "移動：京都 ➔ 大阪 ➔ 關西機場", note: "方案：先將行李寄放在大阪難波/天王寺，或直接帶去臨空城/機場寄放。", mapUrl: "https://maps.app.goo.gl/wZ8yJHJJo2tUD5cUA" },
                     { type: "visit", time: "09:30", title: "ATC Green Eco Plaza (南港)", note: "位於大阪南港 ATC 大樓。兼具環保教育與觀光功能的設施。" },
                     { type: "visit", time: "11:00", title: "堺東観光案内所", tag: "收集", note: "領取堺市人孔蓋卡。位於南海高野線堺東站。" },
                     { type: "visit", time: "12:00", title: "岸和田站前觀光案內所", tag: "收集", note: "以「岸和田山車祭 (Danjiri)」聞名。領取人孔蓋卡。", mapUrl: "https://maps.app.goo.gl/hbFc4FkHzPWHKGkDA" },
@@ -278,27 +224,27 @@
                 ]}
             ],
             // [人孔蓋卡庫存資訊]
-            // 用於 renderManholeView 表格渲染
             manholeStock: [
                 { name: "臨空城案內所", region: "大阪", hours: "09:00–20:00", url: "https://www.city.izumisano.lg.jp/kakuka/jogesuidokyoku/jogesui/menu/1511934914176.html" },
-                { name: "大津車站觀光案内所", region: "滋賀", hours: "09:00–18:00", url: "https://www.city.otsu.lg.jp/kigyo/about/koho/68041.html", highlight: true },
+                { name: "道の駅 草津", region: "滋賀", hours: "09:00–18:00", url: "https://www.city.kusatsu.shiga.jp/kurashi/suidogesuido/gesuido/manholecard.html", highlight: true, textColor: "text-orange-600" },
+                { name: "大津車站觀光案内所", region: "滋賀", hours: "09:00–18:00", url: "https://www.city.otsu.lg.jp/kigyo/about/koho/68041.html", highlight: true, textColor: "text-orange-600" },
                 { name: "くさつ夢本陣", region: "滋賀", hours: "09:00–17:00", url: "https://www.city.kusatsu.shiga.jp/kurashi/suidogesuido/gesuido/manholecard.html" },
                 { name: "草津宿街道交流館", region: "滋賀", hours: "09:00–17:00", url: "https://www.city.kusatsu.shiga.jp/kurashi/suidogesuido/gesuido/manholecard.html" },
                 { name: "栗東観光案内所 二樓", region: "滋賀", hours: "08:30–12:00", url: "https://www.city.ritto.lg.jp/soshiki/jogeuido/jogesuido/oshirase/7224.html" },
                 { name: "栗東市立図書館", region: "滋賀", hours: "10:00–17:00", url: "https://www.city.ritto.lg.jp/soshiki/jogeuido/jogesuido/oshirase/7224.html", highlight: true },
                 { name: "守山市駅前総合案内所", region: "滋賀", hours: "07:30–19:30", url: "https://www.city.moriyama.lg.jp/kurashitetsuzuki/jougesuido/1001701/1008797.html" },
                 { name: "八日市駅前観光交流施設", region: "滋賀", hours: "10:00–17:00", url: "https://www.city.higashiomi.shiga.jp/kurashi_tetsuzuki/jougesuidou/1008975/1009690.html" },
-                { name: "東近江市役所 守衛室", region: "滋賀", hours: "10:00–16:00", url: "https://www.city.higashiomi.shiga.jp/kurashi_tetsuzuki/jougesuidou/1008975/1009690.html", highlight: false },
+                { name: "東近江市役所 守衛室", region: "滋賀", hours: "10:00–16:00", url: "https://www.city.higashiomi.shiga.jp/kurashi_tetsuzuki/jougesuidou/1008975/1008976.html", highlight: false },
                 { name: "豊郷町観光案内所", region: "滋賀", hours: "09:00–17:00", url: "https://www.town.toyosato.shiga.jp/0000001749.html", highlight: true },
                 { name: "彥根市上下水道料金お客様サービスセンター", region: "滋賀", hours: "09:00–17:00", url: "https://www.city.hikone.lg.jp/kakuka/jogesuido/2/2219.html" },
                 { name: "ひこね食賓館四番町ダイニング", region: "滋賀", hours: "10:00–17:00", url: "https://www.city.hikone.lg.jp/kakuka/jogesuido/2/2219.html" },
-                { name: "「道の駅 海の京都 宮津」観光案内所", region: "京都", hours: "09:00–18:00", url: "https://www.pref.kyoto.jp/gesuido/manholemiyazu.html" },
+                { name: "「道の駅 海の京都 宮津」観光案内所", region: "京都", hours: "09:00–17:30", url: "https://www.pref.kyoto.jp/gesuido/manholemiyazu.html" },
                 { name: "神戸空港 1 階総合案内所", region: "兵庫", hours: "07:00–23:00", url: "https://www.city.kobe.lg.jp/a78445/kurashi/sumai/sewage/pr/manhole_card.html" },
                 { name: "芦屋市役所守衛室", region: "兵庫", hours: "09:00–17:00", url: "https://www.city.ashiya.lg.jp/gesuidou/mhc.html", highlight: true },
                 { name: "大阪観光案内所(JR 車站內)", region: "大阪", hours: "07:00–21:00", url: "https://www.city.osaka.lg.jp/kensetsu/page/0000431121.html" },
                 { name: "奈良町南観光案内所", region: "奈良", hours: "09:00–17:00", url: "https://h2o.nara.nara.jp/info_924.html" },
                 { name: "宇治市観光センター", region: "京都", hours: "09:00–17:00", url: "https://www.city.uji.kyoto.jp/soshiki/12/6038.html" },
-                { name: "大阪市下水道科學館(需購票入場後填寫問券)", region: "大阪", hours: "09:30–17:00", url: "https://www.city.osaka.lg.jp/kensetsu/page/0000431121.html", highlight: true },
+                { name: "大阪市下水道科學館", region: "大阪", hours: "09:30–17:00", url: "https://www.city.osaka.lg.jp/kensetsu/page/0000431121.html", highlight: true },
                 { name: "おおさか ATC グリーンエコプラザ", region: "大阪", hours: "10:00–17:00", url: "https://www.city.osaka.lg.jp/kensetsu/page/0000431121.html" },
                 { name: "堺東観光案内所", region: "大阪", hours: "09:00–19:00", url: "https://water.city.sakai.lg.jp/about/kouhou/1522311572373.html" },
                 { name: "岸和田駅前観光案内所", region: "大阪", hours: "09:00–17:00", url: "https://www.city.kishiwada.lg.jp/page/56-manholecard.html" },
@@ -311,238 +257,159 @@
                 { title: "Osaka Metro路線圖", url: "https://subway.osakametro.co.jp/img/osakametro_rosenzu_20250404.pdf" },
                 { title: "阪急電鐵", url: "https://www.hankyu.co.jp/station/pdf/zh-tw/map_station_zh-tw.pdf" },
                 { title: "阪神電鐵", url: "https://www.hanshin.co.jp/global/tw/pdf/map.pdf" },
+                { title: "マンホールカード情報まとめサイト", url: "https://anythingsearch.info/" },
                 { title: "マンホールカード官網", url: "https://www.gk-p.jp/mhcard/" },
                 { title: "マンホールカード地圖", url: "https://ekikaramanhole.whitebeach.org/ext/manholecard/map/?t=map" },
                 { title: "紀念幣地圖", url: "https://www.stampmedal.com/map.htm" },
-                { title: "永旺夢樂城Kyoto 4F (轉蛋屋)", url: "https://maps.app.goo.gl/8NoQd7g6H5cn7UiG7" }
+                { title: "coinlocker地圖", url: "https://coinlocker.click/" },
+                { title: "永旺夢樂城Kyoto 4F (轉蛋屋)", url: "https://maps.app.goo.gl/8NoQd7g6H5cn7UiG7" },
+                { title: "一番賞 京都店", url: "https://maps.app.goo.gl/7jykpS5VA2N82SyN8" },
+                { title: "一番賞官網", url: "https://bandainamco-am.co.jp/chara_shop/ichibankuji-official-shop/?areaNo=6&prefNo=25" }
             ],
             // [備註頁面資料]
-            // 結構較為巢狀，包含日期、連結區塊 (links)、餐飲區塊 (dining) 與路線區塊 (routes)
-            // *餐飲資訊說明*:
-            //  - cuisine: 顯示於店家名稱旁的標籤，用於快速辨識料理類型 (如 拉麵、烏龍麵、定食)。
-            //  - note: 店家特色、必點菜單或注意事項。
             notes: [
                 {
                     date: "12/27（六）",
                     links: [{ title: "臨空城 Outlet 電子地圖", url: "https://platinumaps.jp/d/premiumoutlets-rinku?floor=1F", note: "Nike沒有免稅" }],
-                    dining: [{ area: "滋賀 - 草津", spots: [{ name: "東京油組総本店 滋賀組", cuisine: "油蕎麥 (Abura Soba)", hours: "11:00–02:00", note: "無湯拉麵，將特製醬汁與醋/辣油拌入熱麵中，推薦加點半熟蛋。", mapUrl: "https://maps.app.goo.gl/Zjj8pK1nmaVU6Ug19" }, { name: "麺屋EDITION草津店", cuisine: "近江牛醬油拉麵", hours: "17:00–02:45", note: "使用近江牛骨熬製的黑醬油湯頭，風味濃郁甘甜。" }, { name: "カマドのタコ", cuisine: "章魚燒 / 居酒屋", hours: "12:00–23:00", note: "適合宵夜小酌，章魚燒與各式鐵板料理。", mapUrl: "https://maps.app.goo.gl/f8viAbvjP5p6tLtQ6" }, { name: "くさつ平和堂 (Heiwado)", cuisine: "大型超市", hours: "09:00–21:30", note: "草津站東口。適合購買水果、飲料、熟食與隔日早餐。", mapUrl: "https://maps.app.goo.gl/g81dTrt1ruJAxkT37" }, { name: "近江牛焼肉 MAWARI 南草津店", cuisine: "近江牛燒肉", hours: "17:00–23:00", note: "CP值高的近江牛燒肉店，建議預約。", mapUrl: "https://maps.app.goo.gl/LZFTbWNz9Dpy9TWJ8" }] }]
+                    dining: [{ area: "滋賀 - 草津", spots: [{ name: "東京油組総本店 滋賀組", cuisine: "油蕎麥", hours: "11:00–02:00", note: "無湯拉麵，將特製醬汁與醋/辣油拌入熱麵中。", mapUrl: "https://maps.app.goo.gl/Zjj8pK1nmaVU6Ug19" }, { name: "麺屋EDITION草津店", cuisine: "近江牛醬油拉麵", hours: "17:00–02:45", note: "使用近江牛骨熬製的黑醬油湯頭。" }, { name: "カマドのタコ", cuisine: "章魚燒 / 居酒屋", hours: "12:00–23:00", note: "適合宵夜小酌。", mapUrl: "https://maps.app.goo.gl/f8viAbvjP5p6tLtQ6" }, { name: "くさつ平和堂", cuisine: "大型超市", hours: "09:00–21:30", note: "草津站東口。適合購買水果、熟食。", mapUrl: "https://maps.app.goo.gl/g81dTrt1ruJAxkT37" }, { name: "近江牛焼肉 MAWARI 南草津店", cuisine: "近江牛燒肉", hours: "17:00–23:00", note: "CP值高的近江牛燒肉店，建議預約。", mapUrl: "https://maps.app.goo.gl/LZFTbWNz9Dpy9TWJ8" }] }]
                 },
                 {
                     date: "12/28（日）",
                     links: [{ title: "MITSUI OUTLET PARK 滋賀龍王地圖", url: "https://mitsui-shopping-park.com/mop/file/filer/shiga/floor/00008_fo.pdf", note: "PDF下載" }],
-                    dining: [{ area: "滋賀 - 彥根/龍王", spots: [{ name: "近江ちゃんぽん亭 本店", cuisine: "近江強棒麵 (Champon)", hours: "11:00–22:00", note: "滋賀縣民的靈魂美食。特色是大量蔬菜與清淡和風高湯，非豚骨湯底，加醋更好吃。", mapUrl: "https://maps.app.goo.gl/4pevVmcwwPP1eT8u5" }, { name: "らーめん本気 (Ramen Honki)", cuisine: "強棒麵 / 拉麵", hours: "11:00–20:30", note: "彥根名店。招牌是濃郁的強棒麵 (Champon)，深受在地人喜愛。" }, { name: "たねや 彦根美濠の舎", cuisine: "和菓子 / 年輪蛋糕", hours: "09:00–18:00", note: "Club Harie 的彥根分店，建築優美，適合下午茶或購買伴手禮。", mapUrl: "https://maps.app.goo.gl/hPLMGketJvLks6p87" }, { name: "近江肉 せんなり亭伽羅", cuisine: "近江牛懷石 / 壽喜燒", hours: "11:30–15:00, 17:00–21:30", note: "高級近江牛料理專門店，推薦「近江牛壽吉燒鍋御膳」。", mapUrl: "https://maps.app.goo.gl/eFJ9CDUF5pUwmXrS8" }] }]
+                    dining: [{ area: "滋賀 - 彥根/龍王", spots: [{ name: "近江ちゃんぽん亭 本店", cuisine: "近江強棒麵", hours: "11:00–22:00", note: "滋賀縣民的靈魂美食。特色是大量蔬菜與清淡和風高湯。", mapUrl: "https://maps.app.goo.gl/4pevVmcwwPP1eT8u5" }, { name: "らーめん本気", cuisine: "強棒麵 / 拉麵", hours: "11:00–20:30", note: "彥根名店。" }, { name: "たねや 彦根美濠の舎", cuisine: "和菓子 / 年輪蛋糕", hours: "09:00–18:00", note: "Club Harie 彥根分店，建築優美。", mapUrl: "https://maps.app.goo.gl/hPLMGketJvLks6p87" }, { name: "近江肉 せんなり亭伽羅", cuisine: "近江牛懷石", hours: "11:30–15:00, 17:00–21:30", note: "高級近江牛料理專門店。", mapUrl: "https://maps.app.goo.gl/eFJ9CDUF5pUwmXrS8" }] }]
                 },
                 {
                     date: "12/29（一）",
-                    links: [{ title: "伊根湾めぐり遊覧船", url: "https://www.inewan.com/inewan_cruise/", note: "1,200円" }, { title: "傘松観光券", url: "https://www.tankai.jp/tourist_tickets/#inekasamatsu", note: "2,000円券" }, { title: "天橋立ビューランド (纜車)", url: "https://www.viewland.jp/tw/eigyou/", note: "1,000円" }],
-                    dining: [{ area: "京都 - 傘松/成相寺/天橋立", spots: [{ name: "Suginoya (すぎのや)", cuisine: "黑竹輪 / 蛤蠣烏龍麵", hours: "11:30–16:00", note: "位於天橋立站前。必點宮津名產「黑竹輪」與滿滿蛤蠣的「蛤蠣烏龍麵」。", mapUrl: "https://maps.app.goo.gl/tEp45aDV6KEpciG37" }, { name: "海鮮工房 橋立物產", cuisine: "海鮮丼 / 松葉蟹", hours: "11:00–17:00", note: "海鮮批發商直營，食材新鮮。冬季有松葉蟹料理。", mapUrl: "https://maps.app.goo.gl/1n6htfvFC6ZJLCwS9" }, { name: "文珠莊 勘七茶屋", cuisine: "智慧之餅 (智恵の餅)", hours: "09:00–17:00", note: "智恩寺門前的茶屋，參拜後必吃。", mapUrl: "https://maps.app.goo.gl/XqvKrtaCaJkCyqVd9" }, { name: "咖啡館 龍燈之松", cuisine: "拉麵 / 咖啡", hours: "11:30–19:00", note: "位於智恩寺旁，有特色的拉麵與甜點。", mapUrl: "https://maps.app.goo.gl/ppaASzBRfQDksssP6" }] }, { area: "京都 - 宮津午餐", spots: [{ name: "烏冬小吃大門 (うどん処 大門)", cuisine: "咖哩烏龍麵", hours: "11:30–14:30、17:30–20:30", note: "宮津名店，以濃郁的「咖哩烏龍麵」聞名，宵夜場也很受歡迎。", mapUrl: "https://maps.app.goo.gl/XuUhLeaJ4kGXr5Ag9" }, { name: "こんぴらうどん (Konpira Udon)", cuisine: "手打烏龍麵", hours: "11:00–15:00", note: "位於宮津，提供道地的讚岐風格手打烏龍麵。", mapUrl: "https://www.google.com/maps/search/?api=1&query=こんぴらうどん" }, { name: "富田屋 (Tomitaya)", cuisine: "海鮮定食 / 居酒屋", hours: "11:00–21:30", note: "宮津站前傳奇老店。CP值極高，海鮮定食、煮魚定食非常划算，人氣極旺需排隊。", mapUrl: "https://maps.app.goo.gl/B52SCgQa1vkrkkPs8" }, { name: "Seafood Kawasaki", cuisine: "海鮮丼", hours: "11:00–13:30", note: "位於宮津站正對面，提供新鮮且價格實惠的海鮮丼。", mapUrl: "https://maps.app.goo.gl/85PgVVpZyfBDBdtZ7" }, { name: "山海屋", cuisine: "海鮮料理", hours: "11:00–22:00", note: "宮津Shopping Center內，家庭式海鮮餐廳。", mapUrl: "https://maps.app.goo.gl/3n5uxsmPifezUnbCA" }] }, { area: "京都 - 宮津晚餐", spots: [{ name: "お食事処 割烹たんご", cuisine: "海鮮懷石 / 螃蟹", hours: "17:30–22:30", note: "提供精緻的丹後海鮮料理，適合預算較高者。" }] }]
+                    links: [{ title: "伊根湾めぐり遊覧船", url: "https://www.inewan.com/inewan_cruise/", note: "1,200円" }, { title: "傘松観光券", url: "https://www.tankai.jp/tourist_tickets/#inekasamatsu", note: "2,000円券" }, { title: "天橋立ビューランド", url: "https://www.viewland.jp/tw/eigyou/", note: "1,000円" }],
+                    dining: [{ area: "京都 - 傘松/成相寺/天橋立", spots: [{ name: "Suginoya (すぎのや)", cuisine: "黑竹輪 / 烏龍麵", hours: "11:30–16:00", note: "位於天橋立站前。必點宮津名產「黑竹輪」。", mapUrl: "https://maps.app.goo.gl/tEp45aDV6KEpciG37" }, { name: "海鮮工房 橋立物產", cuisine: "海鮮丼 / 松葉蟹", hours: "11:00–17:00", note: "海鮮批發商直營，食材新鮮。", mapUrl: "https://maps.app.goo.gl/1n6htfvFC6ZJLCwS9" }, { name: "文珠莊 勘七茶屋", cuisine: "智慧之餅", hours: "09:00–17:00", note: "智恩寺門前的茶屋。", mapUrl: "https://maps.app.goo.gl/XqvKrtaCaJkCyqVd9" }, { name: "咖啡館 龍燈之松", cuisine: "拉麵 / 咖啡", hours: "11:30–19:00", note: "位於智恩寺旁，有特色的拉麵與甜點。", mapUrl: "https://maps.app.goo.gl/ppaASzBRfQDksssP6" }] }, { area: "京都 - 宮津午餐", spots: [{ name: "烏冬小吃大門", cuisine: "咖哩烏龍麵", hours: "11:30–14:30、17:30–20:30", note: "宮津名店，濃郁的「咖哩烏龍麵」。", mapUrl: "https://maps.app.goo.gl/XuUhLeaJ4kGXr5Ag9" }, { name: "こんぴらうどん", cuisine: "手打烏龍麵", hours: "11:00–15:00", note: "提供道地的讚岐風格手打烏龍麵。", mapUrl: "https://www.google.com/maps/search/?api=1&query=こんぴらうどん" }, { name: "富田屋", cuisine: "海鮮定食", hours: "11:00–21:30", note: "宮津站前傳奇老店。CP值極高。", mapUrl: "https://maps.app.goo.gl/B52SCgQa1vkrkkPs8" }, { name: "Seafood Kawasaki", cuisine: "海鮮丼", hours: "11:00–13:30", note: "提供新鮮且價格實惠的海鮮丼。", mapUrl: "https://maps.app.goo.gl/85PgVVpZyfBDBdtZ7" }, { name: "山海屋", cuisine: "海鮮料理", hours: "11:00–22:00", note: "宮津Shopping Center內。", mapUrl: "https://maps.app.goo.gl/3n5uxsmPifezUnbCA" }] }, { area: "京都 - 宮津晚餐", spots: [{ name: "お食事処 割烹たんご", cuisine: "海鮮懷石", hours: "17:30–22:30", note: "提供精緻的丹後海鮮料理。" }] }]
                 },
                 {
                     date: "12/30 (二)",
-                    dining: [{ area: "滋賀 - 長濱", spots: [{ name: "翼果樓 (Yokarou)", cuisine: "燒鯖魚素麵 (Yakisaba Somen)", hours: "10:30–15:00", note: "長濱必吃名物！將燒烤過的鯖魚與素麵一同燉煮，鹹甜入味，位於黑壁廣場內的老屋餐廳。", mapUrl: "https://maps.app.goo.gl/M2b1zmTJekofTqZ8A" }, { name: "96CAFE (Kurokabe)", cuisine: "黑咖哩 / 黑霜淇淋", hours: "11:00–17:30", note: "黑壁廣場名物。使用竹炭製作的黑色咖哩飯與黑色霜淇淋，視覺效果十足。", mapUrl: "https://maps.app.goo.gl/MiHw3RWh5FEupBd89" }, { name: "芋平長浜店", cuisine: "芋頭金鍔燒", hours: "10:00–17:00", note: "現烤的番薯/芋頭甜點，散步美食。", mapUrl: "https://maps.app.goo.gl/p9WPAwh6gVX1eSdK7" }, { name: "炭火焼うなぎ料理 ざいもん (Zaimon)", cuisine: "鰻魚飯", hours: "11:00–14:00, 17:00–21:00", note: "使用炭火燒烤的關西風鰻魚飯，皮脆肉嫩。", mapUrl: "https://maps.app.goo.gl/2b38CdtSP6qpMFhT8" }, { name: "らうめん屋台屋", cuisine: "拉麵", hours: "", note: "當地人氣拉麵店。", mapUrl: "https://maps.app.goo.gl/N33eYkm1SyxYhyoHA" }] }]
+                    dining: [{ area: "滋賀 - 長濱", spots: [{ name: "翼果樓", cuisine: "燒鯖魚素麵", hours: "10:30–15:00", note: "長濱必吃名物！", mapUrl: "https://maps.app.goo.gl/M2b1zmTJekofTqZ8A" }, { name: "96CAFE", cuisine: "黑咖哩 / 黑霜淇淋", hours: "11:00–17:30", note: "黑壁廣場名物。", mapUrl: "https://maps.app.goo.gl/MiHw3RWh5FEupBd89" }, { name: "芋平長浜店", cuisine: "芋頭金鍔燒", hours: "10:00–17:00", note: "現烤的番薯/芋頭甜點。", mapUrl: "https://maps.app.goo.gl/p9WPAwh6gVX1eSdK7" }, { name: "炭火焼うなぎ料理 ざいもん", cuisine: "鰻魚飯", hours: "11:00–14:00, 17:00–21:00", note: "關西風鰻魚飯。", mapUrl: "https://maps.app.goo.gl/2b38CdtSP6qpMFhT8" }, { name: "らうめん屋台屋", cuisine: "拉麵", hours: "", note: "當地人氣拉麵店。", mapUrl: "https://maps.app.goo.gl/N33eYkm1SyxYhyoHA" }] }]
                 },
                 {
                     date: "12/31 (三)",
-                    dining: [{ area: "滋賀 - 近江八幡", spots: [{ name: "近江牛料理 千成亭", cuisine: "近江牛壽喜燒 / 牛丼", hours: "10:00–17:00", note: "八幡堀旁的名店，一樓有現炸近江牛可樂餅，二樓可用餐。", mapUrl: "https://maps.app.goo.gl/ZXs7qm42FVCM3xGVA" }, { name: "近江牛創作ダイニング 久ぼ多屋", cuisine: "近江牛壽喜燒 / 漢堡排", hours: "11:00–17:00", note: "環境舒適，提供多樣化的近江牛料理。", mapUrl: "https://maps.app.goo.gl/dTZvwTyUpaUXWVJP8" }, { name: "丸竹近江牛 西川", cuisine: "近江牛牛排 / 壽喜燒", hours: "11:00–15:00, 16:00–19:00", note: "老字號精肉店直營。", mapUrl: "https://maps.app.goo.gl/2Wwx1MrNJmwFwvfw6" }, { name: "お食事処和でん", cuisine: "近江牛定食 / 和食", hours: "11:00–15:00", note: "提供平價實惠的近江牛午餐定食。", mapUrl: "https://maps.app.goo.gl/3TVVaLspqCMVWAjd8" }, { name: "日牟禮乃舍", cuisine: "年輪蛋糕 / 下午茶", hours: "09:30–17:00", note: "Club Harie 日牟禮館，可在日式庭園中享用剛出爐的年輪蛋糕。", mapUrl: "https://maps.app.goo.gl/BAbfwkGY47DuMW4t8" }] }]
+                    dining: [{ area: "滋賀 - 近江八幡", spots: [{ name: "近江牛料理 千成亭", cuisine: "近江牛壽喜燒", hours: "10:00–17:00", note: "八幡堀旁的名店。", mapUrl: "https://maps.app.goo.gl/ZXs7qm42FVCM3xGVA" }, { name: "久ぼ多屋", cuisine: "近江牛壽喜燒", hours: "11:00–17:00", note: "提供多樣化的近江牛料理。", mapUrl: "https://maps.app.goo.gl/dTZvwTyUpaUXWVJP8" }, { name: "丸竹近江牛 西川", cuisine: "近江牛牛排", hours: "11:00–15:00, 16:00–19:00", note: "老字號精肉店直營。", mapUrl: "https://maps.app.goo.gl/2Wwx1MrNJmwFwvfw6" }, { name: "お食事処和でん", cuisine: "近江牛定食", hours: "11:00–15:00", note: "提供平價實惠的近江牛午餐定食。", mapUrl: "https://maps.app.goo.gl/3TVVaLspqCMVWAjd8" }, { name: "日牟禮乃舍", cuisine: "年輪蛋糕", hours: "09:30–17:00", note: "Club Harie 日牟禮館。", mapUrl: "https://maps.app.goo.gl/BAbfwkGY47DuMW4t8" }] }]
                 },
                 {
                     date: "1/1 (四)",
-                    dining: [{ area: "大阪 / 神戶", spots: [{ name: "らぁ麺 鴨と葱 梅田店 (Kamo to Negi)", cuisine: "鴨肉拉麵", hours: "11:00–23:00", note: "來自東京御徒町的名店。特色是只用鴨、蔥與水熬製的湯頭，麵條口感極佳。" }, { name: "神戶三宮 / 元町", cuisine: "中華料理 / 洋食", hours: "", note: "新年期間很多店家休息，建議在三宮或元町的中華街 (南京町) 覓食，或百貨公司美食街。", mapUrl: "https://maps.app.goo.gl/m2XA2WzBxvyH8tjA6" }] }],
-                    routes: [{ area: "心齋橋", spots: [{ name: "寶可夢中心 大阪店 DX大丸心齋橋9F", hours: "10:00–20:00", mapUrl: "https://maps.app.goo.gl/6XNEnaevDXWHBe1q9" }, { name: "CHIIKAWA LAND Shinsaibashi PARCO Store 6F", hours: "10:00–20:00" }] }, { area: "梅田", spots: [{ name: "寶可夢中心 大阪大丸梅田13F", hours: "10:00–20:00" }, { name: "ちいかわらんど 大阪梅田店", hours: "10:00–20:00", note: "暫定阪急三番街南館B1 37號" }, { name: "梅田藍天大樓", hours: "09:30–22:00" }, { name: "HEP FIVE 摩天輪7F", hours: "11:00–22:45" }] }]
+                    dining: [{ area: "大阪 / 神戶", spots: [{ name: "らぁ麺 鴨と葱 梅田店", cuisine: "鴨肉拉麵", hours: "11:00–23:00", note: "來自東京御徒町的名店。" }, { name: "神戶三宮 / 元町", cuisine: "中華料理", hours: "", note: "新年期間建議在三宮或元町的中華街覓食。", mapUrl: "https://maps.app.goo.gl/m2XA2WzBxvyH8tjA6" }] }],
+                    routes: [{ area: "心齋橋", spots: [{ name: "寶可夢中心 大阪店 DX", hours: "10:00–20:00", mapUrl: "https://maps.app.goo.gl/6XNEnaevDXWHBe1q9" }, { name: "CHIIKAWA LAND PARCO", hours: "10:00–20:00" }] }, { area: "梅田", spots: [{ name: "寶可夢中心 大阪大丸梅田", hours: "10:00–20:00" }, { name: "ちいかわらんど 大阪梅田店", hours: "10:00–20:00", note: "阪急三番街南館B1" }, { name: "梅田藍天大樓", hours: "09:30–22:00" }, { name: "HEP FIVE 摩天輪", hours: "11:00–22:45" }] }]
                 },
                 {
                     date: "1/2 (五)",
-                    dining: [{ area: "奈良", spots: [{ name: "中谷堂", cuisine: "麻糬 (Yomogi Mochi)", hours: "10:00–18:00", note: "必看高速搗麻糬表演。現做麻糬軟糯Q彈，內餡紅豆不甜膩。", mapUrl: "https://maps.app.goo.gl/ZobNUwiuMZgPRVQf7" }] }, { area: "京都 - 宇治", spots: [{ name: "中村藤吉 (Nakamura Tokichi) 本店", cuisine: "抹茶甜點 / 茶蕎麥麵", hours: "10:00–17:30", note: "宇治必吃名店。推薦生茶果凍 (Namacha Jelly) 與抹茶蕎麥麵。", mapUrl: "https://maps.app.goo.gl/2nLpsWUjFZcmLyNf7" }, { name: "伊藤久右衛門 宇治本店・茶房", cuisine: "抹茶聖代 / 伴手禮", hours: "10:00–18:00", note: "抹茶甜點種類豐富，季節限定的聖代非常受歡迎。", mapUrl: "https://maps.app.goo.gl/X52bnzuQK4Ftn7oD8" }] }]
+                    dining: [{ area: "奈良", spots: [{ name: "中谷堂", cuisine: "麻糬", hours: "10:00–18:00", note: "必看高速搗麻糬表演。", mapUrl: "https://maps.app.goo.gl/ZobNUwiuMZgPRVQf7" }] }, { area: "京都 - 宇治", spots: [{ name: "中村藤吉 本店", cuisine: "抹茶甜點", hours: "10:00–17:30", note: "宇治必吃名店。", mapUrl: "https://maps.app.goo.gl/2nLpsWUjFZcmLyNf7" }, { name: "伊藤久右衛門 宇治本店", cuisine: "抹茶聖代", hours: "10:00–18:00", note: "抹茶甜點種類豐富。", mapUrl: "https://maps.app.goo.gl/X52bnzuQK4Ftn7oD8" }] }]
                 },
                 {
                     date: "1/3 (六)",
-                    dining: [{ area: "京都 - 嵐山", spots: [{ name: "嵯峨豆腐 稻 本店 (Saga Tofu Ine)", cuisine: "湯豆腐 / 豆腐料理", hours: "11:00–18:30", note: "嵐山名物湯豆腐，價格相對親民，環境優雅。", mapUrl: "https://maps.app.goo.gl/BBCfdetuL8rNMevf7" }, { name: "嵐山よしむら (Yoshimura)", cuisine: "手打蕎麥麵", hours: "11:00–16:00", note: "位於渡月橋畔，可一邊欣賞嵐山美景一邊享用高品質的手打蕎麥麵。", mapUrl: "https://maps.app.goo.gl/p47zjGPbRoUSY4Cp8" }, { name: "鯛匠 HANANA", cuisine: "鯛魚茶泡飯", hours: "11:00–16:30", note: "人氣排隊店。招牌是真鯛茶泡飯御膳，吃法三部曲：生魚片、胡麻醬拌飯、茶泡飯。", mapUrl: "https://maps.app.goo.gl/5wxGFRvQ2TwzryT48" }] }]
+                    dining: [{ area: "京都 - 嵐山", spots: [{ name: "嵯峨豆腐 稻 本店", cuisine: "湯豆腐", hours: "11:00–18:30", note: "嵐山名物湯豆腐。", mapUrl: "https://maps.app.goo.gl/BBCfdetuL8rNMevf7" }, { name: "嵐山よしむら", cuisine: "手打蕎麥麵", hours: "11:00–16:00", note: "位於渡月橋畔，可欣賞美景。", mapUrl: "https://maps.app.goo.gl/p47zjGPbRoUSY4Cp8" }, { name: "鯛匠 HANANA", cuisine: "鯛魚茶泡飯", hours: "11:00–16:30", note: "人氣排隊店。", mapUrl: "https://maps.app.goo.gl/5wxGFRvQ2TwzryT48" }] }]
                 }
             ],
             // [自駕指南與交通號誌]
-            // SVG 繪製所需的數據源
             drivingGuide: {
                 tips: [
-                    { title: "右駕左行", content: "日本車輛為右駕，請務必靠左行駛。口訣：「左轉小彎、右轉大彎」。轉彎時請打方向燈（雨刷通常在左邊，方向燈在右邊，小心打錯）。" },
-                    { title: "行人優先", content: "斑馬線若有行人準備過馬路，車輛「絕對必須」完全停止讓行。這是日本非常嚴格執行的交通規則。" },
-                    { title: "止まれ (Stop)", content: "看到倒三角形的「止まれ」標誌，地面通常也有白色文字，車輪必須「完全停止」運轉，左右確認無車後再開。沒完全煞停若被警察看到會被罰。" },
-                    { title: "右轉禮讓", content: "右轉（跨越對向車道）時，必須禮讓直行車與左轉車。若無右轉燈號，需等待空檔或變燈時儘速通過。" },
-                    // [移除平交道提示] (依需求調整)
+                    { title: "右駕左行", content: "日本車輛為右駕，請務必靠左行駛。口訣：「左轉小彎、右轉大彎」。" },
+                    { title: "行人優先", content: "斑馬線若有行人準備過馬路，車輛「絕對必須」完全停止讓行。" },
+                    { title: "止まれ (Stop)", content: "看到倒三角形的「止まれ」標誌，車輪必須「完全停止」運轉。" },
+                    { title: "右轉禮讓", content: "右轉（跨越對向車道）時，必須禮讓直行車與左轉車。" }
                 ],
-                // [道路標線說明] (新功能 - 擴充版)
                 roadLines: [
-                    { type: "white-dotted", title: "白色虛線 (White Dotted)", desc: "可變換車道 (Lane Change OK)" },
-                    { type: "white-solid", title: "白色實線 (White Solid)", desc: "可變換車道 (但需注意安全)" },
-                    { type: "orange-solid", title: "橘黃色實線 (Orange Solid)", desc: "🚫 禁止變換車道 (No Lane Change)" },
-                    { type: "double-orange", title: "雙橘實線 (Double Orange)", desc: "⚠️ 嚴禁跨越/迴轉 (Strictly No Crossing)" },
-                    { type: "parking-kei", title: "停車格：軽 (Kei)", desc: "🟡 輕自動車專用 (K-Car Only)" },
-                    // [移除] 停車格：身障專用
-                    // [移除] 菱形標記
+                    { type: "white-dotted", title: "白色虛線", desc: "可變換車道" },
+                    { type: "white-solid", title: "白色實線", desc: "可變換車道 (注意安全)" },
+                    { type: "orange-solid", title: "橘黃色實線", desc: "🚫 禁止變換車道" },
+                    { type: "double-orange", title: "雙橘實線", desc: "⚠️ 嚴禁跨越/迴轉" },
+                    { type: "parking-kei", title: "停車格：軽", desc: "🟡 輕自動車專用" }
                 ],
-                // [加油指南]
                 refueling: [
                     {
                         type: "self",
-                        title: "自助加油 (Self / セルフ)",
-                        steps: [
-                            "1. 認明「セルフ (Self)」招牌駛入。",
-                            "2. 螢幕操作：先選擇支付方式 (現金/信用卡)。",
-                            "3. 選擇油種：通常租車加「紅色 Regular (レギュラー)」。",
-                            "4. 選擇油量：通常選「滿坦 (満タン)」。",
-                            "5. 觸摸除靜電鈕 (黑色圓形)。",
-                            "6. 拿起紅色油槍加油，跳停即可。",
-                            "7. 取收據 (現金找零需至精算機掃描收據)。"
-                        ]
+                        title: "自助加油 (Self)",
+                        steps: ["1. 認明「セルフ」招牌。", "2. 選擇支付與油種(紅色 Regular)。", "3. 除靜電。", "4. 加油跳停即可。"]
                     },
                     {
                         type: "manual",
-                        title: "人工加油 (Full Service)",
-                        steps: [
-                            "1. 駛入無「Self」標示的車道，店員會引導。",
-                            "2. 搖下車窗說：「Regular, Mantan (紅色的，加滿)」。",
-                            "3. 店員可能會問是否丟垃圾或擦窗戶。",
-                            "4. 加完後車內付款。",
-                            "5. 離場時店員通常會引導交通。"
-                        ]
+                        title: "人工加油",
+                        steps: ["1. 駛入車道。", "2. 說：「Regular, Mantan (紅色加滿)」。", "3. 車內付款。"]
                     },
                     {
                         type: "types",
-                        title: "油種辨識 (重要！)",
-                        steps: [
-                            "🔴 紅色 (Regular / レギュラー)：一般汽油 (租車最常用)。",
-                            "🟡 黃色 (High Octane / ハイオク)：高辛烷值汽油。",
-                            "🟢 綠色 (Diesel / 軽油)：柴油。⚠️ 千萬別加錯！"
-                        ]
+                        title: "油種辨識",
+                        steps: ["🔴 紅色 Regular：一般汽油。", "🟡 黃色 High Octane：高辛烷值。", "🟢 綠色 Diesel：柴油 (勿加錯)。"]
                     }
                 ],
-                // [更新後的交通號誌列表]
-                // 移除：施工、平交道、橫斷步道、注意危險 (!)
-                // 新增：指定方向(直行)、駐停車禁止、禁止右轉
                 signs: [
-                    { label: "一時停止 (Stop)", desc: "務必完全煞停，確認安全後再開。", type: "stop" },
-                    { label: "徐行 (Slow)", desc: "減速慢行（通常指10km/h以下），隨時可停車的狀態。", type: "slow" },
-                    { label: "車輛進入禁止", desc: "單行道出口常見，禁止駛入。", type: "no-entry" },
-                    { label: "最高速度", desc: "限制最高時速（圖為50km/h）。", type: "speed", limit: 50 },
-                    { label: "單行道", desc: "僅能依箭頭方向行駛。", type: "one-way" },
-                    { label: "駐車禁止", desc: "禁止停車（但可短暫臨時停車上下客）。", type: "no-parking" },
-                    { label: "禁止迴轉", desc: "此路段禁止 U-Turn (迴轉)。", type: "no-uturn" },
-                    // [移除] 橫斷步道
-                    // [移除] 禁止右轉 (No Right Turn)
-                    
-                    // [新增] 指定方向 (直行)
-                    { label: "指定方向 (直行)", desc: "僅能依箭頭方向行駛 (Only Straight)", type: "only-straight" },
-                    // [新增] 駐停車禁止
-                    { label: "駐停車禁止", desc: "禁止停車與臨時停車 (No Stopping)", type: "no-stopping" },
-                    // [新增] 禁止超車
-                    { label: "禁止超車", desc: "禁止超車 (Overtaking Prohibited)", type: "no-overtaking" }
+                    { label: "一時停止", desc: "務必完全煞停", type: "stop" },
+                    { label: "徐行", desc: "減速慢行", type: "slow" },
+                    { label: "車輛進入禁止", desc: "禁止駛入", type: "no-entry" },
+                    { label: "最高速度", desc: "限制最高時速", type: "speed", limit: 50 },
+                    { label: "單行道", desc: "依箭頭方向", type: "one-way" },
+                    { label: "駐車禁止", desc: "禁止停車", type: "no-parking" },
+                    { label: "禁止迴轉", desc: "禁止 U-Turn", type: "no-uturn" },
+                    { label: "指定方向", desc: "僅能直行", type: "only-straight" },
+                    { label: "駐停車禁止", desc: "禁止臨停", type: "no-stopping" },
+                    { label: "禁止超車", desc: "禁止超車", type: "no-overtaking" }
                 ],
                 highway: [
-                    { title: "ETC 車道", content: "租車建議租用 ETC 卡。進入收費站請走紫色「ETC」專用道或「ETC/一般」共用道，減速至 20km/h 以下通過，柵欄升起後再加速。" },
-                    { title: "追越車道 (超車道)", content: "高速公路最右側車道為「追越車道」。超車後應儘速切回左側行駛車道，切勿長時間佔用右側車道，否則違規。" },
-                    { title: "合流禮讓", content: "從交流道匯入主線時，請加速至與主線車流相當的速度再匯入，並採取「拉鍊式匯入」（一台插一台）。" },
-                    { title: "車距確認", content: "高速公路地面常有綠線或標示「車間距離確認」，請依當前速限保持足夠安全距離（如100km/h保持100米）。" },
-                    { title: "塞車閃黃燈", content: "若前方遇到塞車需急減速，請開啟「雙黃燈（故障燈）」警示後方來車，避免追撞，這是日本駕駛的默契。" },
-                    { title: "SA 與 PA", content: "SA (Service Area) 通常有加油站、餐廳、廁所；PA (Parking Area) 則較小，僅有廁所與販賣機。長途駕駛建議每2小時休息一次。" }
+                    { title: "ETC 車道", content: "建議租用 ETC 卡。進入收費站請走紫色 ETC 車道，減速至 20km/h 通過。" },
+                    { title: "追越車道", content: "最右側為超車道。超車後應儘速切回左側，切勿長時間佔用。" },
+                    { title: "合流禮讓", content: "採取「拉鍊式匯入」（一台插一台）。" },
+                    { title: "車距確認", content: "請依地標保持安全距離。" },
+                    { title: "塞車閃黃燈", content: "若遇塞車急減速，請開「雙黃燈」警示後車。" },
+                    { title: "SA 與 PA", content: "SA 為大型休息站；PA 為小型休息站。建議每2小時休息一次。" }
                 ]
             }
         };
 
-        // 輔助函式：產生 Google Map 連結
-        // [encodeURIComponent 的必要性]
-        // 確保地名中的特殊字元（如空格、斜線、中文字）被正確編碼，避免破壞 URL 結構導致導航失敗。
         const getGoogleMapUrl = (name) => `https://www.google.com/maps/search/?api=1&query=$$${encodeURIComponent(name)}`;
 
         // ==========================================
         // --- 2. 狀態管理 (State Management) ---
         // ==========================================
-        // [簡易狀態管理系統]
-        // 不依賴 React/Vue 等重型框架，使用單一物件儲存當前的 UI 狀態，決定渲染邏輯。
         let state = {
-            activeTab: 'itinerary', // 當前底部導航選中的標籤 (控制主要視圖切換)
-            selectedDayId: 'day1'   // 當前選中的日期 (僅在 itinerary 模式下有效，控制行程切換)
+            activeTab: 'itinerary',
+            selectedDayId: 'day1'
         };
 
         // ==========================================
         // --- 3. 組件渲染函數 (Component Renderers) ---
         // ==========================================
         
-        // 輔助函式：生成 Lucide Icon HTML 結構
-        // 注意：此函數僅返回帶有 data-lucide 屬性的 <i> 標籤，真正的 SVG 生成是在 lucide.createIcons() 被呼叫時發生的。
+        // 輔助函式：生成 Lucide Icon
         function getIcon(name, classes = "", size = 24) {
             return `<i data-lucide="${name}" class="${classes}" width="${size}" height="${size}"></i>`;
         }
 
-        // [新增輔助函式]：繪製道路標線 SVG
-        // 模擬柏油路面背景，並在中間繪製對應類型的車道線與文字
+        // 輔助函式：繪製道路標線 SVG
         function renderRoadLine(type) {
-            const bg = '<rect width="100%" height="100%" fill="#52525b" />'; // zinc-600 (深灰色柏油路)
             let content = '';
-            
             switch (type) {
-                case 'white-dotted':
-                    content = '<line x1="0" y1="20" x2="100%" y2="20" stroke="white" stroke-width="4" stroke-dasharray="12,12" />';
-                    break;
-                case 'white-solid':
-                    content = '<line x1="0" y1="20" x2="100%" y2="20" stroke="white" stroke-width="4" />';
-                    break;
-                case 'orange-solid':
-                    content = '<line x1="0" y1="20" x2="100%" y2="20" stroke="#f97316" stroke-width="4" />';
-                    break;
-                case 'double-orange':
-                    content = `
-                        <line x1="0" y1="16" x2="100%" y2="16" stroke="#f97316" stroke-width="3" />
-                        <line x1="0" y1="24" x2="100%" y2="24" stroke="#f97316" stroke-width="3" />
-                    `;
-                    break;
-                case 'parking-kei':
-                    // [修正] 置中：使用 x=50% + text-anchor="middle" + translate
-                    content = `
-                        <rect x="50%" y="5" width="30" height="30" transform="translate(-15, 0)" fill="none" stroke="#fcd34d" stroke-width="2" />
-                        <text x="50%" y="26" text-anchor="middle" fill="#fcd34d" font-size="20" font-weight="bold">軽</text>
-                    `;
-                    break;
+                case 'white-dotted': content = '<line x1="0" y1="20" x2="100%" y2="20" stroke="white" stroke-width="4" stroke-dasharray="12,12" />'; break;
+                case 'white-solid': content = '<line x1="0" y1="20" x2="100%" y2="20" stroke="white" stroke-width="4" />'; break;
+                case 'orange-solid': content = '<line x1="0" y1="20" x2="100%" y2="20" stroke="#f97316" stroke-width="4" />'; break;
+                case 'double-orange': content = '<line x1="0" y1="16" x2="100%" y2="16" stroke="#f97316" stroke-width="3" /><line x1="0" y1="24" x2="100%" y2="24" stroke="#f97316" stroke-width="3" />'; break;
+                case 'parking-kei': content = '<rect x="50%" y="5" width="30" height="30" transform="translate(-15, 0)" fill="none" stroke="#fcd34d" stroke-width="2" /><text x="50%" y="26" text-anchor="middle" fill="#fcd34d" font-size="20" font-weight="bold">軽</text>'; break;
             }
-            // preserveAspectRatio="none" 確保 SVG 寬度能自適應容器拉伸 (除了特定圖示保持比例)
-            return `<svg width="100%" height="40" class="rounded-md border border-stone-400 bg-zinc-600">${content}</svg>`;
+            return `<svg width="100%" height="40" class="rounded-md border border-stone-400 bg-zinc-600"><rect width="100%" height="100%" fill="#52525b" />${content}</svg>`;
         }
 
         // 輔助函式：繪製 SVG 交通號誌
-        // [SVG 內嵌優勢]
-        // 直接使用 SVG 向量代碼繪製日本交通號誌，優點包括：
-        // 1. 無需發送額外的圖片 HTTP 請求，加快載入速度。
-        // 2. 向量圖形在任何解析度下都不會模糊 (Retina Display Ready)。
-        // 3. 可透過 CSS 輕鬆修改顏色與樣式。
         function renderTrafficSign(type, limit) {
-            // [尺寸放大調整] 
-            // 為了讓號誌在手機上更清晰，將基礎 SVG 畫布尺寸從 40x40 放大至 80x80
-            // 所有的內部座標與線條寬度也進行了相應的倍率調整 (x2)
             switch(type) {
                 case 'stop': return `<svg width="80" height="80" viewBox="0 0 80 80"><polygon points="40,76 4,10 76,10" fill="#ef4444" stroke="none"/><text x="50%" y="35%" dominant-baseline="middle" text-anchor="middle" fill="white" font-size="18" font-weight="bold">止まれ</text><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" fill="white" font-size="12" font-weight="bold">STOP</text></svg>`;
                 case 'slow': return `<svg width="80" height="80" viewBox="0 0 80 80"><polygon points="40,76 4,10 76,10" fill="white" stroke="#ef4444" stroke-width="6"/><text x="50%" y="35%" dominant-baseline="middle" text-anchor="middle" fill="#1c1917" font-size="20" font-weight="bold">徐行</text><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" fill="#1c1917" font-size="10" font-weight="bold">SLOW</text></svg>`;
                 case 'no-entry': return `<svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="36" fill="#ef4444" /><rect x="16" y="34" width="48" height="12" fill="white" /></svg>`;
                 case 'speed': return `<svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="36" fill="white" stroke="#ef4444" stroke-width="6" /><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" fill="#3b82f6" font-size="32" font-weight="bold">${limit}</text></svg>`;
-                case 'one-way': 
-                    // [修正] 箭頭置中：
-                    // 背景寬 72, 中心 36+4=40. 箭頭長度 28 (54-26).
-                    // 起點 26, 終點 54. 
-                    return `<svg width="80" height="80" viewBox="0 0 80 80"><rect x="4" y="16" width="72" height="48" rx="4" fill="#3b82f6" /><path d="M26 40 L54 40 M54 40 L42 28 M54 40 L42 52" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+                case 'one-way': return `<svg width="80" height="80" viewBox="0 0 80 80"><rect x="4" y="16" width="72" height="48" rx="4" fill="#3b82f6" /><path d="M26 40 L54 40 M54 40 L42 28 M54 40 L42 52" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
                 case 'no-parking': return `<svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="36" fill="#3b82f6" stroke="#ef4444" stroke-width="6" /><line x1="16" y1="16" x2="64" y2="64" stroke="#ef4444" stroke-width="6" /></svg>`;
                 case 'no-uturn': return `<svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="36" fill="white" stroke="#ef4444" stroke-width="6" /><path d="M48 32 C48 24 32 24 32 32 L32 52" stroke="#3b82f6" stroke-width="6" fill="none" /><polygon points="32,56 24,44 40,44" fill="#3b82f6" /><line x1="16" y1="64" x2="64" y2="16" stroke="#ef4444" stroke-width="6" /></svg>`;
-                
-                // [新增] 指定方向 (Only Straight)
                 case 'only-straight': return `<svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="36" fill="#3b82f6" stroke="white" stroke-width="2" /><path d="M40 20 L40 60 M28 32 L40 20 L52 32" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>`;
-                
-                // [新增] 駐停車禁止 (No Stopping)
                 case 'no-stopping': return `<svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="36" fill="#3b82f6" stroke="#ef4444" stroke-width="6" /><line x1="20" y1="20" x2="60" y2="60" stroke="#ef4444" stroke-width="6" /><line x1="60" y1="20" x2="20" y2="60" stroke="#ef4444" stroke-width="6" /></svg>`;
-
-                // [新增] 禁止超車 (No Overtaking)
                 case 'no-overtaking': return `<svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="36" fill="white" stroke="#ef4444" stroke-width="6" /><text x="50%" y="32" text-anchor="middle" fill="#3b82f6" font-size="20" font-weight="bold">追越</text><text x="50%" y="58" text-anchor="middle" fill="#3b82f6" font-size="20" font-weight="bold">禁止</text></svg>`;
-                
                 default: return '';
             }
         }
 
-        // 輔助函式：根據資料中的天氣代碼 (code string) 渲染對應的 Lucide 圖標
+        // 輔助函式：渲染天氣圖標
         function renderWeatherIcon(type) {
             switch (type) {
                 case 'sunny': return getIcon('sun', "w-5 h-5 text-orange-500");
@@ -554,20 +421,10 @@
         }
 
         // [核心渲染函式：單個行程項目卡片]
-        // 這是行程列表中的最小視覺單位，包含時間軸、圖標、標題、標籤與備註。
-        // @param {Object} item - 行程項目物件
         function renderItineraryItem(item) {
-            let iconName = 'map-pin';
-            let iconColor = "text-stone-400";
-            let borderColor = "border-stone-200";
+            let iconName = 'map-pin', iconColor = "text-stone-400", borderColor = "border-stone-200";
 
             // [動態樣式邏輯]
-            // 根據項目類型 (type) 動態設定圖標與顏色主題 (Tailwind Classes)
-            // - food: 紅色系 (utensils)
-            // - shop: 黃色系 (shopping-bag)
-            // - visit: 綠色系 (camera)
-            // - hotel: 紫色系 (bed-double)
-            // - transport: 藍/靛色系，並區分飛機與租車
             if (item.type === 'food') { 
                 iconName = 'utensils'; iconColor = "text-red-400"; borderColor="border-l-red-400"; 
             } else if (item.type === 'shop') { 
@@ -578,309 +435,154 @@
                 iconName = 'bed-double'; iconColor = "text-purple-400"; borderColor="border-l-purple-400"; 
             } else if (item.type === 'transport') {
                 const isFlight = item.title.includes("CX564") || item.title.includes("CX565");
-                const isCarRelated = item.title.includes("租車") || item.title.includes("還車") || item.title.includes("駐車場") || item.title.includes("前往伊根灣");
-                
-                if (isFlight) { 
-                    iconName = 'plane'; iconColor = "text-red-500"; borderColor = "border-l-red-500"; 
-                } else if (isCarRelated) { 
-                    iconName = 'car'; iconColor = "text-lime-600"; borderColor = "border-l-lime-600"; 
-                } else { 
-                    iconName = 'train-front'; iconColor = "text-indigo-400"; borderColor = "border-l-indigo-400"; 
-                }
+                const isCarRelated = item.title.includes("租車") || item.title.includes("還車") || item.title.includes("駐車場") || item.title.includes("前往伊根灣") || item.title.includes("前往竹生島") || item.title.includes("前往近江八幡");
+                if (isFlight) { iconName = 'plane'; iconColor = "text-red-500"; borderColor = "border-l-red-500"; } 
+                else if (isCarRelated) { iconName = 'car'; iconColor = "text-lime-600"; borderColor = "border-l-lime-600"; } 
+                else { iconName = 'train-front'; iconColor = "text-indigo-400"; borderColor = "border-l-indigo-400"; }
             }
 
-            // 特殊邏輯：如果是「收集」任務 (例如收集人孔蓋卡)，強制使用星星圖標強調
             const isCollection = item.tag === "收集";
-            if (isCollection) { 
-                iconName = 'star'; iconColor = "text-amber-500"; borderColor = "border-l-amber-500";
-            }
+            if (isCollection) { iconName = 'star'; iconColor = "text-amber-500"; borderColor = "border-l-amber-500"; }
 
-            // [導航按鈕顯示邏輯]
-            // 過濾掉不需要導航的項目 (如搭飛機過程或單純移動描述)
-            // 優先使用資料中的自定義 mapUrl，若無則使用 Google Search 連結
             const titlesWithoutNavigation = ["搭乘 CX564 飛往大阪", "搭乘 CX565 返台", "前往草津", "前往大阪"];
             const showNavigation = !titlesWithoutNavigation.includes(item.title) && item.mapUrl !== null;
             const destinationUrl = item.mapUrl || getGoogleMapUrl(item.title);
-
-            // [時間顯示邏輯優化]
-            // 若 item.time 為空字串，則不渲染時間文字 span，避免空白佔位
             const timeHtml = item.time ? `<span class="text-sm font-bold text-stone-600 font-mono">${item.time}</span>` : '';
 
-            // 回傳 Template Literal (樣板字串) HTML：使用反引號 (`) 包裹，允許換行與變數插入 (${})
             return `
             <div class="flex gap-4 p-4 bg-white/95 backdrop-blur-sm rounded-lg border-l-4 shadow-sm mb-3 ${borderColor} active:bg-stone-50 transition-colors">
-                <!-- 左側欄位：時間與類型圖標 -->
                 <div class="flex flex-col items-center min-w-[50px]">
                     ${timeHtml}
                     <div class="mt-2 p-1.5 rounded-full bg-stone-50 ${iconColor}">
                         ${getIcon(iconName, "", 18)}
                     </div>
-                    <!-- 若為收集任務，顯示 "GET!" 文字 -->
                     ${isCollection ? '<span class="text-[9px] text-amber-600 font-bold mt-1">GET!</span>' : ''}
                 </div>
-                
-                <!-- 右側欄位：主要資訊內容 -->
                 <div class="flex-1">
                     <div class="flex items-start justify-between">
-                        <!-- 標題：支援文字選取 (select-text) -->
                         <h3 class="font-bold text-stone-800 text-lg leading-tight w-[calc(100%-70px)] sm:w-[calc(100%-110px)] select-text">${item.title}</h3>
-                        
-                        <!-- 導航/連結按鈕群組 -->
                         <div class="flex gap-2 shrink-0"> 
-                            <!-- 停車資訊按鈕 -->
-                            ${item.parkingUrl ? `
-                                <a href="${item.parkingUrl}" target="_blank" rel="noopener noreferrer" class="p-2 bg-sky-50 text-sky-600 rounded-full active:scale-95 hover:bg-sky-100 transition-colors shrink-0">
-                                    ${getIcon('square-parking', "", 18)}
-                                </a>` : ''}
-                            <!-- 導航按鈕 -->
-                            ${showNavigation ? `
-                                <a href="${destinationUrl}" target="_blank" rel="noopener noreferrer" class="p-2 bg-blue-50 text-blue-600 rounded-full active:scale-95 hover:bg-blue-100 transition-colors shrink-0">
-                                    ${getIcon('navigation', "", 18)}
-                                </a>` : '<div class="w-8 h-8 shrink-0"></div>'}
+                            ${item.parkingUrl ? `<a href="${item.parkingUrl}" target="_blank" class="p-2 bg-sky-50 text-sky-600 rounded-full active:scale-95 shrink-0">${getIcon('square-parking', "", 18)}</a>` : ''}
+                            ${showNavigation ? `<a href="${destinationUrl}" target="_blank" class="p-2 bg-blue-50 text-blue-600 rounded-full active:scale-95 shrink-0">${getIcon('navigation', "", 18)}</a>` : '<div class="w-8 h-8 shrink-0"></div>'}
                         </div>
                     </div>
-                    
-                    <!-- 標籤 (Tag) 顯示 -->
-                    ${item.tag ? `
-                        <div class="mt-1">
-                            <span class="text-[10px] px-2 py-0.5 rounded-full border font-medium mr-2 ${isCollection ? "border-amber-400 text-amber-600 bg-amber-50" : (item.tag === '備案' ? "border-stone-400 text-stone-500 bg-stone-100" : "border-stone-300 text-stone-500")}">
-                                ${item.tag}
-                            </span>
-                        </div>` : ''}
-                        
-                    <!-- 重點 (Highlight) 顯示 -->
-                    ${item.highlight ? `
-                        <div class="mt-2 inline-block px-3 py-1 bg-red-50 text-red-600 text-xs rounded-md font-bold select-text">
-                            ★ ${item.highlight}
-                        </div>` : ''}
-                        
-                    <!-- 詳細備註 (Note) 顯示區塊 -->
-                    ${item.note ? `
-                        <p class="mt-2 text-sm text-stone-500 leading-relaxed bg-stone-50 p-2 rounded border border-stone-100 select-text">
-                            ${item.note}
-                        </p>` : ''}
+                    ${item.tag ? `<div class="mt-1"><span class="text-[10px] px-2 py-0.5 rounded-full border font-medium mr-2 ${isCollection ? "border-amber-400 text-amber-600 bg-amber-50" : (item.tag === '備案' ? "border-stone-400 text-stone-500 bg-stone-100" : "border-stone-300 text-stone-500")}">${item.tag}</span></div>` : ''}
+                    ${item.highlight ? `<div class="mt-2 inline-block px-3 py-1 bg-red-50 text-red-600 text-xs rounded-md font-bold select-text">★ ${item.highlight}</div>` : ''}
+                    ${item.note ? `<p class="mt-2 text-sm text-stone-500 leading-relaxed bg-stone-50 p-2 rounded border border-stone-100 select-text">${item.note}</p>` : ''}
                 </div>
             </div>`;
         }
 
-        // [渲染函式：每日行程視圖 (Daily View)]
-        // 負責組合 Header 資訊與當天的所有行程卡片
+        // [渲染函式：每日行程視圖]
         function renderItineraryView(dayId) {
             const currentDayData = TRIP_DATA.itinerary.find(d => d.id === dayId);
             if (!currentDayData) return '';
 
-            // [DOM 操作]
-            // 更新 Header 右側的狀態欄 (天氣、溫度、地點)
             const headerStatus = document.getElementById('header-status');
-            headerStatus.innerHTML = `
-                ${renderWeatherIcon(currentDayData.weather)}
-                <span class="text-sm font-bold text-stone-600">${currentDayData.temp}</span>
-                <span class="text-xs text-stone-400 pl-1 border-l border-stone-300 ml-1">${currentDayData.location}</span>
-            `;
+            headerStatus.innerHTML = `${renderWeatherIcon(currentDayData.weather)}<span class="text-sm font-bold text-stone-600">${currentDayData.temp}</span><span class="text-xs text-stone-400 pl-1 border-l border-stone-300 ml-1">${currentDayData.location}</span>`;
             headerStatus.classList.remove('hidden');
 
-            // 將當天的所有 items 轉換為 HTML 字串並串接
-            const itemsHtml = currentDayData.items.map(item => renderItineraryItem(item)).join('');
-            
             return `
                 <div class="animate-fade-in-up pb-20">
                     <div class="flex items-center justify-between mb-4 px-1">
-                        <h2 class="text-lg font-bold text-stone-700">
-                            Day ${dayId.replace('day', '')} 
-                            <span class="ml-2 text-sm font-normal text-stone-500">${currentDayData.location}</span>
-                        </h2>
+                        <h2 class="text-lg font-bold text-stone-700">Day ${dayId.replace('day', '')} <span class="ml-2 text-sm font-normal text-stone-500">${currentDayData.location}</span></h2>
                     </div>
-                    ${itemsHtml}
+                    ${currentDayData.items.map(item => renderItineraryItem(item)).join('')}
                 </div>
             `;
         }
 
         // [渲染函式：航班與住宿頁面]
-        // 展示航班卡片與飯店卡片
         function renderFlightsView() {
-            // 使用 Array.map 將航班資料轉換為 HTML 卡片
             const flightsHtml = TRIP_DATA.flights.map(flight => `
                 <div class="bg-white/95 backdrop-blur-sm rounded-xl shadow-sm border border-stone-200 overflow-hidden p-5 mb-4">
                     <div class="flex items-center justify-between mb-4 border-b border-stone-100 pb-3">
-                        <span class="text-xs font-bold px-2 py-1 rounded ${flight.type === 'Departure' ? 'bg-indigo-100 text-indigo-700' : 'bg-orange-100 text-orange-700'}">
-                            ${flight.type === 'Departure' ? '去程' : '回程'}
-                        </span>
+                        <span class="text-xs font-bold px-2 py-1 rounded ${flight.type === 'Departure' ? 'bg-indigo-100 text-indigo-700' : 'bg-orange-100 text-orange-700'}">${flight.type === 'Departure' ? '去程' : '回程'}</span>
                         <span class="font-mono font-bold text-stone-500">${flight.date}</span>
                     </div>
-                    <div class="flex justify-between items-center mb-2">
-                        <div class="text-3xl font-black text-stone-800">${flight.code}</div>
-                        <div class="text-stone-300 rotate-45">${getIcon('plane', "", 24)}</div>
-                    </div>
+                    <div class="flex justify-between items-center mb-2"><div class="text-3xl font-black text-stone-800">${flight.code}</div><div class="text-stone-300 rotate-45">${getIcon('plane', "", 24)}</div></div>
                     <div class="text-sm font-medium text-stone-600 mb-4">${flight.airline} • ${flight.class}</div>
                     <div class="bg-stone-50 p-4 rounded-lg text-center border border-stone-100">
                         <div class="text-lg font-bold text-stone-800 mb-1">${flight.route}</div>
                         <div class="text-xs text-stone-500">${flight.terminal} • ${flight.duration} • ${flight.aircraft}</div>
                     </div>
-                </div>
-            `).join('');
+                </div>`).join('');
 
-            // 使用 Array.map 將飯店資料轉換為 HTML 卡片
             const hotelsHtml = TRIP_DATA.hotels.map(hotel => `
                 <div class="bg-white/95 backdrop-blur-sm rounded-xl shadow-sm border border-stone-200 overflow-hidden p-0 mb-4">
-                    <!-- 飯店圖片區塊：若無圖片則顯示 placeholder -->
                     <div class="h-60 bg-stone-200 relative overflow-hidden">
-                        ${hotel.image ? `
-                            <img src="${hotel.image}" alt="${hotel.name}" class="w-full h-full object-cover">` 
-                        : `
-                            <div class="w-full h-full bg-gradient-to-r from-stone-200 to-stone-300 flex items-center justify-center">
-                                ${getIcon('bed-double', "text-white w-10 h-10 opacity-50")}
-                            </div>`
-                        }
+                        ${hotel.image ? `<img src="${hotel.image}" alt="${hotel.name}" class="w-full h-full object-cover">` : `<div class="w-full h-full bg-gradient-to-r from-stone-200 to-stone-300 flex items-center justify-center">${getIcon('bed-double', "text-white w-10 h-10 opacity-50")}</div>`}
                     </div>
                     <div class="p-5">
-                        <div class="flex justify-between items-start mb-2">
-                            <h3 class="text-lg font-bold text-stone-800 leading-tight w-3/4">${hotel.name}</h3>
-                            <span class="text-xs bg-stone-100 text-stone-600 px-2 py-1 rounded font-medium whitespace-nowrap">${hotel.dates}</span>
-                        </div>
+                        <div class="flex justify-between items-start mb-2"><h3 class="text-lg font-bold text-stone-800 leading-tight w-3/4">${hotel.name}</h3><span class="text-xs bg-stone-100 text-stone-600 px-2 py-1 rounded font-medium whitespace-nowrap">${hotel.dates}</span></div>
                         <p class="text-xs text-stone-400 mb-4 font-mono">${hotel.engName}</p>
-                        <div class="flex items-start gap-2 mb-4 text-sm text-stone-600">
-                            ${getIcon('map-pin', "mt-0.5 text-stone-400 shrink-0", 16)}
-                            <span>${hotel.location}</span>
-                        </div>
-                        <div class="flex flex-wrap gap-2 mb-4">
-                             ${hotel.features.map(f => `<span class="text-[10px] px-2 py-1 bg-indigo-50 text-indigo-600 rounded">${f}</span>`).join('')}
-                        </div>
-                        <div class="bg-amber-50 p-3 rounded text-xs text-amber-800 border border-amber-100 flex gap-2">
-                            ${getIcon('info', "shrink-0 mt-0.5", 14)}
-                            ${hotel.note}
-                        </div>
-                        <a href="https://www.google.com/maps/search/?api=1&query=$$${encodeURIComponent(hotel.name)}" target="_blank" rel="noreferrer" class="mt-4 block w-full py-3 bg-stone-800 text-white text-center rounded-lg text-sm font-bold active:bg-stone-900 transition active:scale-[0.98]">導航至飯店</a>
+                        <div class="flex items-start gap-2 mb-4 text-sm text-stone-600">${getIcon('map-pin', "mt-0.5 text-stone-400 shrink-0", 16)}<span>${hotel.location}</span></div>
+                        <div class="flex flex-wrap gap-2 mb-4">${hotel.features.map(f => `<span class="text-[10px] px-2 py-1 bg-indigo-50 text-indigo-600 rounded">${f}</span>`).join('')}</div>
+                        <div class="bg-amber-50 p-3 rounded text-xs text-amber-800 border border-amber-100 flex gap-2">${getIcon('info', "shrink-0 mt-0.5", 14)}${hotel.note}</div>
+                        <a href="https://www.google.com/maps/search/?api=1&query=$$${encodeURIComponent(hotel.name)}" target="_blank" class="mt-4 block w-full py-3 bg-stone-800 text-white text-center rounded-lg text-sm font-bold active:bg-stone-900 transition active:scale-[0.98]">導航至飯店</a>
                     </div>
-                </div>
-            `).join('');
+                </div>`).join('');
 
-            return `
-                <div class="space-y-4 animate-fade-in pb-20">
-                    <h2 class="text-xl font-bold text-stone-800 px-1">航班資訊</h2>
-                    ${flightsHtml}
-                    <h2 class="text-xl font-bold text-stone-800 px-1 mt-8 pt-4 border-t border-stone-300/50">住宿資訊</h2>
-                    ${hotelsHtml}
-                </div>
-            `;
+            return `<div class="space-y-4 animate-fade-in pb-20"><h2 class="text-xl font-bold text-stone-800 px-1">航班資訊</h2>${flightsHtml}<h2 class="text-xl font-bold text-stone-800 px-1 mt-8 pt-4 border-t border-stone-300/50">住宿資訊</h2>${hotelsHtml}</div>`;
         }
 
         // [渲染函式：自駕指南頁面]
-        // 包含文字提示、加油指南、SVG 交通號誌網格與高速公路指南
         function renderDrivingView() {
             const tipsHtml = TRIP_DATA.drivingGuide.tips.map(tip => `
                 <div class="bg-white/95 backdrop-blur-sm rounded-xl shadow-sm border border-stone-200 overflow-hidden p-4 border-l-4 border-l-lime-500">
-                    <h3 class="font-bold text-lime-800 mb-1 flex items-center gap-2">
-                        ${getIcon('triangle-alert', "text-lime-600", 18)}
-                        ${tip.title}
-                    </h3>
+                    <h3 class="font-bold text-lime-800 mb-1 flex items-center gap-2">${getIcon('triangle-alert', "text-lime-600", 18)}${tip.title}</h3>
                     <p class="text-sm text-stone-600 leading-relaxed">${tip.content}</p>
-                </div>
-             `).join('');
+                </div>`).join('');
 
-            // [加油指南渲染]
             const refuelingHtml = TRIP_DATA.drivingGuide.refueling.map(item => `
                 <div class="bg-white/95 backdrop-blur-sm rounded-xl shadow-sm border border-stone-200 overflow-hidden p-4 border-l-4 ${item.type === 'types' ? 'border-l-red-500 bg-red-50/20' : 'border-l-sky-500'}">
-                    <h3 class="font-bold ${item.type === 'types' ? 'text-red-700' : 'text-sky-800'} mb-2 flex items-center gap-2">
-                        ${getIcon(item.type === 'types' ? 'fuel' : 'droplet', "", 18)}
-                        ${item.title}
-                    </h3>
-                    <ul class="text-sm text-stone-600 leading-relaxed space-y-1 list-disc list-inside pl-1">
-                        ${item.steps.map(step => `<li>${step}</li>`).join('')}
-                    </ul>
-                </div>
-            `).join('');
+                    <h3 class="font-bold ${item.type === 'types' ? 'text-red-700' : 'text-sky-800'} mb-2 flex items-center gap-2">${getIcon(item.type === 'types' ? 'fuel' : 'droplet', "", 18)}${item.title}</h3>
+                    <ul class="text-sm text-stone-600 leading-relaxed space-y-1 list-disc list-inside pl-1">${item.steps.map(step => `<li>${step}</li>`).join('')}</ul>
+                </div>`).join('');
 
-            // [新增：道路標線渲染]
             const roadLinesHtml = TRIP_DATA.drivingGuide.roadLines.map(line => `
                 <div class="flex items-center gap-3 bg-white/95 backdrop-blur-sm rounded-xl shadow-sm border border-stone-200 p-3">
-                    <div class="w-16 shrink-0 shadow-inner rounded overflow-hidden">
-                        ${renderRoadLine(line.type)}
-                    </div>
-                    <div>
-                        <div class="font-bold text-stone-800 text-sm">${line.title}</div>
-                        <div class="text-[10px] text-stone-500">${line.desc}</div>
-                    </div>
-                </div>
-            `).join('');
+                    <div class="w-16 shrink-0 shadow-inner rounded overflow-hidden">${renderRoadLine(line.type)}</div>
+                    <div><div class="font-bold text-stone-800 text-sm">${line.title}</div><div class="text-[10px] text-stone-500">${line.desc}</div></div>
+                </div>`).join('');
 
-            // 渲染 SVG 交通號誌網格
             const signsHtml = TRIP_DATA.drivingGuide.signs.map(sign => `
                 <div class="bg-white/95 backdrop-blur-sm rounded-xl shadow-sm border border-stone-200 overflow-hidden p-3 flex flex-col items-center text-center">
                     <div class="mb-2 drop-shadow-sm">${renderTrafficSign(sign.type, sign.limit)}</div>
                     <div class="text-sm font-bold text-stone-800 mb-1">${sign.label}</div>
                     <div class="text-[10px] text-stone-500 leading-tight">${sign.desc}</div>
-                </div>
-            `).join('');
+                </div>`).join('');
 
             const highwayHtml = TRIP_DATA.drivingGuide.highway.map(tip => `
                 <div class="bg-white/95 backdrop-blur-sm rounded-xl shadow-sm border border-stone-200 overflow-hidden p-4 border-l-4 border-l-indigo-500 bg-indigo-50/30">
-                    <h3 class="font-bold text-indigo-900 mb-1 flex items-center gap-2">
-                        ${getIcon('car', "text-indigo-600", 16)}
-                        ${tip.title}
-                    </h3>
+                    <h3 class="font-bold text-indigo-900 mb-1 flex items-center gap-2">${getIcon('car', "text-indigo-600", 16)}${tip.title}</h3>
                     <p class="text-sm text-stone-600 leading-relaxed">${tip.content}</p>
-                </div>
-            `).join('');
+                </div>`).join('');
 
             return `
                 <div class="space-y-6 animate-fade-in pb-20">
-                    <h2 class="text-xl font-bold text-stone-800 px-1 flex items-center gap-2">
-                        ${getIcon('car', "text-lime-600", 24)}
-                        日本自駕注意事項
-                    </h2>
-                      <div class="mb-2">
-                    <img src="car.jpg" alt="Driving Visual Guide" class="w-full h-auto rounded-xl">
-                    </div>
-
-                    <div class="space-y-3">
-                        ${tipsHtml}
-                    </div>
-
-                    <div>
-                        <h3 class="text-lg font-bold text-stone-700 mb-3 px-1 border-l-4 border-stone-400 pl-2">常用交通號誌</h3>
-                        <div class="grid grid-cols-2 gap-3">
-                            ${signsHtml}
-                        </div>
-                    </div>
-
-                    <div>
-                        <h3 class="text-lg font-bold text-stone-700 mb-3 px-1 border-l-4 border-indigo-400 pl-2">高速公路行駛指南</h3>
-                        <div class="space-y-3">
-                            ${highwayHtml}
-                        </div>
-                    </div>
-
-                    <!-- 道路標線區塊 (新增於此) -->
-                    <div>
-                        <h3 class="text-lg font-bold text-stone-700 mb-3 px-1 border-l-4 border-orange-400 pl-2">道路標線辨識</h3>
-                        <div class="space-y-3">
-                            ${roadLinesHtml}
-                        </div>
-                    </div>
-
-                    <!-- 加油指南區塊 (移至此處) -->
-                    <div>
-                        <h3 class="text-lg font-bold text-stone-700 mb-3 px-1 border-l-4 border-sky-400 pl-2">加油站使用指南</h3>
-                        <div class="space-y-3">
-                            ${refuelingHtml}
-                        </div>
-                    </div>
-                </div>
-            `;
+                    <h2 class="text-xl font-bold text-stone-800 px-1 flex items-center gap-2">${getIcon('car', "text-lime-600", 24)}日本自駕注意事項</h2>
+                    <div class="mb-2"><img src="car.jpg" alt="Driving Visual Guide" class="w-full h-auto rounded-xl"></div>
+                    <div class="space-y-3">${tipsHtml}</div>
+                    <div><h3 class="text-lg font-bold text-stone-700 mb-3 px-1 border-l-4 border-stone-400 pl-2">常用交通號誌</h3><div class="grid grid-cols-2 gap-3">${signsHtml}</div></div>
+                    <div><h3 class="text-lg font-bold text-stone-700 mb-3 px-1 border-l-4 border-indigo-400 pl-2">高速公路行駛指南</h3><div class="space-y-3">${highwayHtml}</div></div>
+                    <div><h3 class="text-lg font-bold text-stone-700 mb-3 px-1 border-l-4 border-orange-400 pl-2">道路標線辨識</h3><div class="space-y-3">${roadLinesHtml}</div></div>
+                    <div><h3 class="text-lg font-bold text-stone-700 mb-3 px-1 border-l-4 border-sky-400 pl-2">加油站使用指南</h3><div class="space-y-3">${refuelingHtml}</div></div>
+                </div>`;
         }
-
         // [渲染函式：人孔蓋庫存清單]
-        // 使用表格 (Table) 樣式展示
         function renderManholeView() {
             const rowsHtml = TRIP_DATA.manholeStock.map(item => `
                 <tr class="hover:bg-indigo-50/50 transition-colors">
-                    <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-stone-900">${item.region}</td>
-                    <td class="px-4 py-3">
-                        <a href="${item.url}" target="_blank" rel="noopener noreferrer" class="text-sm font-bold block ${item.highlight ? 'text-red-600' : 'text-indigo-600'}">
+                    <td class="px-2 py-3 whitespace-nowrap text-lg font-medium text-stone-900" style="font-family: 'Microsoft JhengHei', 'Heiti TC', sans-serif;">${item.region}</td>
+                    <td class="px-2 py-3">
+                        <a href="${item.url}" target="_blank" rel="noopener noreferrer" 
+                           class="text-lg font-bold block ${item.textColor ? item.textColor : (item.highlight ? 'text-red-600' : 'text-indigo-600')}"
+                           style="font-family: 'Microsoft JhengHei', 'Heiti TC', sans-serif;">
                             ${item.name}
                         </a>
                     </td>
-                    <td class="px-4 py-3 whitespace-nowrap text-xs text-emerald-600 font-bold">${item.hours}</td>
+                    <td class="px-2 py-3 whitespace-nowrap text-base text-emerald-600 font-bold">${item.hours}</td>
                 </tr>
             `).join('');
 
@@ -895,9 +597,9 @@
                             <table class="min-w-full divide-y divide-stone-200">
                                 <thead class="bg-stone-50 sticky top-0">
                                     <tr>
-                                        <th class="px-4 py-3 text-left text-xs font-semibold text-stone-600 w-1/4">地區</th>
-                                        <th class="px-4 py-3 text-left text-xs font-semibold text-stone-600 w-1/2">地點</th>
-                                        <th class="px-4 py-3 text-left text-xs font-semibold text-stone-600 w-1/4">時間</th>
+                                        <th class="px-2 py-3 text-left text-sm font-semibold text-stone-600 whitespace-nowrap w-[1%]">地區</th>
+                                        <th class="px-2 py-3 text-left text-sm font-semibold text-stone-600">地點</th>
+                                        <th class="px-2 py-3 text-left text-sm font-semibold text-stone-600 whitespace-nowrap w-[1%]">時間</th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-stone-100">
@@ -909,7 +611,7 @@
                 </div>
             `;
         }
-
+        
         // [渲染函式：地圖連結列表]
         function renderMapView() {
             const linksHtml = TRIP_DATA.mapLinks.map(link => `
@@ -919,286 +621,113 @@
                         <span class="font-bold text-stone-700 text-lg">${link.title}</span>
                     </div>
                     ${getIcon('external-link', "text-stone-400", 18)}
-                </a>
-            `).join('');
+                </a>`).join('');
 
-            return `
-                <div class="space-y-4 animate-fade-in pb-20">
-                    <h2 class="text-xl font-bold text-stone-800 px-1 flex items-center gap-2">
-                        ${getIcon('map', "text-emerald-600", 24)}
-                        地圖與相關連結
-                    </h2>
-                    <div class="space-y-3">
-                        ${linksHtml}
-                    </div>
-                </div>
-            `;
+            return `<div class="space-y-4 animate-fade-in pb-20"><h2 class="text-xl font-bold text-stone-800 px-1 flex items-center gap-2">${getIcon('map', "text-emerald-600", 24)}地圖與相關連結</h2><div class="space-y-3">${linksHtml}</div></div>`;
         }
 
         // [渲染函式：筆記與餐廳頁面]
-        // 結構較為複雜，包含三個動態子區塊 (Links, Dining, Routes)
         function renderNotesView() {
             const daysHtml = TRIP_DATA.notes.map(day => {
                 let content = '';
-
-                // 子區塊 1: 外部連結 (Links)
                 if (day.links) {
-                    content += `<div class="space-y-2">
-                        ${day.links.map(link => `
-                            <a href="${link.url}" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-3 bg-white border border-indigo-100 rounded-lg shadow-sm active:bg-indigo-50 transition-colors">
-                                <div class="flex flex-col">
-                                    <span class="text-base text-indigo-700 font-bold flex items-center gap-2">${link.title}${getIcon('external-link', "opacity-50", 14)}</span>
-                                    ${link.note ? `<span class="text-xs text-stone-500 mt-0.5">${link.note}</span>` : ''}
-                                </div>
-                            </a>
-                        `).join('')}
-                    </div>`;
+                    content += `<div class="space-y-2">${day.links.map(link => `<a href="${link.url}" target="_blank" class="flex items-center justify-between p-3 bg-white border border-indigo-100 rounded-lg shadow-sm active:bg-indigo-50"><div class="flex flex-col"><span class="text-base text-indigo-700 font-bold flex items-center gap-2">${link.title}${getIcon('external-link', "opacity-50", 14)}</span>${link.note ? `<span class="text-xs text-stone-500 mt-0.5">${link.note}</span>` : ''}</div></a>`).join('')}</div>`;
                 }
-
-                // 子區塊 2: 餐飲資訊 (Dining) - 巢狀結構 (地區 -> 店家列表)
                 if (day.dining) {
-                    content += `<div class="bg-orange-50/50 rounded-lg p-3 border border-orange-100 mt-4">
-                        <h4 class="text-sm font-bold text-orange-600 mb-2 uppercase tracking-wide flex items-center gap-1">${getIcon('utensils', "", 12)} 餐飲資訊</h4>
-                        ${day.dining.map(areaGroup => `
-                            <div class="mb-4 last:mb-0">
-                                <div class="text-xs font-bold text-stone-500 mb-1 border-b border-orange-200 inline-block">${areaGroup.area}</div>
-                                <ul class="space-y-2 pl-2">
-                                    ${areaGroup.spots.map(spot => `
-                                        <li class="flex justify-between items-center text-sm">
-                                            <div class="flex flex-col">
-                                                <div class="flex items-center gap-2">
-                                                    <span class="text-base text-stone-800 font-bold">${spot.name}</span>
-                                                    ${spot.cuisine ? `<span class="text-[10px] px-1.5 py-0.5 bg-orange-100 text-orange-700 rounded-md font-bold">${spot.cuisine}</span>` : ''}
-                                                </div>
-                                                <span class="text-[10px] font-mono text-stone-500 mt-0.5">${spot.hours}</span>
-                                                ${spot.note ? `<span class="text-sm text-stone-600 mt-1 leading-relaxed">${spot.note}</span>` : ''}
-                                            </div>
-                                            <a href="${spot.mapUrl || getGoogleMapUrl(spot.name)}" target="_blank" rel="noopener noreferrer" 
-class="p-2 bg-blue-50 text-blue-600 rounded-full active:scale-95 hover:bg-blue-100 transition-colors shrink-0">${getIcon('navigation', "", 16)}</a>
-                                        </li>
-                                    `).join('')}
-                                </ul>
-                            </div>
-                        `).join('')}
-                    </div>`;
+                    content += `<div class="bg-orange-50/50 rounded-lg p-3 border border-orange-100 mt-4"><h4 class="text-sm font-bold text-orange-600 mb-2 uppercase tracking-wide flex items-center gap-1">${getIcon('utensils', "", 12)} 餐飲資訊</h4>${day.dining.map(areaGroup => `<div class="mb-4 last:mb-0"><div class="text-xs font-bold text-stone-500 mb-1 border-b border-orange-200 inline-block">${areaGroup.area}</div><ul class="space-y-2 pl-2">${areaGroup.spots.map(spot => `<li class="flex justify-between items-center text-sm"><div class="flex flex-col"><div class="flex items-center gap-2"><span class="text-base text-stone-800 font-bold">${spot.name}</span>${spot.cuisine ? `<span class="text-[10px] px-1.5 py-0.5 bg-orange-100 text-orange-700 rounded-md font-bold">${spot.cuisine}</span>` : ''}</div><span class="text-[10px] font-mono text-stone-500 mt-0.5">${spot.hours}</span>${spot.note ? `<span class="text-sm text-stone-600 mt-1 leading-relaxed">${spot.note}</span>` : ''}</div><a href="${spot.mapUrl || getGoogleMapUrl(spot.name)}" target="_blank" class="p-2 bg-blue-50 text-blue-600 rounded-full active:scale-95 shrink-0">${getIcon('navigation', "", 16)}</a></li>`).join('')}</ul></div>`).join('')}</div>`;
                 }
-
-                // 子區塊 3: 逛街路線 (Routes) - 視覺化的時間軸樣式
                 if (day.routes) {
-                    content += `<div class="space-y-4 mt-4">
-                        ${day.routes.map(route => `
-                            <div class="bg-sky-50 rounded-lg p-3 border border-sky-100">
-                                <h4 class="text-base font-bold text-sky-800 mb-2 flex items-center gap-2">${getIcon('map-pin', "", 14)} ${route.area}</h4>
-                                <ul class="space-y-2 relative pl-4 border-l-2 border-sky-200 ml-1">
-                                    ${route.spots.map(spot => `
-                                        <li class="relative flex justify-between items-start">
-                                            <div class="absolute -left-[21px] top-1.5 w-2 h-2 rounded-full bg-sky-300"></div>
-                                            <div class="flex-1 pr-2">
-                                                <div class="flex items-center gap-2"><div class="text-base font-bold text-stone-700">${spot.name}</div>${spot.cuisine ? `<span class="text-[10px] px-1.5 py-0.5 bg-orange-100 text-orange-700 rounded-md font-bold">${spot.cuisine}</span>` : ''}</div>
-                                                <div class="text-[10px] text-stone-500 font-mono mt-0.5">${spot.hours}</div>
-                                                ${spot.note ? `<div class="text-sm text-stone-600 mt-1 leading-relaxed">${spot.note}</div>` : ''}
-                                            </div>
-                                            <a href="${spot.mapUrl || getGoogleMapUrl(spot.name)}" target="_blank" rel="noopener noreferrer" 
-class="p-2 bg-blue-50 text-blue-600 rounded-full active:scale-95 hover:bg-blue-100 transition-colors shrink-0">${getIcon('navigation', "", 16)}</a>
-                                        </li>
-                                    `).join('')}
-                                </ul>
-                            </div>
-                        `).join('')}
-                    </div>`;
+                    content += `<div class="space-y-4 mt-4">${day.routes.map(route => `<div class="bg-sky-50 rounded-lg p-3 border border-sky-100"><h4 class="text-base font-bold text-sky-800 mb-2 flex items-center gap-2">${getIcon('map-pin', "", 14)} ${route.area}</h4><ul class="space-y-2 relative pl-4 border-l-2 border-sky-200 ml-1">${route.spots.map(spot => `<li class="relative flex justify-between items-start"><div class="absolute -left-[21px] top-1.5 w-2 h-2 rounded-full bg-sky-300"></div><div class="flex-1 pr-2"><div class="flex items-center gap-2"><div class="text-base font-bold text-stone-700">${spot.name}</div>${spot.cuisine ? `<span class="text-[10px] px-1.5 py-0.5 bg-orange-100 text-orange-700 rounded-md font-bold">${spot.cuisine}</span>` : ''}</div><div class="text-[10px] text-stone-500 font-mono mt-0.5">${spot.hours}</div>${spot.note ? `<div class="text-sm text-stone-600 mt-1 leading-relaxed">${spot.note}</div>` : ''}</div><a href="${spot.mapUrl || getGoogleMapUrl(spot.name)}" target="_blank" class="p-2 bg-blue-50 text-blue-600 rounded-full active:scale-95 shrink-0">${getIcon('navigation', "", 16)}</a></li>`).join('')}</ul></div>`).join('')}</div>`;
                 }
-
-                return `
-                    <div class="bg-white/95 backdrop-blur-sm rounded-xl shadow-sm border border-stone-200 overflow-hidden p-0 border-l-4 border-l-pink-400">
-                        <div class="bg-stone-50 px-4 py-2 border-b border-stone-100"><h3 class="font-bold text-stone-800">${day.date}</h3></div>
-                        <div class="p-4 space-y-4">
-                            ${content}
-                        </div>
-                    </div>
-                `;
+                return `<div class="bg-white/95 backdrop-blur-sm rounded-xl shadow-sm border border-stone-200 overflow-hidden p-0 border-l-4 border-l-pink-400"><div class="bg-stone-50 px-4 py-2 border-b border-stone-100"><h3 class="font-bold text-stone-800">${day.date}</h3></div><div class="p-4 space-y-4">${content}</div></div>`;
             }).join('');
 
-            return `
-                <div class="space-y-6 animate-fade-in pb-20">
-                    <h2 class="text-xl font-bold text-stone-800 px-1 flex items-center gap-2">
-                        ${getIcon('notebook-pen', "text-pink-500", 24)}
-                        行程備註
-                    </h2>
-                    ${daysHtml}
-                </div>
-            `;
+            return `<div class="space-y-6 animate-fade-in pb-20"><h2 class="text-xl font-bold text-stone-800 px-1 flex items-center gap-2">${getIcon('notebook-pen', "text-pink-500", 24)}行程備註</h2>${daysHtml}</div>`;
         }
 
-        // [渲染函式：頁尾 (Footer)]
+        // [渲染函式：頁尾]
         function renderFooter() {
-            return `
-                <div class="text-center pt-8 pb-4 opacity-80 mb-16">
-                    <div class="border-t border-stone-400/30 pt-2 px-4 inline-flex items-baseline gap-2">
-                        <span class="text-sm text-stone-500 font-medium tracking-wider">Created by</span>
-                        <span class="text-4xl text-stone-600" style="font-family: 'Dancing Script', cursive">Wen</span>
-                    </div>
-                </div>
-            `;
+            return `<div class="text-center pt-8 pb-4 opacity-80 mb-16"><div class="border-t border-stone-400/30 pt-2 px-4 inline-flex items-baseline gap-2"><span class="text-sm text-stone-500 font-medium tracking-wider">Created by</span><span class="text-4xl text-stone-600" style="font-family: 'Dancing Script', cursive">Wen</span></div></div>`;
         }
 
         // ==========================================
         // --- 4. 主控制邏輯 (Main Controller) ---
         // ==========================================
-
-        // [核心視圖更新函式 updateView]
-        // 運作原理：類似 Virtual DOM 的簡化版，根據當前 State 清空並重繪整個 #main-content
         function updateView() {
             const mainContent = document.getElementById('main-content');
             const scrollerContainer = document.getElementById('date-scroller-container');
             const headerStatus = document.getElementById('header-status');
 
-            // [UX 優化] 重置滾動位置到頂部，確保切換分頁時視野從頭開始
             mainContent.scrollTop = 0;
-
-            // [路由邏輯]
-            // 根據目前 state.activeTab 決定要呼叫哪個 Render 函式生成 HTML 字串
             let contentHtml = '';
+            
+            scrollerContainer.classList.add('hidden');
+            headerStatus.classList.add('hidden');
+
             switch(state.activeTab) {
                 case 'itinerary': 
                     contentHtml = renderItineraryView(state.selectedDayId);
-                    scrollerContainer.classList.remove('hidden'); // 只有行程頁需要顯示日期捲軸
+                    scrollerContainer.classList.remove('hidden');
                     updateDateScroller();
                     break;
-                case 'flights': 
-                    contentHtml = renderFlightsView();
-                    scrollerContainer.classList.add('hidden');
-                    headerStatus.classList.add('hidden');
-                    break;
-                case 'driving': 
-                    contentHtml = renderDrivingView();
-                    scrollerContainer.classList.add('hidden');
-                    headerStatus.classList.add('hidden');
-                    break;
-                case 'manhole': 
-                    contentHtml = renderManholeView();
-                    scrollerContainer.classList.add('hidden');
-                    headerStatus.classList.add('hidden');
-                    break;
-                case 'map': 
-                    contentHtml = renderMapView();
-                    scrollerContainer.classList.add('hidden');
-                    headerStatus.classList.add('hidden');
-                    break;
-                case 'notes': 
-                    contentHtml = renderNotesView();
-                    scrollerContainer.classList.add('hidden');
-                    headerStatus.classList.add('hidden');
-                    break;
-                default:
-                    contentHtml = renderItineraryView(state.selectedDayId);
+                case 'flights': contentHtml = renderFlightsView(); break;
+                case 'driving': contentHtml = renderDrivingView(); break;
+                case 'manhole': contentHtml = renderManholeView(); break;
+                case 'map': contentHtml = renderMapView(); break;
+                case 'notes': contentHtml = renderNotesView(); break;
+                default: contentHtml = renderItineraryView(state.selectedDayId);
             }
             
-            // [DOM 重繪] 將生成的 HTML 注入到主容器中
             mainContent.innerHTML = contentHtml + renderFooter();
-            
-            // 更新底部導航欄的樣式 (Highlight Active Tab)
             updateBottomNav();
-            
-            // [關鍵步驟：圖標渲染]
-            // 因為 innerHTML 重繪了 DOM，原本的 <i data-lucide> 標籤已被重置為純 HTML 標籤
-            // 需要重新呼叫 lucide.createIcons() 讓腳本掃描新 DOM 並將其轉換為 SVG 向量圖
             lucide.createIcons();
         }
 
-        // [更新頂部日期捲軸 (Date Scroller)]
+        // [更新頂部日期捲軸]
         function updateDateScroller() {
             const scroller = document.getElementById('date-scroller');
             const buttonsHtml = TRIP_DATA.itinerary.map(day => {
                 const isActive = state.selectedDayId === day.id;
-                // [樣式切換] 根據是否選中切換 CSS 類別 (Active 狀態有陰影與深色背景)
-                const activeClasses = isActive 
-                    ? "bg-indigo-600/90 backdrop-blur border-indigo-600 text-white shadow-lg shadow-indigo-200" 
-                    : "bg-white/60 backdrop-blur border-stone-200 text-stone-400";
-                
-                return `
-                    <button
-                        onclick="switchDay('${day.id}')"
-                        id="btn-${day.id}"
-                        class="flex-shrink-0 snap-center flex flex-col items-center justify-center w-14 h-16 rounded-xl border transition-all duration-300 active:scale-95 ${activeClasses}"
-                    >
-                        <span class="text-[10px] font-medium uppercase leading-none mb-1">${day.date}</span>
-                        <span class="text-lg font-black leading-none">${day.dayOfWeek}</span>
-                    </button>
-                `;
+                const activeClasses = isActive ? "bg-indigo-600/90 backdrop-blur border-indigo-600 text-white shadow-lg shadow-indigo-200" : "bg-white/60 backdrop-blur border-stone-200 text-stone-400";
+                return `<button onclick="switchDay('${day.id}')" id="btn-${day.id}" class="flex-shrink-0 snap-center flex flex-col items-center justify-center w-14 h-16 rounded-xl border transition-all duration-300 active:scale-95 ${activeClasses}"><span class="text-[10px] font-medium uppercase leading-none mb-1">${day.date}</span><span class="text-lg font-black leading-none">${day.dayOfWeek}</span></button>`;
             }).join('');
-            
             scroller.innerHTML = buttonsHtml;
-            
-            // [UX 優化：自動捲動]
-            // 當切換日期時，確保選中的日期按鈕自動捲動到畫面中央
             setTimeout(() => {
                 const selectedBtn = document.getElementById(`btn-${state.selectedDayId}`);
-                if (selectedBtn) {
-                    selectedBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-                }
+                if (selectedBtn) selectedBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
             }, 50);
         }
 
-        // [更新底部導航欄 (Bottom Nav)]
+        // [更新底部導航欄]
         function updateBottomNav() {
             const nav = document.getElementById('bottom-nav');
             const tabs = [
                 { id: 'itinerary', label: '行程', icon: 'calendar' },
                 { id: 'flights', label: '航班/住宿', icon: 'plane' },
                 { id: 'driving', label: '自駕', icon: 'car', color: 'text-lime-600' },
-                { id: 'manhole', label: '庫存', icon: 'credit-card', sub: 'scale-90' },
+                { id: 'manhole', label: '在庫状況', icon: 'credit-card', sub: 'scale-90' },
                 { id: 'map', label: '地圖', icon: 'map', color: 'text-emerald-600' },
                 { id: 'notes', label: '備註', icon: 'notebook-pen', color: 'text-pink-600' }
             ];
             
-            const html = tabs.map(tab => {
+            nav.innerHTML = tabs.map(tab => {
                 const isActive = state.activeTab === tab.id;
-                // [樣式切換] 處理選中狀態的顏色邏輯 (部分 Tab 有特定主題色，如自駕為綠色)
                 const defaultColor = isActive ? 'text-indigo-600' : 'text-stone-400';
                 const activeColor = (tab.color && isActive) ? tab.color : defaultColor;
-                
-                return `
-                    <button 
-                        onclick="switchTab('${tab.id}')"
-                        class="flex flex-col items-center justify-center w-14 h-full space-y-1 active:bg-stone-50 transition-colors ${activeColor}"
-                    >
-                        ${getIcon(tab.icon, "", 20)}
-                        <span class="text-[9px] font-medium ${tab.sub || ''}">${tab.label}</span>
-                    </button>
-                `;
+                return `<button onclick="switchTab('${tab.id}')" class="flex flex-col items-center justify-center w-14 h-full space-y-1 active:bg-stone-50 transition-colors ${activeColor}">${getIcon(tab.icon, "", 20)}<span class="text-[9px] font-medium ${tab.sub || ''}">${tab.label}</span></button>`;
             }).join('');
-
-            nav.innerHTML = html;
         }
 
         // ==========================================
         // --- 5. 事件處理 (Event Handlers) ---
         // ==========================================
-
-        // [切換底部標籤頁]
-        // 更新全域狀態 state.activeTab -> 觸發 updateView 重繪
-        function switchTab(tabId) {
-            state.activeTab = tabId;
-            updateView();
-        }
-
-        // [切換日期 (行程模式)]
-        // 更新全域狀態 state.selectedDayId -> 觸發 updateView 重繪
-        function switchDay(dayId) {
-            state.selectedDayId = dayId;
-            updateView();
-        }
+        function switchTab(tabId) { state.activeTab = tabId; updateView(); }
+        function switchDay(dayId) { state.selectedDayId = dayId; updateView(); }
 
         // ==========================================
         // --- 6. 初始化 (Initialization) ---
         // ==========================================
-        // [應用程式啟動入口]
-        // 當 DOM 結構完全載入後，執行初次渲染，啟動應用程式
-        document.addEventListener('DOMContentLoaded', () => {
-            updateView();
-        });
+        document.addEventListener('DOMContentLoaded', () => { updateView(); });
     </script>
 </body>
 </html>
-
-
