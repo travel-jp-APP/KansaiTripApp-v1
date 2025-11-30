@@ -36,7 +36,6 @@
 
     <style>
         /* --- CSS 全域樣式優化 --- */
-        
         /* [關鍵修正] 鎖定 html 與 body，徹底解決 iOS 滑動頁面邊緣導致的整體位移與卡頓問題 */
         html, body {
             width: 100%;
@@ -81,10 +80,8 @@
     </style>
 </head>
 <body>
-
     <!-- [App 主容器佈局] -->
     <div class="h-[100dvh] flex flex-col md:max-w-md md:mx-auto shadow-2xl overflow-hidden relative select-none bg-stone-300">
-        
         <!-- [背景圖層] -->
         <div class="fixed inset-0 z-0 pointer-events-none md:max-w-md md:mx-auto">
             <img src="Shirahige Jinja.jpg" alt="Shiga Scenery" class="w-full h-full object-cover opacity-90"/>
@@ -139,7 +136,8 @@
             itinerary: [
                 { id: "day1", date: "12/27", dayOfWeek: "六", location: "大阪 ➔ 滋賀", weather: "sunny", temp: "8°C", items: [
                     { type: "transport", time: "11:15", title: "搭乘 CX564 飛往大阪", note: "預計 14:55 抵達關西機場 T1。出關後請先至「臨空城」方向移動。" },
-                    { type: "visit", time: "15:30", title: "臨空城觀光案內所 (Rinku Machidokoro)", tag: "收集", note: "位於臨空城車站改札口外，務必先領取人孔蓋卡。營業至22:00 (卡片發放至20:00)。", mapUrl: "https://maps.app.goo.gl/AFLxB4tBLNV1DPb79" },
+                    { type: "visit", time: "15:30", title: "臨空城觀光案內所 (Rinku Machidokoro)", tag: "收集", note: "位於臨空城車站改札口外，務必先領取人孔蓋卡，卡片發放至20:00。", mapUrl: "https://maps.app.goo.gl/AFLxB4tBLNV1DPb79", bookingUrl: "https://www.kankou-izumisano.jp/50on/ka/1565835676276.html" },
+                    { type: "visit", time: "15:45", title: "泉佐野市 觀光資訊服務中心", tag: "收集", note: "位於南海泉佐野站。", mapUrl: "https://maps.app.goo.gl/Fykh1UMmYw9CDw5x9", bookingUrl: "https://www.city.izumisano.lg.jp/kakuka/seikatsu/shoko/menu/izumisanomachidokoro.html" },
                     { type: "shop", time: "16:00", title: "臨空城 Outlet (Rinku Premium Outlets)", highlight: "必買: 運動品牌、日系服飾", note: "晚餐建議在此解決 (美食街或海邊餐廳)。營業至20:00。" },
                     { type: "transport", time: "19:00", title: "前往草津", note: "關西機場 → 京都車站 → 草津車站。車程約 1小時50分。", mapUrl: null }, 
                     { type: "hotel", time: "21:30", title: "入住：草津波士頓廣場飯店", note: "位於草津站西口，出站即達。" }
@@ -147,34 +145,36 @@
                 { id: "day2", date: "12/28", dayOfWeek: "日", location: "滋賀自駕", weather: "cloudy", temp: "6°C", items: [
                     { type: "transport", time: "08:00", title: "租車：Toyota Rent a Car 草津西口店", note: "攜帶：台灣駕照、日文譯本、護照、信用卡。檢查車況與 ETC 卡。", mapUrl: "https://maps.app.goo.gl/SDWrnzuSNuSV1V6V9" },
                     { type: "visit", time: "09:40", title: "Kusatsu Yume-Honjin (くさつ夢本陣)", tag: "收集", note: "領取草津人孔蓋卡。位於商店街內，門口可暫停或停附近停車場。09:30開門。", parkingUrl: "https://maps.app.goo.gl/u6ZijyhJJtStz16C8", mapUrl: "https://maps.app.goo.gl/gQ4efFwChjmxP4Gq5?g_st=ipc" },
+                    { type: "visit", time: "10:00", title: "草津宿街道交流館", tag: "收集", note: "位於夢本陣附近，順道參觀與領取。", mapUrl: "https://maps.app.goo.gl/TfcXcTNCF1PatLLd7", bookingUrl: "https://www.city.kusatsu.shiga.jp/kusatsujuku/index.html" },
                     { type: "visit", time: "10:20", title: "栗東観光案内所 (手原車站 2F)", tag: "收集", note: "位於 JR 手原站二樓。注意：假日營業時間可能較短，請優先前往。" },
-                    { type: "visit", time: "11:00", title: "守山市駅前総合案内所", tag: "收集", note: "位於 JR 守山站，交通便利。07:30早開。" },
+                    { type: "visit", time: "11:00", title: "守山市駅前総合案内所", tag: "收集", note: "位於 JR 守山站，交通便利。07:30早開。", bookingUrl: "https://pc-moriyama.jp/information" },
                     { type: "visit", time: "12:00", title: "八日市駅前観光交流施設", tag: "收集", note: "近江鐵道八日市站內。附近有大風箏博物館。" },
                     { type: "visit", time: "13:00", title: "東近江市役所 (假日：守衛室)", tag: "收集", note: "假日需至市役所「宿直室 (守衛室)」領取。請導航至東近江市役所本廳。", mapUrl: "https://www.google.com/maps/search/?api=1&query=東近江市役所" },
                     { type: "visit", time: "14:00", title: "彥根市上下水道中心 (假日窗口)", tag: "收集", note: "假日需按門鈴請守衛開門領取。非一般觀光案內所，請注意位置。", mapUrl: "https://maps.app.goo.gl/mVScUD8s72aGcQTF9" },
-                    { type: "visit", time: "14:30", title: "Hikonyan Museum (彥根貓博物館)", highlight: "必看: 彥根貓表演", note: "位於彥根城旁。請事先查詢彥根貓 (Hikonyan) 登場時間。", mapUrl: "https://maps.app.goo.gl/kkbKSaDFaAikUWC89" },
+                    { type: "visit", time: "14:30", title: "Hikonyan Museum (彥根貓博物館)", highlight: "必看: 彥根貓表演", note: "位於彥根城旁。請事先查詢彥根貓 (Hikonyan) 登場時間。", mapUrl: "https://maps.app.goo.gl/kkbKSaDFaAikUWC89", bookingUrl: "https://www.hikonyan-museum.com/new_year_2026/" },
                     { type: "shop", time: "17:30", title: "MITSUI OUTLET PARK 滋賀龍王", highlight: "關西最大級 Outlet", note: "店鋪數多，晚餐推薦在此享用近江牛料理 (如近江牛岡喜)。" }
                 ]},
                 { id: "day3", date: "12/29", dayOfWeek: "一", location: "海之京都", weather: "rain", temp: "4°C", items: [
                     { type: "transport", time: "06:30", title: "前往伊根灣", note: "從草津波士頓飯店出發 (不需導航)，預計車程約 2.5 小時，09:00 前抵達。", mapUrl: null },
-                    { type: "visit", time: "09:00", title: "伊根灣賞景觀光船", highlight: "必拍: 舟屋群 & 餵海鷗", note: "每半小時一班，航程約25分鐘。船上有販售蝦味先可餵食海鷗與老鷹。" },
+                    { type: "visit", time: "09:00", title: "伊根灣賞景觀光船", highlight: "必拍: 舟屋群 & 餵海鷗", note: "每半小時一班，航程約25分鐘。船上有販售蝦味先可餵食海鷗與老鷹。", bookingUrl: "https://www.inewan.com/inewan_cruise/" },
                     { type: "visit", time: "10:30", title: "道の駅 海の京都 宮津", tag: "收集", note: "位於宮津市區的休息站。內有觀光案內所可領取人孔蓋卡。", mapUrl: "https://maps.app.goo.gl/8o12WE4J7ZNhWoeWA" },
                     { type: "food", time: "12:00", title: "午餐：天橋立 / 宮津周邊", highlight: "必吃: 蛤蠣丼 (Asari Don) 或 海鮮丼", note: "推薦：富田屋 (宮津站前老舖)、Suginoya (天橋立站前)。" },
-                    { type: "visit", time: "13:30", title: "天橋立 傘松公園 (昇龍觀)", highlight: "日本三景", note: "搭乘纜車或吊椅上山，從胯下窺看「飛龍在天」的奇景。", mapUrl: "https://maps.app.goo.gl/2UTtV1BR6svz4rQa6?g_st=ipc" },
-                    { type: "visit", time: "15:00", title: "元伊勢 籠神社 & 智恩寺", note: "籠神社為丹後國一宮。智恩寺供奉文殊菩薩，以「智慧之餅」聞名。" },
-                    { type: "visit", time: "16:00", title: "天橋立 View Land (飛龍觀)", note: "位於車站後方，從另一側看沙洲。注意冬季纜車末班時間 (約16:30-17:00)。", mapUrl: "https://maps.app.goo.gl/jbcSfyaEcciWeSuGA?g_st=ipc" }
+                    { type: "visit", time: "13:00", title: "天橋立観光船", highlight: "!", note: "前往天橋立棧橋。", mapUrl: "https://maps.app.goo.gl/mamfMGuNHkrJHZ7UA", bookingUrl: "https://www.amano-hashidate.com/sightseeingboat/" },
+                    { type: "visit", time: "13:30", title: "天橋立 傘松公園 (昇龍觀)", highlight: "日本三景", note: "搭乘纜車或吊椅上山，從胯下窺看「飛龍在天」的奇景。", mapUrl: "https://maps.app.goo.gl/2UTtV1BR6svz4rQa6?g_st=ipc", bookingUrl: "https://www.amano-hashidate.com/cablecar/" },
+                    { type: "shrine", time: "15:00", title: "元伊勢 籠神社 & 智恩寺", note: "籠神社為丹後國一宮。智恩寺供奉文殊菩薩，以「智慧之餅」聞名。" },
+                    { type: "visit", time: "16:00", title: "天橋立 View Land (飛龍觀)", note: "位於車站後方，從另一側看沙洲。注意冬季纜車末班時間 (約16:30-17:00)。", mapUrl: "https://maps.app.goo.gl/jbcSfyaEcciWeSuGA?g_st=ipc", bookingUrl: "https://www.viewland.jp/" }
                 ]},
                 { id: "day4", date: "12/30", dayOfWeek: "二", location: "長濱/琵琶湖", weather: "cloudy", temp: "5°C", items: [
-                    { type: "transport", time: "08:30前", title: "從草津波士頓廣場飯店到竹生島觀光船 (長濱港出發)", note: "前往琵琶湖中的能量景點「竹生島」。請確認船班時間 (冬季班次較少)。", mapUrl: "https://maps.app.goo.gl/uMrWCQdtjCGpAsvT8" },
-                    { type: "visit", time: "10:00", title: "竹生島 寶嚴寺", highlight: "投擲瓦片祈福", note: "參拜弁財天。必試「瓦片投擲 (Kawarake Nage)」，投過鳥居可心想事成。", mapUrl: "https://maps.app.goo.gl/q2TAryroG2QNfisY8" },
+                    { type: "transport", time: "08:30前", title: "竹生島觀光船 (長濱港出發)", highlight: "!", note: "前往琵琶湖中的能量景點「竹生島」。請確認船班時間 (冬季班次較少)。", mapUrl: "https://maps.app.goo.gl/uMrWCQdtjCGpAsvT8", bookingUrl: "https://book.biwakokisen.co.jp/top/products/87fd7388-72d2-5b0b-af09-340f7e9aa8ef?lng=ja-JP" },
+                    { type: "shrine", time: "10:00", title: "竹生島 寶嚴寺", highlight: "投擲瓦片祈福", note: "參拜弁財天。必試「瓦片投擲 (Kawarake Nage)」，投過鳥居可心想事成。", mapUrl: "https://maps.app.goo.gl/q2TAryroG2QNfisY8" },
                     { type: "visit", time: "12:00", title: "黑壁廣場 (黑壁Square)", highlight: "大正浪漫老街", note: "以玻璃工藝聞名。必吃：96Cafe 黑咖哩、翼果樓 燒鯖魚素麵。" },
-                    { type: "visit", time: "14:30", title: "道の駅 草津", tag: "收集", note: "營業時間 09:00–18:00。", mapUrl: "https://maps.app.goo.gl/ToBkBynpWX7XvhsF6" },
+                    { type: "visit", time: "14:30", title: "道の駅 草津", tag: "收集", note: "營業時間 09:00–18:00。", mapUrl: "https://maps.app.goo.gl/ToBkBynpWX7XvhsF6", bookingUrl: "https://www.karasuma.co.jp/" },
                     { type: "visit", time: "15:30", title: "大津駅観光案内所", tag: "收集", note: "營業時間 09:00–18:00。30分鐘內停車免費。", mapUrl: "https://maps.app.goo.gl/3RaAV6qsSCDTrXgS9", parkingUrl: "https://maps.app.goo.gl/M5SQU6NfjnbUdTPB7" },
-                    { type: "visit", time: "16:15", title: "近江神宮", highlight: "花牌情緣聖地", note: "競技歌牌 (百人一首) 的殿堂。建築風格為昭和造，朱紅美麗。" }
+                    { type: "shrine", time: "16:15", title: "近江神宮", highlight: "花牌情緣聖地", note: "競技歌牌 (百人一首) 的殿堂。建築風格為昭和造，朱紅美麗。" }
                 ]},
                 { id: "day5", date: "12/31", dayOfWeek: "三", location: "近江八幡", weather: "snow", temp: "3°C", items: [
                     { type: "visit", time: "08:30", title: "彥根城 (國寶五城)", highlight: "現存天守", note: "日本僅存五座國寶天守之一。可登上天守閣眺望琵琶湖。", mapUrl: "https://maps.app.goo.gl/oQ6LteKGpyHSDj7s5" },
-                    { type: "visit", time: "10:30", title: "多賀大社", highlight: "長壽祈願", note: "從彥根城出發約20分車程。滋賀縣第一大社，通稱「多賀公」。門口必買名產「糸切餅」。", mapUrl: "https://maps.app.goo.gl/FyG9SYzgecBRXQ74A" },
+                    { type: "shrine", time: "10:30", title: "多賀大社", highlight: "長壽祈願", note: "從彥根城出發約20分車程。滋賀縣第一大社，通稱「多賀公」。門口必買名產「糸切餅」。", mapUrl: "https://maps.app.goo.gl/FyG9SYzgecBRXQ74A" },
                     { type: "transport", time: "12:00", title: "前往近江八幡", note: "從多賀大社前往近江八幡，車程約 40 分鐘。", mapUrl: "https://maps.app.goo.gl/Sk3cyrf86bb4MXxx7?g_st=ipc" },
                     { type: "visit", time: "13:00", title: "八幡山纜車 & 八幡山城跡", note: "搭纜車上山，可俯瞰琵琶湖、西之湖與近江八幡棋盤狀市景。", mapUrl: "https://www.google.com/maps/search/?api=1&query=八幡山纜車" },
                     { type: "visit", time: "14:30", title: "八幡堀水鄉漫遊", highlight: "時代劇取景地", note: "沿著護城河散步或搭乘手搖船，感受江戶風情。" },
@@ -185,41 +185,41 @@
                 ]},
                 { id: "day6", date: "1/1", dayOfWeek: "四", location: "神戶/初詣", weather: "sunny", temp: "7°C", items: [
                     { type: "transport", time: "08:00", title: "移動至京都 (寄放行李) -> 神戶", note: "JR草津 -> JR京都 (Check-in REF飯店/寄放行李) -> JR新快速 -> JR三之宮。", mapUrl: "https://maps.app.goo.gl/wvQV78Z1MTSnDR3J6" },
-                    { type: "visit", time: "10:30", title: "生田神社 (初詣)", highlight: "戀愛結緣", note: "神戶最古老神社之一。新年參拜人潮眾多，請有排隊心理準備。", mapUrl: "https://maps.app.goo.gl/Qp6xcnbq8jurtKjr7" },
-                    { type: "visit", time: "12:00", title: "北野異人館街 & 北野天滿神社", note: "參觀風見雞之館(外觀)，並至高點的天滿神社祈求學業，俯瞰神戶港。", mapUrl: "https://maps.app.goo.gl/UYp8chLFqd5stcB77" },
+                    { type: "shrine", time: "10:30", title: "生田神社 (初詣)", highlight: "戀愛結緣", note: "神戶最古老神社之一。新年參拜人潮眾多，請有排隊心理準備。", mapUrl: "https://maps.app.goo.gl/Qp6xcnbq8jurtKjr7" },
+                    { type: "shrine", time: "12:00", title: "北野異人館街 & 北野天滿神社", note: "參觀風見雞之館(外觀)，並至高點的天滿神社祈求學業，俯瞰神戶港。", mapUrl: "https://maps.app.goo.gl/UYp8chLFqd5stcB77" },
                     { type: "visit", time: "13:00", title: "神戶港 / 美利堅公園 / BE KOBE", note: "神戶塔(整修中請確認)、BE KOBE 地標拍照。", mapUrl: "https://maps.app.goo.gl/UYp8chLFqd5stcB77" },
-                    { type: "visit", time: "14:00", title: "神戶機場 綜合案內所", tag: "收集", note: "搭乘 Port Liner 電車至神戶機場。領取神戶人孔蓋卡。", mapUrl: "https://maps.app.goo.gl/NNi4QQFVeQrsUWkb9" }
+                    { type: "visit", time: "14:00", title: "神戶機場 綜合案內所", tag: "收集", note: "搭乘 Port Liner 電車至神戶機場。領取神戶人孔蓋卡。", mapUrl: "https://maps.app.goo.gl/NNi4QQFVeQrsUWkb9", bookingUrl: "https://www.kairport.co.jp/service/equipment/information" }
                 ]},
                 { id: "day7", date: "1/2", dayOfWeek: "五", location: "奈良/宇治", weather: "sunny", temp: "6°C", items: [
-                    { type: "visit", time: "08:30", title: "春日大社", highlight: "鹿與燈籠", note: "參道上有許多鹿群。春日大社的燈籠與朱紅迴廊非常美麗。" },
+                    { type: "shrine", time: "08:30", title: "春日大社", highlight: "鹿與燈籠", note: "參道上有許多鹿群。春日大社的燈籠與朱紅迴廊非常美麗。" },
                     { type: "food", time: "11:00", title: "水谷茶屋", highlight: "茅草屋茶屋", note: "位於春日大社與若草山之間。必點：蕨餅、烏龍麵。拍照超美。" },
-                    { type: "visit", time: "12:30", title: "東大寺二月堂", highlight: "世界遺產", note: "大佛殿看世界最大青銅佛像。推薦走上二月堂，免費且可俯瞰奈良盆地。", mapUrl: "https://maps.app.goo.gl/NDEGsqMRrCt41PoT7" },
-                    { type: "visit", time: "13:00", title: "東大寺", note: "大佛殿參拜。", mapUrl: "https://maps.app.goo.gl/BzL6nTUyZgyjinjx5" },
-                    { type: "visit", time: "13:30", title: "御霊神社 (奈良町)", note: "位於奈良町內的老街區，可順道散步。", mapUrl: "https://maps.app.goo.gl/H4zGYhXNHFs1SHbG7" },
+                    { type: "shrine", time: "12:30", title: "東大寺二月堂", highlight: "世界遺產", note: "大佛殿看世界最大青銅佛像。推薦走上二月堂，免費且可俯瞰奈良盆地。", mapUrl: "https://maps.app.goo.gl/NDEGsqMRrCt41PoT7" },
+                    { type: "shrine", time: "13:00", title: "東大寺", note: "大佛殿參拜。", mapUrl: "https://maps.app.goo.gl/BzL6nTUyZgyjinjx5" },
+                    { type: "shrine", time: "13:30", title: "御霊神社 (奈良町)", note: "位於奈良町內的老街區，可順道散步。", mapUrl: "https://maps.app.goo.gl/H4zGYhXNHFs1SHbG7" },
                     { type: "visit", time: "14:30", title: "奈良町南観光案内所 (鹿之舟)", tag: "收集", note: "領取奈良市人孔蓋卡。建築本身也是景點。", mapUrl: "https://maps.app.goo.gl/uYGs9e48zbmCL9m18" },
-                    { type: "visit", time: "16:30", title: "大鳥大社 (大阪堺市)", tag: "收集", note: "注意：時間可能較晚，請確認營業時間。若來不及可僅參拜。", mapUrl: "https://maps.app.goo.gl/kyxyYjHMVcdGzBZg6?g_st=ipc" },
+                    { type: "shrine", time: "16:30", title: "大鳥大社 (大阪堺市)", note: "注意：時間可能較晚，請確認營業時間。若來不及可僅參拜。", mapUrl: "https://maps.app.goo.gl/kyxyYjHMVcdGzBZg6?g_st=ipc" },
                     { type: "shop", time: "18:00", title: "寶可夢中心 大阪店 DX (大丸心齋橋9F)", highlight: "必買: 限定商品", note: "營業時間通常至20:00 (新年請確認)。晚餐可於心齋橋/道頓堀解決。", mapUrl: "https://maps.app.goo.gl/6XNEnaevDXWHBe1q9" },
                     { type: "shop", time: "19:30", title: "寶可夢中心 大阪 (大丸梅田13F)", highlight: "注意營業時間", note: "⚠️ 兩家寶可夢中心皆約 20:00 打烊，時間較趕，建議依當下位置擇一前往。", mapUrl: "https://www.google.com/maps/search/?api=1&query=寶可夢中心+梅田" },
                     { type: "visit", time: "", title: "宇治市観光センター", tag: "備案", note: "搭乘JR奈良線至宇治。領取宇治人孔蓋卡。中心內有免費茶水。" },
                     { type: "shop", time: "", title: "吉伊卡哇 (Chiikawa) 伏見店", tag: "備案", highlight: "京都限定周邊", note: "Mogumogu 本舖。位於伏見稻荷大社附近，必買伏見稻荷限定狐狸造型周邊。" }
                 ]},
                 { id: "day8", date: "1/3", dayOfWeek: "六", location: "京都巡禮", weather: "cloudy", temp: "5°C", items: [
-                    { type: "visit", time: "08:30", title: "天龍寺 (嵐山)", highlight: "曹源池庭園", note: "世界遺產。建議開門即入園，避開人潮，欣賞借景嵐山的庭園之美。" },
+                    { type: "shrine", time: "08:30", title: "天龍寺 (嵐山)", highlight: "曹源池庭園", note: "世界遺產。建議開門即入園，避開人潮，欣賞借景嵐山的庭園之美。" },
                     { type: "visit", time: "09:30", title: "嵐山竹林の小径", highlight: "必拍美景", note: "從天龍寺北門出去即達。野宮神社也在附近。", mapUrl: "https://maps.app.goo.gl/tDdr4tS4kvyaiepM8" },
                     { type: "visit", time: "10:30", title: "尋找鳳王人孔蓋 (吉佐美兒童公園)", tag: "收集", note: "寶可夢人孔蓋『鳳王』。位於京都西大路御池附近的公園內。", mapUrl: "https://maps.app.goo.gl/rX5RkRCimURC2yaNA" },
-                    { type: "visit", time: "13:00", title: "仁和寺", note: "皇室御願寺。雖非櫻花季，但御殿建築與庭園枯山水非常值得一看。", mapUrl: "https://maps.app.goo.gl/5YWzcadDHfKG9SeR7?g_st=ipc" },
-                    { type: "visit", time: "14:00", title: "賀茂御祖神社 (下鴨神社)", highlight: "糾之森", note: "穿越原始林「糾之森」到達神社。這裡有著名的水籤與美麗的蕾絲守。", mapUrl: "https://maps.app.goo.gl/B5SbkueV5CbZ3s3B6" },
-                    { type: "visit", time: "15:00", title: "平安神宮", note: "明治時代重現平安京大內裏的建築。巨大的紅色鳥居是地標。" },
+                    { type: "shrine", time: "13:00", title: "仁和寺", note: "皇室御願寺。雖非櫻花季，但御殿建築與庭園枯山水非常值得一看。", mapUrl: "https://maps.app.goo.gl/5YWzcadDHfKG9SeR7?g_st=ipc" },
+                    { type: "shrine", time: "14:00", title: "賀茂御祖神社 (下鴨神社)", highlight: "糾之森", note: "穿越原始林「糾之森」到達神社。這裡有著名的水籤與美麗的蕾絲守。", mapUrl: "https://maps.app.goo.gl/B5SbkueV5CbZ3s3B6" },
+                    { type: "shrine", time: "15:00", title: "平安神宮", note: "明治時代重現平安京大內裏的建築。巨大的紅色鳥居是地標。" },
                     { type: "shop", time: "16:30", title: "Pokemon Center Kyoto (SUINA室町)", highlight: "藝妓皮卡丘", note: "位於 SUINA 室町 2F。特色是穿著和服/藝妓服裝的皮卡丘。" },
                     { type: "shop", time: "18:00", title: "吉伊卡哇 Land 京都 (四條河原町)", note: "位於 Kiddyland 內。繼續補貨京都限定商品。", mapUrl: "https://www.google.com/maps/search/?api=1&query=Kiddyland+京都" }
                 ]},
                 { id: "day9", date: "1/4", dayOfWeek: "日", location: "大阪 ➔ 台北", weather: "sunny", temp: "8°C", items: [
                     { type: "transport", time: "08:12", title: "移動：京都 ➔ 大阪 ➔ 關西機場", note: "方案：先將行李寄放在大阪難波/天王寺，或直接帶去臨空城/機場寄放。", mapUrl: "https://maps.app.goo.gl/wZ8yJHJJo2tUD5cUA" },
-                    { type: "visit", time: "09:30", title: "ATC Green Eco Plaza (南港)", note: "位於大阪南港 ATC 大樓。兼具環保教育與觀光功能的設施。" },
-                    { type: "visit", time: "11:00", title: "堺東観光案内所", tag: "收集", note: "領取堺市人孔蓋卡。位於南海高野線堺東站。" },
-                    { type: "visit", time: "12:00", title: "岸和田站前觀光案內所", tag: "收集", note: "以「岸和田山車祭 (Danjiri)」聞名。領取人孔蓋卡。", mapUrl: "https://maps.app.goo.gl/hbFc4FkHzPWHKGkDA" },
-                    { type: "visit", time: "13:30", title: "まちの駅 かいづか (貝塚)", tag: "收集", note: "貝塚市人孔蓋卡。位於南海本線貝塚站附近。", mapUrl: "https://www.google.com/maps/search/?api=1&query=まちの駅かいづか" },
-                    { type: "visit", time: "15:00", title: "泉佐野市観光情報センター", tag: "收集", note: "最後一站收集！位於臨空城站/泉佐野站附近。" },
+                    { type: "visit", time: "09:30", title: "ATC Green Eco Plaza (南港)", note: "位於大阪南港 ATC 大樓。兼具環保教育與觀光功能的設施。", bookingUrl: "https://www.ecoplaza.gr.jp/atc_post/n20251125/" },
+                    { type: "visit", time: "11:00", title: "堺東観光案内所", tag: "收集", note: "領取堺市人孔蓋卡。位於南海高野線堺東站。", bookingUrl: "https://www.sakai-tcb.or.jp/service/" },
+                    { type: "visit", time: "12:00", title: "岸和田站前觀光案內所", tag: "收集", note: "以「岸和田山車祭 (Danjiri)」聞名。領取人孔蓋卡。", mapUrl: "https://maps.app.goo.gl/hbFc4FkHzPWHKGkDA", bookingUrl: "https://www.city.kishiwada.lg.jp/page/36-touristinformationcenter.html" },
+                    { type: "visit", time: "13:30", title: "まちの駅 かいづか (貝塚)", tag: "收集", note: "貝塚市人孔蓋卡。位於南海本線貝塚站附近 (3F)。", mapUrl: "https://www.google.com/maps/search/?api=1&query=まちの駅かいづか", bookingUrl: "https://www.machinoeki-kaizuka.com/" },
+                    { type: "visit", time: "15:00", title: "泉佐野市観光情報センター", tag: "收集", note: "最後一站收集！位於臨空城站/泉佐野站附近。", bookingUrl: "https://www.city.izumisano.lg.jp/kakuka/seikatsu/shoko/menu/matidokoro.html" },
                     { type: "transport", time: "16:15", title: "搭乘 CX565 返台", note: "前往關西機場 T1 辦理登機。再見關西！預計 18:30 抵達台北。" }
                 ]}
             ],
@@ -271,7 +271,7 @@
                 {
                     date: "12/27（六）",
                     links: [{ title: "臨空城 Outlet 電子地圖", url: "https://platinumaps.jp/d/premiumoutlets-rinku?floor=1F", note: "Nike沒有免稅" }],
-                    dining: [{ area: "滋賀 - 草津", spots: [{ name: "東京油組総本店 滋賀組", cuisine: "油蕎麥", hours: "11:00–02:00", note: "無湯拉麵，將特製醬汁與醋/辣油拌入熱麵中。", mapUrl: "https://maps.app.goo.gl/Zjj8pK1nmaVU6Ug19" }, { name: "麺屋EDITION草津店", cuisine: "近江牛醬油拉麵", hours: "17:00–02:45", note: "使用近江牛骨熬製的黑醬油湯頭。" }, { name: "カマドのタコ", cuisine: "章魚燒 / 居酒屋", hours: "12:00–23:00", note: "適合宵夜小酌。", mapUrl: "https://maps.app.goo.gl/f8viAbvjP5p6tLtQ6" }, { name: "くさつ平和堂", cuisine: "大型超市", hours: "09:00–21:30", note: "草津站東口。適合購買水果、熟食。", mapUrl: "https://maps.app.goo.gl/g81dTrt1ruJAxkT37" }, { name: "近江牛焼肉 MAWARI 南草津店", cuisine: "近江牛燒肉", hours: "17:00–23:00", note: "CP值高的近江牛燒肉店，建議預約。", mapUrl: "https://maps.app.goo.gl/LZFTbWNz9Dpy9TWJ8" }] }]
+                    dining: [{ area: "滋賀 - 草津", spots: [{ name: "東京油組総本店 滋賀組", cuisine: "油蕎麥", hours: "11:00–02:00", note: "無湯拉麵，將特製醬汁與醋/辣油拌入熱麵中。", mapUrl: "https://maps.app.goo.gl/Zjj8pK1nmaVU6Ug19" }, { name: "麺屋EDITION草津店", cuisine: "近江牛醬油拉麵", hours: "17:00–02:45", note: "使用近江牛骨熬製的黑醬油湯頭。" }, { name: "カマドのタコ", cuisine: "章魚燒 /居酒屋", hours: "12:00–23:00", note: "適合宵夜小酌。", mapUrl: "https://maps.app.goo.gl/f8viAbvjP5p6tLtQ6" }, { name: "くさつ平和堂", cuisine: "大型超市", hours: "09:00–21:30", note: "草津站東口。適合購買水果、熟食。", mapUrl: "https://maps.app.goo.gl/g81dTrt1ruJAxkT37" }, { name: "近江牛焼肉 MAWARI 南草津店", cuisine: "近江牛燒肉", hours: "17:00–23:00", note: "CP值高的近江牛燒肉店，建議預約。", mapUrl: "https://maps.app.goo.gl/LZFTbWNz9Dpy9TWJ8" }] }]
                 },
                 {
                     date: "12/28（日）",
@@ -423,6 +423,7 @@
         // [核心渲染函式：單個行程項目卡片]
         function renderItineraryItem(item) {
             let iconName = 'map-pin', iconColor = "text-stone-400", borderColor = "border-stone-200";
+            let isEmoji = false; // 新增 Emoji 標記
 
             // [動態樣式邏輯]
             if (item.type === 'food') { 
@@ -431,6 +432,11 @@
                 iconName = 'shopping-bag'; iconColor = "text-yellow-500"; borderColor="border-l-yellow-500"; 
             } else if (item.type === 'visit') { 
                 iconName = 'camera'; iconColor = "text-emerald-500"; borderColor="border-l-emerald-500"; 
+            } else if (item.type === 'shrine') {
+                // 神社類別使用 Emoji 渲染邏輯
+                isEmoji = true; 
+                iconColor = "text-stone-800"; // Emoji 顏色通常固定，這裡僅影響容器文字顏色
+                borderColor = "border-l-rose-600"; // 邊框設為朱紅色
             } else if (item.type === 'hotel') { 
                 iconName = 'bed-double'; iconColor = "text-purple-400"; borderColor="border-l-purple-400"; 
             } else if (item.type === 'transport') {
@@ -454,7 +460,8 @@
                 <div class="flex flex-col items-center min-w-[50px]">
                     ${timeHtml}
                     <div class="mt-2 p-1.5 rounded-full bg-stone-50 ${iconColor}">
-                        ${getIcon(iconName, "", 18)}
+                        <!-- 若為神社類型則顯示 Emoji，否則顯示 Lucide Icon -->
+                        ${isEmoji ? '<span class="text-lg leading-none">⛩️</span>' : getIcon(iconName, "", 18)}
                     </div>
                     ${isCollection ? '<span class="text-[9px] text-amber-600 font-bold mt-1">GET!</span>' : ''}
                 </div>
@@ -462,7 +469,8 @@
                     <div class="flex items-start justify-between">
                         <h3 class="font-bold text-stone-800 text-lg leading-tight w-[calc(100%-70px)] sm:w-[calc(100%-110px)] select-text">${item.title}</h3>
                         <div class="flex gap-2 shrink-0"> 
-                            ${item.parkingUrl ? `<a href="${item.parkingUrl}" target="_blank" class="p-2 bg-sky-50 text-sky-600 rounded-full active:scale-95 shrink-0">${getIcon('square-parking', "", 18)}</a>` : ''}
+                            ${item.parkingUrl ? `<a href="${item.parkingUrl}" target="_blank" class="p-2 bg-sky-50 text-sky-600 rounded-full active:scale-95 shrink-0">${getIcon('circle-parking', "", 18)}</a>` : ''}
+                            ${item.bookingUrl ? `<a href="${item.bookingUrl}" target="_blank" class="p-2 bg-red-50 text-red-600 rounded-full active:scale-95 shrink-0">${getIcon('circle-alert', "", 18)}</a>` : ''}
                             ${showNavigation ? `<a href="${destinationUrl}" target="_blank" class="p-2 bg-blue-50 text-blue-600 rounded-full active:scale-95 shrink-0">${getIcon('navigation', "", 18)}</a>` : '<div class="w-8 h-8 shrink-0"></div>'}
                         </div>
                     </div>
@@ -705,7 +713,7 @@
                 { id: 'itinerary', label: '行程', icon: 'calendar' },
                 { id: 'flights', label: '航班/住宿', icon: 'plane' },
                 { id: 'driving', label: '自駕', icon: 'car', color: 'text-lime-600' },
-                { id: 'manhole', label: '在庫状況', icon: 'credit-card', sub: 'scale-90' },
+                { id: 'manhole', label: '在庫狀況', icon: 'credit-card', sub: 'scale-90' },
                 { id: 'map', label: '地圖', icon: 'map', color: 'text-emerald-600' },
                 { id: 'notes', label: '備註', icon: 'notebook-pen', color: 'text-pink-600' }
             ];
