@@ -101,7 +101,7 @@
         // --- 1. 資料來源 (Data Source) ---
         // ==========================================
         
-        // 不需要導航按鈕的標題清單
+        // 不需要導航按鈕的標題清單 (排除名單)
         const TITLES_WITHOUT_NAVIGATION = ["搭乘 CX564 飛往大阪", "搭乘 CX565 返台", "前往草津", "前往大阪"];
 
         const TRIP_DATA = {
@@ -433,12 +433,13 @@
                 iconName = 'bed-double'; iconColor = "text-purple-400"; borderColor="border-l-purple-400"; 
             } else if (item.type === 'transport') {
                 const isFlight = item.title.includes("CX564") || item.title.includes("CX565");
-                const isCarRelated = item.title.includes("租車") || item.title.includes("還車") || item.title.includes("駐車場") || item.title.includes("前往伊根灣") || item.title.includes("前往竹生島") || item.title.includes("前往近江八幡") || item.title.includes("前往");
-                const isBus = item.title.includes("公車") || item.title.includes("巴士") || item.title.includes("貴船公車站"); // 增加針對貴船公車站的判斷
+                const isCarRelated = item.title.includes("租車") || item.title.includes("還車") || item.title.includes("駐車場") || item.title.includes("前往伊根灣") || item.title.includes("前往竹生島") || item.title.includes("前往近江八幡") || (item.title.includes("前往") && !item.title.includes("叡山電鐵") && !item.title.includes("京都車站") && !item.title.includes("草津")); 
+                // 新增公車判斷邏輯，包含「貴船公車站」
+                const isBus = item.title.includes("公車") || item.title.includes("巴士") || item.title.includes("貴船公車站");
 
                 if (isFlight) { iconName = 'plane'; iconColor = "text-red-500"; borderColor = "border-l-red-500"; } 
                 else if (isCarRelated) { iconName = 'car'; iconColor = "text-lime-600"; borderColor = "border-l-lime-600"; } 
-                else if (isBus) { iconName = 'bus'; iconColor = "text-teal-600"; borderColor = "border-l-teal-600"; } // 公車專屬樣式
+                else if (isBus) { iconName = 'bus'; iconColor = "text-teal-600"; borderColor = "border-l-teal-600"; } 
                 else { iconName = 'train-front'; iconColor = "text-indigo-400"; borderColor = "border-l-indigo-400"; }
             }
 
@@ -742,3 +743,5 @@
     </script>
 </body>
 </html>
+
+
