@@ -148,7 +148,8 @@
                 ]},
                 { id: "day4", date: "12/30", dayOfWeek: "二", location: "長濱/琵琶湖", weather: "cloudy", temp: "5°C", items: [
                     { type: "transport", time: "08:30前", title: "竹生島觀光船 (長濱港出發)", highlight: "!", note: "前往琵琶湖中的能量景點「竹生島」。請確認船班時間 (冬季班次較少)。", mapUrl: "https://maps.app.goo.gl/uMrWCQdtjCGpAsvT8", bookingUrl: "https://book.biwakokisen.co.jp/top/products/87fd7388-72d2-5b0b-af09-340f7e9aa8ef?lng=ja-JP" },
-                    { type: "shrine", time: "10:00", title: "竹生島 寶嚴寺", highlight: "投擲瓦片祈福", note: "參拜弁財天。必試「瓦片投擲 (Kawarake Nage)」，投過鳥居可心想事成。", mapUrl: "https://maps.app.goo.gl/q2TAryroG2QNfisY8" },
+                    // [修改] 新增御朱印連結
+                    { type: "shrine", time: "10:00", title: "竹生島 寶嚴寺", highlight: "投擲瓦片祈福", note: "參拜弁財天。必試「瓦片投擲 (Kawarake Nage)」，投過鳥居可心想事成。", mapUrl: "https://maps.app.goo.gl/q2TAryroG2QNfisY8", goshuinUrl: "https://www.chikubushima.jp/prayer/" },
                     { type: "visit", time: "12:00", title: "黑壁廣場 (黑壁Square)", highlight: "大正浪漫老街", note: "以玻璃工藝聞名。必吃：96Cafe 黑咖哩、翼果樓 燒鯖魚素麵。" },
                     { type: "visit", time: "14:30", title: "道の駅 草津", tag: "收集", note: "營業時間 09:00–18:00。", mapUrl: "https://maps.app.goo.gl/ToBkBynpWX7XvhsF6", bookingUrl: "https://www.karasuma.co.jp/" },
                     { type: "visit", time: "15:30", title: "大津駅観光案内所", tag: "收集", note: "營業時間 09:00–18:00。30分鐘內停車免費。", mapUrl: "https://maps.app.goo.gl/3RaAV6qsSCDTrXgS9", parkingUrl: "https://maps.app.goo.gl/M5SQU6NfjnbUdTPB7" },
@@ -168,9 +169,7 @@
                 ]},
                 { id: "day6", date: "1/1", dayOfWeek: "四", location: "神戶/初詣", weather: "sunny", temp: "7°C", items: [
                     { type: "transport", time: "08:00", title: "移動至京都 (寄放行李) -> 神戶", note: "JR草津 -> JR京都 (Check-in REF飯店/寄放行李) -> JR新快速 -> JR三之宮。", mapUrl: "https://maps.app.goo.gl/wvQV78Z1MTSnDR3J6" },
-                    // [修改] 新增 goshuinUrl
                     { type: "shrine", time: "10:30", title: "生田神社 (初詣)", highlight: "戀愛結緣", note: "神戶最古老神社之一。新年參拜人潮眾多，請有排隊心理準備。", mapUrl: "https://maps.app.goo.gl/Qp6xcnbq8jurtKjr7", goshuinUrl: "https://ikutajinja.or.jp/goshuin" },
-                    // [修改] 更名並新增 goshuinUrl
                     { type: "shrine", time: "12:00", title: "北野天滿神社", note: "參觀風見雞之館(外觀)，並至高點的天滿神社祈求學業，俯瞰神戶港。", mapUrl: "https://maps.app.goo.gl/fhcHcHdgvcvERgqb9?g_st=ipc", goshuinUrl: "https://www.kobe-kitano.net/goshuin/" },
                     { type: "visit", time: "13:00", title: "神戶港 / 美利堅公園 / BE KOBE", note: "神戶塔(整修中請確認)、BE KOBE 地標拍照。", mapUrl: "https://maps.app.goo.gl/UYp8chLFqd5stcB77" },
                     { type: "visit", time: "14:00", title: "神戶機場 綜合案內所", tag: "收集", note: "搭乘 Port Liner 電車至神戶機場。領取神戶人孔蓋卡。", mapUrl: "https://maps.app.goo.gl/NNi4QQFVeQrsUWkb9", bookingUrl: "https://www.kairport.co.jp/service/equipment/information" }
@@ -178,11 +177,15 @@
                 { id: "day7", date: "1/2", dayOfWeek: "五", location: "奈良/宇治", weather: "sunny", temp: "6°C", items: [
                     { type: "shrine", time: "08:30", title: "春日大社", highlight: "鹿與燈籠", note: "參道上有許多鹿群。春日大社的燈籠與朱紅迴廊非常美麗。" },
                     { type: "food", time: "11:00", title: "水谷茶屋", highlight: "茅草屋茶屋", note: "位於春日大社與若草山之間。必點：蕨餅、烏龍麵。拍照超美。" },
-                    { type: "shrine", time: "12:30", title: "東大寺二月堂", highlight: "世界遺產", note: "大佛殿看世界最大青銅佛像。推薦走上二月堂，免費且可俯瞰奈良盆地。", mapUrl: "https://maps.app.goo.gl/NDEGsqMRrCt41PoT7" },
-                    { type: "shrine", time: "13:00", title: "東大寺", note: "大佛殿參拜。", mapUrl: "https://maps.app.goo.gl/BzL6nTUyZgyjinjx5" },
-                    { type: "shrine", time: "13:30", title: "御霊神社 (奈良町)", note: "位於奈良町內的老街區，可順道散步。", mapUrl: "https://maps.app.goo.gl/H4zGYhXNHFs1SHbG7" },
+                    // [修改] 新增御朱印連結
+                    { type: "shrine", time: "12:30", title: "東大寺二月堂", highlight: "世界遺產", note: "大佛殿看世界最大青銅佛像。推薦走上二月堂，免費且可俯瞰奈良盆地。", mapUrl: "https://maps.app.goo.gl/NDEGsqMRrCt41PoT7", goshuinUrl: "https://www.todaiji.or.jp/information/nigatsudo/" },
+                    // [修改] 新增御朱印連結
+                    { type: "shrine", time: "13:00", title: "東大寺", note: "大佛殿參拜。", mapUrl: "https://maps.app.goo.gl/BzL6nTUyZgyjinjx5", goshuinUrl: "https://www.todaiji.or.jp/sutra-and-goshuin/goshuin/" },
+                    // [修改] 新增御朱印連結
+                    { type: "shrine", time: "13:30", title: "御霊神社 (奈良町)", note: "位於奈良町內的老街區，可順道散步。", mapUrl: "https://maps.app.goo.gl/H4zGYhXNHFs1SHbG7", goshuinUrl: "https://naramachigoryojinja.amebaownd.com/" },
                     { type: "visit", time: "14:30", title: "奈良町南観光案内所 (鹿之舟)", tag: "收集", note: "領取奈良市人孔蓋卡。建築本身也是景點。", mapUrl: "https://maps.app.goo.gl/uYGs9e48zbmCL9m18" },
-                    { type: "shrine", time: "16:30", title: "大鳥大社 (大阪堺市)", note: "注意：時間可能較晚，請確認營業時間。若來不及可僅參拜。", mapUrl: "https://maps.app.goo.gl/kyxyYjHMVcdGzBZg6?g_st=ipc" },
+                    // [修改] 新增御朱印連結
+                    { type: "shrine", time: "16:30", title: "大鳥大社 (大阪堺市)", note: "注意：時間可能較晚，請確認營業時間。若來不及可僅參拜。", mapUrl: "https://maps.app.goo.gl/kyxyYjHMVcdGzBZg6?g_st=ipc", goshuinUrl: "https://www.ootoritaisha.jp/" },
                     { type: "shop", time: "18:00", title: "寶可夢中心 大阪店 DX (大丸心齋橋9F)", highlight: "必買: 限定商品", note: "營業時間通常至20:00 (新年請確認)。晚餐可於心齋橋/道頓堀解決。", mapUrl: "https://maps.app.goo.gl/6XNEnaevDXWHBe1q9" },
                     { type: "shop", time: "19:30", title: "寶可夢中心 大阪 (大丸梅田13F)", highlight: "注意營業時間", note: "⚠️ 兩家寶可夢中心皆約 20:00 打烊，時間較趕，建議依當下位置擇一前往。", mapUrl: "https://www.google.com/maps/search/?api=1&query=寶可夢中心+梅田" },
                     { type: "visit", time: "", title: "宇治市観光センター", tag: "備案", note: "搭乘JR奈良線至宇治。領取宇治人孔蓋卡。中心內有免費茶水。" },
