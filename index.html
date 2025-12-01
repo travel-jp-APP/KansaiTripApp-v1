@@ -156,11 +156,11 @@
                 ]},
                 { id: "day3", date: "12/29", dayOfWeek: "一", location: "海之京都", weather: "rain", temp: "4°C", items: [
                     { type: "transport", time: "06:30", title: "前往伊根灣", note: "從草津波士頓飯店出發 (不需導航)，預計車程約 2.5 小時，09:00 前抵達。", mapUrl: null },
-                    { type: "visit", time: "09:00", title: "伊根灣賞景觀光船", highlight: "必拍: 舟屋群 & 餵海鷗", note: "每半小時一班，航程約25分鐘。船上有販售蝦味先可餵食海鷗與老鷹。", bookingUrl: "https://www.inewan.com/inewan_cruise/" },
+                    { type: "visit", time: "09:00", title: "伊根灣賞景觀光船", highlight: "必拍: 舟屋群 & 餵海鷗", note: "每半小時一班，航程約25分鐘。船上有販售蝦味先可餵食海鷗與老鷹。", bookingUrl: "https://www.inewan.com/inewan_cruise/", videoUrl: "https://www.youtube.com/live/UG9WdWSDo4I?si=KYvhllx_Wjo4krCz" },
                     { type: "visit", time: "10:30", title: "道の駅 海の京都 宮津", tag: "收集", note: "位於宮津市區的休息站。內有觀光案內所可領取人孔蓋卡。", mapUrl: "https://maps.app.goo.gl/8o12WE4J7ZNhWoeWA" },
                     { type: "food", time: "12:00", title: "午餐：天橋立 / 宮津周邊", highlight: "必吃: 蛤蠣丼 (Asari Don) 或 海鮮丼", note: "推薦：富田屋 (宮津站前老舖)、Suginoya (天橋立站前)。" },
                     { type: "visit", time: "13:00", title: "天橋立観光船", highlight: "!", note: "前往天橋立棧橋。", mapUrl: "https://maps.app.goo.gl/mamfMGuNHkrJHZ7UA", bookingUrl: "https://www.amano-hashidate.com/sightseeingboat/" },
-                    { type: "visit", time: "13:30", title: "天橋立 傘松公園 (昇龍觀)", highlight: "日本三景", note: "搭乘纜車或吊椅上山，從胯下窺看「飛龍在天」的奇景。", mapUrl: "https://maps.app.goo.gl/2UTtV1BR6svz4rQa6?g_st=ipc", bookingUrl: "https://www.amano-hashidate.com/cablecar/" },
+                    { type: "visit", time: "13:30", title: "天橋立 傘松公園 (昇龍觀)", highlight: "日本三景", note: "搭乘纜車或吊椅上山，從胯下窺看「飛龍在天」的奇景。", mapUrl: "https://maps.app.goo.gl/2UTtV1BR6svz4rQa6?g_st=ipc", bookingUrl: "https://www.amano-hashidate.com/cablecar/", videoUrl: "https://www.youtube.com/live/hVdb6BbxEdc?si=emhP_hcW_PWt7ost" },
                     { type: "shrine", time: "15:00", title: "元伊勢 籠神社 & 智恩寺", note: "籠神社為丹後國一宮。智恩寺供奉文殊菩薩，以「智慧之餅」聞名。" },
                     { type: "visit", time: "16:00", title: "天橋立 View Land (飛龍觀)", note: "位於車站後方，從另一側看沙洲。注意冬季纜車末班時間 (約16:30-17:00)。", mapUrl: "https://maps.app.goo.gl/jbcSfyaEcciWeSuGA?g_st=ipc", bookingUrl: "https://www.viewland.jp/" }
                 ]},
@@ -470,6 +470,7 @@
                         <h3 class="font-bold text-stone-800 text-lg leading-tight w-[calc(100%-70px)] sm:w-[calc(100%-110px)] select-text">${item.title}</h3>
                         <div class="flex gap-2 shrink-0"> 
                             ${item.parkingUrl ? `<a href="${item.parkingUrl}" target="_blank" class="p-2 bg-sky-50 text-sky-600 rounded-full active:scale-95 shrink-0">${getIcon('circle-parking', "", 18)}</a>` : ''}
+                            ${item.videoUrl ? `<a href="${item.videoUrl}" target="_blank" class="p-2 bg-red-100 text-red-600 rounded-full active:scale-95 shrink-0">${getIcon('youtube', "", 18)}</a>` : ''}
                             ${item.bookingUrl ? `<a href="${item.bookingUrl}" target="_blank" class="p-2 bg-red-50 text-red-600 rounded-full active:scale-95 shrink-0">${getIcon('circle-alert', "", 18)}</a>` : ''}
                             ${showNavigation ? `<a href="${destinationUrl}" target="_blank" class="p-2 bg-blue-50 text-blue-600 rounded-full active:scale-95 shrink-0">${getIcon('navigation', "", 18)}</a>` : '<div class="w-8 h-8 shrink-0"></div>'}
                         </div>
