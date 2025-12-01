@@ -100,6 +100,10 @@
         // ==========================================
         // --- 1. 資料來源 (Data Source) ---
         // ==========================================
+        
+        // 不需要導航按鈕的標題清單
+        const TITLES_WITHOUT_NAVIGATION = ["搭乘 CX564 飛往大阪", "搭乘 CX565 返台", "前往草津", "前往大阪"];
+
         const TRIP_DATA = {
             flights: [
                 { type: "Departure", date: "2025/12/27 (六)", code: "CX564", airline: "國泰航空", route: "TPE 台北 (11:15) ➔ KIX 大阪 (14:55)", terminal: "TPE T1 / KIX T1", duration: "2h 40m", aircraft: "Airbus A330-300", class: "經濟 Q" },
@@ -199,12 +203,15 @@
                     { type: "visit", time: "15:00", title: "泉佐野市観光情報センター", tag: "收集", note: "最後一站收集！位於臨空城站/泉佐野站附近。", bookingUrl: "https://www.city.izumisano.lg.jp/kakuka/seikatsu/shoko/menu/matidokoro.html" },
                     { type: "transport", time: "16:15", title: "搭乘 CX565 返台", note: "前往關西機場 T1 辦理登機。再見關西！預計 18:30 抵達台北。" }
                 ]},
+                // [下雪 Plan]
                 { id: "daySnow", date: "下雪", dayOfWeek: "❄️", location: "京都 - 洛北", weather: "snow", temp: "-1°C", items: [
-                    { type: "transport", time: "09:00", title: "前往出町柳轉乘叡山電鐵", note: "搭乘著名的觀景列車「Kirara」前往貴船/鞍馬區域。" },
+                    { type: "transport", time: "09:00", title: "前往出町柳轉乘叡山電鐵", note: "搭乘著名的觀景列車「Kirara」前往貴船/鞍馬區域。", mapUrl: "https://maps.app.goo.gl/FPmVS6W6woB9vjZZA" },
                     { type: "shrine", time: "10:30", title: "鞍馬寺", highlight: "源義經修練地", note: "京都屈指可數的能量景點。仁王門至本殿的參道在雪季非常壯觀。", mapUrl: "https://maps.app.goo.gl/RHCm3G9WwzATTBVc8?g_st=ipc" },
                     { type: "visit", time: "12:00", title: "鞍馬山鋼索鐵道", note: "日本最短的鐵道，可省去爬坡體力。", mapUrl: null },
-                    { type: "shrine", time: "13:30", title: "貴船神社", highlight: "繪馬發源地", note: "本宮參道的紅色獻燈與白雪形成的對比是京都冬日絕景。", mapUrl: "https://maps.app.goo.gl/8WzargmHKy8wGFKaA?g_st=ipc" },
-                    { type: "food", time: "15:00", title: "ひろ文 (Hirobun)", note: "雖然以夏日川床流水麵聞名，但冬季的熱食與雪景也別有一番風味。", mapUrl: null }
+                    { type: "shrine", time: "13:30", title: "貴船神社", highlight: "繪馬發源地", note: "本宮參道的紅色獻燈與白雪形成的對比是京都冬日絕景。", mapUrl: "https://maps.app.goo.gl/8WzargmHKy8wGFKaA?g_st=ipc", videoUrl: "https://guideme24.com/products/e129-2", busUrl: "https://japantravel.navitime.com/zh-tw/area/jp/depArrTimeList/00056787/00056789/00016721?direction=down" },
+                    { type: "food", time: "15:00", title: "ひろ文 (Hirobun)", note: "雖然以夏日川床流水麵聞名，但冬季的熱食與雪景也別有一番風味。", mapUrl: null },
+                    // [新增] 貴船公車站
+                    { type: "transport", time: "17:35", title: "貴船公車站", note: "最後一班公車17:35下山", mapUrl: "https://maps.app.goo.gl/e2qtxnRp5p8uq1nv5", busUrl: "https://japantravel.navitime.com/zh-tw/area/jp/depArrTimeList/00056789/00056787/00016721?direction=up" }
                 ]}
             ],
             // [人孔蓋卡庫存資訊]
@@ -246,6 +253,7 @@
                 { title: "マンホールカード地圖", url: "https://ekikaramanhole.whitebeach.org/ext/manholecard/map/?t=map" },
                 { title: "紀念幣地圖", url: "https://www.stampmedal.com/map.htm" },
                 { title: "coinlocker地圖", url: "https://coinlocker.click/" },
+                { title: "京都即時影像", url: "https://doitwell.app/CCTVs/world/%E6%97%A5%E6%9C%AC%E3%83%BB%E4%BA%AC%E9%83%BD" },
                 { title: "永旺夢樂城Kyoto 4F (轉蛋屋)", url: "https://maps.app.goo.gl/8NoQd7g6H5cn7UiG7" },
                 { title: "一番賞 京都店", url: "https://maps.app.goo.gl/7jykpS5VA2N82SyN8" },
                 { title: "一番賞官網", url: "https://bandainamco-am.co.jp/chara_shop/ichibankuji-official-shop/?areaNo=6&prefNo=25" }
@@ -289,7 +297,7 @@
                     dining: [{ area: "京都 - 嵐山", spots: [{ name: "嵯峨豆腐 稻 本店", cuisine: "湯豆腐", hours: "11:00–18:30", note: "嵐山名物湯豆腐。", mapUrl: "https://maps.app.goo.gl/BBCfdetuL8rNMevf7" }, { name: "嵐山よしむら", cuisine: "手打蕎麥麵", hours: "11:00–16:00", note: "位於渡月橋畔，可欣賞美景。", mapUrl: "https://maps.app.goo.gl/p47zjGPbRoUSY4Cp8" }, { name: "鯛匠 HANANA", cuisine: "鯛魚茶泡飯", hours: "11:00–16:30", note: "人氣排隊店。", mapUrl: "https://maps.app.goo.gl/5wxGFRvQ2TwzryT48" }] }]
                 }
             ],
-            // [自駕指南]
+            // [自駕指南與交通號誌]
             drivingGuide: {
                 tips: [
                     { title: "右駕左行", content: "日本車輛為右駕，請務必靠左行駛。口訣：「左轉小彎、右轉大彎」。" },
@@ -358,12 +366,12 @@
         // --- 3. 組件渲染函數 (Component Renderers) ---
         // ==========================================
         
-        // 產生 Lucide 圖示
+        // 輔助函式：生成 Lucide Icon
         function getIcon(name, classes = "", size = 24) {
             return `<i data-lucide="${name}" class="${classes}" width="${size}" height="${size}"></i>`;
         }
 
-        // 繪製道路標線 SVG
+        // 輔助函式：繪製道路標線 SVG
         function renderRoadLine(type) {
             let content = '';
             switch (type) {
@@ -376,7 +384,7 @@
             return `<svg width="100%" height="40" class="rounded-md border border-stone-400 bg-zinc-600"><rect width="100%" height="100%" fill="#52525b" />${content}</svg>`;
         }
 
-        // 繪製交通號誌 SVG
+        // 輔助函式：繪製 SVG 交通號誌
         function renderTrafficSign(type, limit) {
             switch(type) {
                 case 'stop': return `<svg width="80" height="80" viewBox="0 0 80 80"><polygon points="40,76 4,10 76,10" fill="#ef4444" stroke="none"/><text x="50%" y="35%" dominant-baseline="middle" text-anchor="middle" fill="white" font-size="18" font-weight="bold">止まれ</text><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" fill="white" font-size="12" font-weight="bold">STOP</text></svg>`;
@@ -393,7 +401,7 @@
             }
         }
 
-        // 渲染天氣圖標
+        // 輔助函式：渲染天氣圖標
         function renderWeatherIcon(type) {
             switch (type) {
                 case 'sunny': return getIcon('sun', "w-5 h-5 text-orange-500");
@@ -404,12 +412,12 @@
             }
         }
 
-        // [核心渲染] 單個行程卡片
+        // [核心渲染函式：單個行程項目卡片]
         function renderItineraryItem(item) {
             let iconName = 'map-pin', iconColor = "text-stone-400", borderColor = "border-stone-200";
-            let isEmoji = false;
+            let isEmoji = false; // 新增 Emoji 標記
 
-            // 樣式判斷邏輯
+            // [動態樣式邏輯]
             if (item.type === 'food') { 
                 iconName = 'utensils'; iconColor = "text-red-400"; borderColor="border-l-red-400"; 
             } else if (item.type === 'shop') { 
@@ -417,29 +425,35 @@
             } else if (item.type === 'visit') { 
                 iconName = 'camera'; iconColor = "text-emerald-500"; borderColor="border-l-emerald-500"; 
             } else if (item.type === 'shrine') {
+                // 神社類別使用 Emoji 渲染邏輯
                 isEmoji = true; 
-                iconColor = "text-stone-800"; 
-                borderColor = "border-l-rose-600";
+                iconColor = "text-stone-800"; // Emoji 顏色通常固定，這裡僅影響容器文字顏色
+                borderColor = "border-l-rose-600"; // 邊框設為朱紅色
             } else if (item.type === 'hotel') { 
                 iconName = 'bed-double'; iconColor = "text-purple-400"; borderColor="border-l-purple-400"; 
             } else if (item.type === 'transport') {
                 const isFlight = item.title.includes("CX564") || item.title.includes("CX565");
-                const isCarRelated = item.title.includes("租車") || item.title.includes("還車") || item.title.includes("駐車場") || item.title.includes("前往伊根灣") || item.title.includes("前往竹生島") || item.title.includes("前往近江八幡");
+                const isCarRelated = item.title.includes("租車") || item.title.includes("還車") || item.title.includes("駐車場") || item.title.includes("前往伊根灣") || item.title.includes("前往竹生島") || item.title.includes("前往近江八幡") || item.title.includes("前往");
+                const isBus = item.title.includes("公車") || item.title.includes("巴士") || item.title.includes("貴船公車站"); // 增加針對貴船公車站的判斷
+
                 if (isFlight) { iconName = 'plane'; iconColor = "text-red-500"; borderColor = "border-l-red-500"; } 
                 else if (isCarRelated) { iconName = 'car'; iconColor = "text-lime-600"; borderColor = "border-l-lime-600"; } 
+                else if (isBus) { iconName = 'bus'; iconColor = "text-teal-600"; borderColor = "border-l-teal-600"; } // 公車專屬樣式
                 else { iconName = 'train-front'; iconColor = "text-indigo-400"; borderColor = "border-l-indigo-400"; }
             }
 
             const isCollection = item.tag === "收集";
             if (isCollection) { iconName = 'star'; iconColor = "text-amber-500"; borderColor = "border-l-amber-500"; }
 
-            // 導航按鈕邏輯
-            const titlesWithoutNavigation = ["搭乘 CX564 飛往大阪", "搭乘 CX565 返台", "前往草津", "前往大阪"];
-            // 注意：若 title 在排除名單中，但有明確的 mapUrl，仍顯示導航按鈕 (主要針對 "前往草津")
-            const hasExplicitMap = item.mapUrl !== null;
-            const showNavigation = (hasExplicitMap || !titlesWithoutNavigation.includes(item.title));
+            // 導航按鈕顯示邏輯優化
+            // 規則: 1. 有明確 mapUrl 連結 -> 顯示
+            //       2. mapUrl 未定義 且 標題不在排除名單中 -> 顯示 (自動產生 Google Search 連結)
+            const showNavigation = item.mapUrl || (!TITLES_WITHOUT_NAVIGATION.includes(item.title) && item.mapUrl !== null);
+            
             const destinationUrl = item.mapUrl || getGoogleMapUrl(item.title);
             const timeHtml = item.time ? `<span class="text-sm font-bold text-stone-600 font-mono">${item.time}</span>` : '';
+
+            // 自動判斷影片連結圖示
             const videoIcon = item.videoUrl && (item.videoUrl.includes('youtube') || item.videoUrl.includes('youtu.be')) ? 'youtube' : 'video';
 
             return `
@@ -447,6 +461,7 @@
                 <div class="flex flex-col items-center min-w-[50px]">
                     ${timeHtml}
                     <div class="mt-2 p-1.5 rounded-full bg-stone-50 ${iconColor}">
+                        <!-- 若為神社類型則顯示 Emoji，否則顯示 Lucide Icon -->
                         ${isEmoji ? '<span class="text-lg leading-none">⛩️</span>' : getIcon(iconName, "", 18)}
                     </div>
                     ${isCollection ? '<span class="text-[9px] text-amber-600 font-bold mt-1">GET!</span>' : ''}
@@ -457,6 +472,7 @@
                         <div class="flex gap-2 shrink-0"> 
                             ${item.parkingUrl ? `<a href="${item.parkingUrl}" target="_blank" class="p-2 bg-sky-50 text-sky-600 rounded-full active:scale-95 shrink-0">${getIcon('circle-parking', "", 18)}</a>` : ''}
                             ${item.videoUrl ? `<a href="${item.videoUrl}" target="_blank" class="p-2 bg-red-100 text-red-600 rounded-full active:scale-95 shrink-0">${getIcon(videoIcon, "", 18)}</a>` : ''}
+                            ${item.busUrl ? `<a href="${item.busUrl}" target="_blank" class="p-2 bg-emerald-100 text-emerald-600 rounded-full active:scale-95 shrink-0">${getIcon('bus', "", 18)}</a>` : ''}
                             ${item.bookingUrl ? `<a href="${item.bookingUrl}" target="_blank" class="p-2 bg-red-50 text-red-600 rounded-full active:scale-95 shrink-0">${getIcon('circle-alert', "", 18)}</a>` : ''}
                             ${showNavigation ? `<a href="${destinationUrl}" target="_blank" class="p-2 bg-blue-50 text-blue-600 rounded-full active:scale-95 shrink-0">${getIcon('navigation', "", 18)}</a>` : '<div class="w-8 h-8 shrink-0"></div>'}
                         </div>
@@ -468,7 +484,7 @@
             </div>`;
         }
 
-        // [渲染] 每日行程
+        // [渲染函式：每日行程視圖]
         function renderItineraryView(dayId) {
             const currentDayData = TRIP_DATA.itinerary.find(d => d.id === dayId);
             if (!currentDayData) return '';
@@ -487,7 +503,7 @@
             `;
         }
 
-        // [渲染] 航班與住宿
+        // [渲染函式：航班與住宿頁面]
         function renderFlightsView() {
             const flightsHtml = TRIP_DATA.flights.map(flight => `
                 <div class="bg-white/95 backdrop-blur-sm rounded-xl shadow-sm border border-stone-200 overflow-hidden p-5 mb-4">
@@ -521,7 +537,7 @@
             return `<div class="space-y-4 animate-fade-in pb-20"><h2 class="text-xl font-bold text-stone-800 px-1">航班資訊</h2>${flightsHtml}<h2 class="text-xl font-bold text-stone-800 px-1 mt-8 pt-4 border-t border-stone-300/50">住宿資訊</h2>${hotelsHtml}</div>`;
         }
 
-        // [渲染] 自駕指南
+        // [渲染函式：自駕指南頁面]
         function renderDrivingView() {
             const tipsHtml = TRIP_DATA.drivingGuide.tips.map(tip => `
                 <div class="bg-white/95 backdrop-blur-sm rounded-xl shadow-sm border border-stone-200 overflow-hidden p-4 border-l-4 border-l-lime-500">
@@ -565,8 +581,7 @@
                     <div><h3 class="text-lg font-bold text-stone-700 mb-3 px-1 border-l-4 border-sky-400 pl-2">加油站使用指南</h3><div class="space-y-3">${refuelingHtml}</div></div>
                 </div>`;
         }
-
-        // [渲染] 人孔蓋庫存 (完整內容恢復)
+        // [渲染函式：人孔蓋庫存清單]
         function renderManholeView() {
             const rowsHtml = TRIP_DATA.manholeStock.map(item => `
                 <tr class="hover:bg-indigo-50/50 transition-colors">
@@ -608,7 +623,7 @@
             `;
         }
         
-        // [渲染] 地圖連結 (完整內容恢復)
+        // [渲染函式：地圖連結列表]
         function renderMapView() {
             const linksHtml = TRIP_DATA.mapLinks.map(link => `
                 <a href="${link.url}" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-4 bg-white/95 backdrop-blur-sm border border-stone-200 rounded-xl shadow-sm active:bg-stone-50 transition-colors">
@@ -622,7 +637,7 @@
             return `<div class="space-y-4 animate-fade-in pb-20"><h2 class="text-xl font-bold text-stone-800 px-1 flex items-center gap-2">${getIcon('map', "text-emerald-600", 24)}地圖與相關連結</h2><div class="space-y-3">${linksHtml}</div></div>`;
         }
 
-        // [渲染] 備註與餐廳 (完整內容恢復)
+        // [渲染函式：筆記與餐廳頁面]
         function renderNotesView() {
             const daysHtml = TRIP_DATA.notes.map(day => {
                 let content = '';
@@ -641,7 +656,7 @@
             return `<div class="space-y-6 animate-fade-in pb-20"><h2 class="text-xl font-bold text-stone-800 px-1 flex items-center gap-2">${getIcon('notebook-pen', "text-pink-500", 24)}行程備註</h2>${daysHtml}</div>`;
         }
 
-        // [渲染] 頁尾
+        // [渲染函式：頁尾]
         function renderFooter() {
             return `<div class="text-center pt-8 pb-4 opacity-80 mb-16"><div class="border-t border-stone-400/30 pt-2 px-4 inline-flex items-baseline gap-2"><span class="text-sm text-stone-500 font-medium tracking-wider">Created by</span><span class="text-4xl text-stone-600" style="font-family: 'Dancing Script', cursive">Wen</span></div></div>`;
         }
@@ -679,7 +694,7 @@
             lucide.createIcons();
         }
 
-        // 更新頂部日期捲軸
+        // [更新頂部日期捲軸]
         function updateDateScroller() {
             const scroller = document.getElementById('date-scroller');
             const buttonsHtml = TRIP_DATA.itinerary.map(day => {
@@ -694,7 +709,7 @@
             }, 50);
         }
 
-        // 更新底部導航欄
+        // [更新底部導航欄]
         function updateBottomNav() {
             const nav = document.getElementById('bottom-nav');
             const tabs = [
@@ -727,5 +742,3 @@
     </script>
 </body>
 </html>
-
-
