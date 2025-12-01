@@ -115,7 +115,6 @@
                     { type: "visit", time: "15:30", title: "臨空城觀光案內所 (Rinku Machidokoro)", tag: "收集", note: "位於臨空城車站改札口外，務必先領取人孔蓋卡，卡片發放至20:00。", mapUrl: "https://maps.app.goo.gl/AFLxB4tBLNV1DPb79", bookingUrl: "https://www.kankou-izumisano.jp/50on/ka/1565835676276.html" },
                     { type: "visit", time: "15:45", title: "泉佐野市 觀光資訊服務中心", tag: "收集", note: "位於南海泉佐野站。", mapUrl: "https://maps.app.goo.gl/Fykh1UMmYw9CDw5x9", bookingUrl: "https://www.city.izumisano.lg.jp/kakuka/seikatsu/shoko/menu/izumisanomachidokoro.html" },
                     { type: "shop", time: "16:00", title: "臨空城 Outlet (Rinku Premium Outlets)", highlight: "必買: 運動品牌、日系服飾", note: "晚餐建議在此解決 (美食街或海邊餐廳)。營業至20:00。" },
-                    // [Type change] type: "transport" -> train icon
                     { type: "transport", time: "18:00", title: "京都車站", note: "中途轉乘點。", mapUrl: "https://maps.app.goo.gl/2cCysX1DTn8CFsCZA?g_st=ipc" },
                     { type: "transport", time: "19:00", title: "前往草津", note: "關西機場 → 京都車站 → 草津車站。車程約 1小時50分。", mapUrl: "https://maps.app.goo.gl/uKTS73uGsMJDYfVP9?g_st=ipc", videoUrl: "https://guideme24.com/products/e72-2-2" }, 
                     { type: "hotel", time: "21:30", title: "入住：草津波士頓廣場飯店", note: "位於草津站西口，出站即達。" }
@@ -200,7 +199,6 @@
                     { type: "visit", time: "15:00", title: "泉佐野市観光情報センター", tag: "收集", note: "最後一站收集！位於臨空城站/泉佐野站附近。", bookingUrl: "https://www.city.izumisano.lg.jp/kakuka/seikatsu/shoko/menu/matidokoro.html" },
                     { type: "transport", time: "16:15", title: "搭乘 CX565 返台", note: "前往關西機場 T1 辦理登機。再見關西！預計 18:30 抵達台北。" }
                 ]},
-                // [新增] 下雪 Plan
                 { id: "daySnow", date: "下雪", dayOfWeek: "❄️", location: "京都 - 洛北", weather: "snow", temp: "-1°C", items: [
                     { type: "transport", time: "09:00", title: "前往出町柳轉乘叡山電鐵", note: "搭乘著名的觀景列車「Kirara」前往貴船/鞍馬區域。" },
                     { type: "shrine", time: "10:30", title: "鞍馬寺", highlight: "源義經修練地", note: "京都屈指可數的能量景點。仁王門至本殿的參道在雪季非常壯觀。", mapUrl: "https://maps.app.goo.gl/RHCm3G9WwzATTBVc8?g_st=ipc" },
@@ -208,6 +206,88 @@
                     { type: "shrine", time: "13:30", title: "貴船神社", highlight: "繪馬發源地", note: "本宮參道的紅色獻燈與白雪形成的對比是京都冬日絕景。", mapUrl: "https://maps.app.goo.gl/8WzargmHKy8wGFKaA?g_st=ipc" },
                     { type: "food", time: "15:00", title: "ひろ文 (Hirobun)", note: "雖然以夏日川床流水麵聞名，但冬季的熱食與雪景也別有一番風味。", mapUrl: null }
                 ]}
+            ],
+            // [人孔蓋卡庫存資訊]
+            manholeStock: [
+                { name: "臨空城案內所", region: "大阪", hours: "09:00–20:00", url: "https://www.city.izumisano.lg.jp/kakuka/jogesuidokyoku/jogesui/menu/1511934914176.html" },
+                { name: "道の駅 草津", region: "滋賀", hours: "09:00–18:00", url: "https://www.city.kusatsu.shiga.jp/kurashi/suidogesuido/gesuido/manholecard.html", highlight: true, textColor: "text-orange-600" },
+                { name: "大津車站觀光案内所", region: "滋賀", hours: "09:00–18:00", url: "https://www.city.otsu.lg.jp/kigyo/about/koho/68041.html", highlight: true, textColor: "text-orange-600" },
+                { name: "くさつ夢本陣", region: "滋賀", hours: "09:00–17:00", url: "https://www.city.kusatsu.shiga.jp/kurashi/suidogesuido/gesuido/manholecard.html" },
+                { name: "草津宿街道交流館", region: "滋賀", hours: "09:00–17:00", url: "https://www.city.kusatsu.shiga.jp/kurashi/suidogesuido/gesuido/manholecard.html" },
+                { name: "栗東観光案内所 二樓", region: "滋賀", hours: "08:30–12:00", url: "https://www.city.ritto.lg.jp/soshiki/jogeuido/jogesuido/oshirase/7224.html" },
+                { name: "栗東市立図書館", region: "滋賀", hours: "10:00–17:00", url: "https://www.city.ritto.lg.jp/soshiki/jogeuido/jogesuido/oshirase/7224.html", highlight: true },
+                { name: "守山市駅前総合案内所", region: "滋賀", hours: "07:30–19:30", url: "https://www.city.moriyama.lg.jp/kurashitetsuzuki/jougesuido/1001701/1008797.html" },
+                { name: "八日市駅前観光交流施設", region: "滋賀", hours: "10:00–17:00", url: "https://www.city.higashiomi.shiga.jp/kurashi_tetsuzuki/jougesuidou/1008975/1009690.html" },
+                { name: "東近江市役所 守衛室", region: "滋賀", hours: "10:00–16:00", url: "https://www.city.higashiomi.shiga.jp/kurashi_tetsuzuki/jougesuidou/1008975/1008976.html", highlight: false },
+                { name: "豊郷町観光案内所", region: "滋賀", hours: "09:00–17:00", url: "https://www.town.toyosato.shiga.jp/0000001749.html", highlight: true },
+                { name: "彥根市上下水道料金お客様サービスセンター", region: "滋賀", hours: "09:00–17:00", url: "https://www.city.hikone.lg.jp/kakuka/jogesuido/2/2219.html" },
+                { name: "ひこね食賓館四番町ダイニング", region: "滋賀", hours: "10:00–17:00", url: "https://www.city.hikone.lg.jp/kakuka/jogesuido/2/2219.html" },
+                { name: "「道の駅 海の京都 宮津」観光案内所", region: "京都", hours: "09:00–17:30", url: "https://www.pref.kyoto.jp/gesuido/manholemiyazu.html" },
+                { name: "神戸空港 1 階総合案内所", region: "兵庫", hours: "07:00–23:00", url: "https://www.city.kobe.lg.jp/a78445/kurashi/sumai/sewage/pr/manhole_card.html" },
+                { name: "芦屋市役所守衛室", region: "兵庫", hours: "09:00–17:00", url: "https://www.city.ashiya.lg.jp/gesuidou/mhc.html", highlight: true },
+                { name: "大阪観光案内所(JR 車站內)", region: "大阪", hours: "07:00–21:00", url: "https://www.city.osaka.lg.jp/kensetsu/page/0000431121.html" },
+                { name: "奈良町南観光案内所", region: "奈良", hours: "09:00–17:00", url: "https://h2o.nara.nara.jp/info_924.html" },
+                { name: "宇治市観光センター", region: "京都", hours: "09:00–17:00", url: "https://www.city.uji.kyoto.jp/soshiki/12/6038.html" },
+                { name: "大阪市下水道科學館", region: "大阪", hours: "09:30–17:00", url: "https://www.city.osaka.lg.jp/kensetsu/page/0000431121.html", highlight: true },
+                { name: "おおさか ATC グリーンエコプラザ", region: "大阪", hours: "10:00–17:00", url: "https://www.city.osaka.lg.jp/kensetsu/page/0000431121.html" },
+                { name: "堺東観光案内所", region: "大阪", hours: "09:00–19:00", url: "https://water.city.sakai.lg.jp/about/kouhou/1522311572373.html" },
+                { name: "岸和田駅前観光案内所", region: "大阪", hours: "09:00–17:00", url: "https://www.city.kishiwada.lg.jp/page/56-manholecard.html" },
+                { name: "まちの駅かいづか", region: "大阪", hours: "10:00–19:00", url: "https://www.city.kaizuka.lg.jp/kakuka/jogesuido/gesuisuisin/topics/manholucard.html" },
+                { name: "泉佐野市観光情報センター", region: "大阪", hours: "10:00–16:00", url: "https://www.city.izumisano.lg.jp/kakuka/jogesuidokyoku/jogesui/menu/1511934914176.html" },
+            ],
+            // [外部地圖連結清單]
+            mapLinks: [
+                { title: "關西周遊路線圖", url: "https://www.surutto.com/kansai_rw/assets/pdf/areamap2024_tw.pdf" },
+                { title: "Osaka Metro路線圖", url: "https://subway.osakametro.co.jp/img/osakametro_rosenzu_20250404.pdf" },
+                { title: "阪急電鐵", url: "https://www.hankyu.co.jp/station/pdf/zh-tw/map_station_zh-tw.pdf" },
+                { title: "阪神電鐵", url: "https://www.hanshin.co.jp/global/tw/pdf/map.pdf" },
+                { title: "マンホールカード情報まとめサイト", url: "https://anythingsearch.info/" },
+                { title: "マンホールカード官網", url: "https://www.gk-p.jp/mhcard/" },
+                { title: "マンホールカード地圖", url: "https://ekikaramanhole.whitebeach.org/ext/manholecard/map/?t=map" },
+                { title: "紀念幣地圖", url: "https://www.stampmedal.com/map.htm" },
+                { title: "coinlocker地圖", url: "https://coinlocker.click/" },
+                { title: "永旺夢樂城Kyoto 4F (轉蛋屋)", url: "https://maps.app.goo.gl/8NoQd7g6H5cn7UiG7" },
+                { title: "一番賞 京都店", url: "https://maps.app.goo.gl/7jykpS5VA2N82SyN8" },
+                { title: "一番賞官網", url: "https://bandainamco-am.co.jp/chara_shop/ichibankuji-official-shop/?areaNo=6&prefNo=25" }
+            ],
+            // [備註頁面資料]
+            notes: [
+                {
+                    date: "12/27（六）",
+                    links: [{ title: "臨空城 Outlet 電子地圖", url: "https://platinumaps.jp/d/premiumoutlets-rinku?floor=1F", note: "Nike沒有免稅" }],
+                    dining: [{ area: "滋賀 - 草津", spots: [{ name: "東京油組総本店 滋賀組", cuisine: "油蕎麥", hours: "11:00–02:00", note: "無湯拉麵，將特製醬汁與醋/辣油拌入熱麵中。", mapUrl: "https://maps.app.goo.gl/Zjj8pK1nmaVU6Ug19" }, { name: "麺屋EDITION草津店", cuisine: "近江牛醬油拉麵", hours: "17:00–02:45", note: "使用近江牛骨熬製的黑醬油湯頭。" }, { name: "カマドのタコ", cuisine: "章魚燒 /居酒屋", hours: "12:00–23:00", note: "適合宵夜小酌。", mapUrl: "https://maps.app.goo.gl/f8viAbvjP5p6tLtQ6" }, { name: "くさつ平和堂", cuisine: "大型超市", hours: "09:00–21:30", note: "草津站東口。適合購買水果、熟食。", mapUrl: "https://maps.app.goo.gl/g81dTrt1ruJAxkT37" }, { name: "近江牛焼肉 MAWARI 南草津店", cuisine: "近江牛燒肉", hours: "17:00–23:00", note: "CP值高的近江牛燒肉店，建議預約。", mapUrl: "https://maps.app.goo.gl/LZFTbWNz9Dpy9TWJ8" }] }]
+                },
+                {
+                    date: "12/28（日）",
+                    links: [{ title: "MITSUI OUTLET PARK 滋賀龍王地圖", url: "https://mitsui-shopping-park.com/mop/file/filer/shiga/floor/00008_fo.pdf", note: "PDF下載" }],
+                    dining: [{ area: "滋賀 - 彥根/龍王", spots: [{ name: "近江ちゃんぽん亭 本店", cuisine: "近江強棒麵", hours: "11:00–22:00", note: "滋賀縣民的靈魂美食。特色是大量蔬菜與清淡和風高湯。", mapUrl: "https://maps.app.goo.gl/4pevVmcwwPP1eT8u5" }, { name: "らーめん本気", cuisine: "強棒麵 / 拉麵", hours: "11:00–20:30", note: "彥根名店。" }, { name: "たねや 彦根美濠の舎", cuisine: "和菓子 / 年輪蛋糕", hours: "09:00–18:00", note: "Club Harie 彥根分店，建築優美。", mapUrl: "https://maps.app.goo.gl/hPLMGketJvLks6p87" }, { name: "近江肉 せんなり亭伽羅", cuisine: "近江牛懷石", hours: "11:30–15:00, 17:00–21:30", note: "高級近江牛料理專門店。", mapUrl: "https://maps.app.goo.gl/eFJ9CDUF5pUwmXrS8" }] }]
+                },
+                {
+                    date: "12/29（一）",
+                    links: [{ title: "伊根湾めぐり遊覧船", url: "https://www.inewan.com/inewan_cruise/", note: "1,200円" }, { title: "傘松観光券", url: "https://www.tankai.jp/tourist_tickets/#inekasamatsu", note: "2,000円券" }, { title: "天橋立ビューランド", url: "https://www.viewland.jp/tw/eigyou/", note: "1,000円" }],
+                    dining: [{ area: "京都 - 傘松/成相寺/天橋立", spots: [{ name: "Suginoya (すぎのや)", cuisine: "黑竹輪 / 烏龍麵", hours: "11:30–16:00", note: "位於天橋立站前。必點宮津名產「黑竹輪」。", mapUrl: "https://maps.app.goo.gl/tEp45aDV6KEpciG37" }, { name: "海鮮工房 橋立物產", cuisine: "海鮮丼 / 松葉蟹", hours: "11:00–17:00", note: "海鮮批發商直營，食材新鮮。", mapUrl: "https://maps.app.goo.gl/1n6htfvFC6ZJLCwS9" }, { name: "文珠莊 勘七茶屋", cuisine: "智慧之餅", hours: "09:00–17:00", note: "智恩寺門前的茶屋。", mapUrl: "https://maps.app.goo.gl/XqvKrtaCaJkCyqVd9" }, { name: "咖啡館 龍燈之松", cuisine: "拉麵 / 咖啡", hours: "11:30–19:00", note: "位於智恩寺旁，有特色的拉麵與甜點。", mapUrl: "https://maps.app.goo.gl/ppaASzBRfQDksssP6" }] }, { area: "京都 - 宮津午餐", spots: [{ name: "烏冬小吃大門", cuisine: "咖哩烏龍麵", hours: "11:30–14:30、17:30–20:30", note: "宮津名店，濃郁的「咖哩烏龍麵」。", mapUrl: "https://maps.app.goo.gl/XuUhLeaJ4kGXr5Ag9" }, { name: "こんぴらうどん", cuisine: "手打烏龍麵", hours: "11:00–15:00", note: "提供道地的讚岐風格手打烏龍麵。", mapUrl: "https://www.google.com/maps/search/?api=1&query=こんぴらうどん" }, { name: "富田屋", cuisine: "海鮮定食", hours: "11:00–21:30", note: "宮津站前傳奇老店。CP值極高。", mapUrl: "https://maps.app.goo.gl/B52SCgQa1vkrkkPs8" }, { name: "Seafood Kawasaki", cuisine: "海鮮丼", hours: "11:00–13:30", note: "提供新鮮且價格實惠的海鮮丼。", mapUrl: "https://maps.app.goo.gl/85PgVVpZyfBDBdtZ7" }, { name: "山海屋", cuisine: "海鮮料理", hours: "11:00–22:00", note: "宮津Shopping Center內。", mapUrl: "https://maps.app.goo.gl/3n5uxsmPifezUnbCA" }] }, { area: "京都 - 宮津晚餐", spots: [{ name: "お食事処 割烹たんご", cuisine: "海鮮懷石", hours: "17:30–22:30", note: "提供精緻的丹後海鮮料理。" }] }]
+                },
+                {
+                    date: "12/30 (二)",
+                    dining: [{ area: "滋賀 - 長濱", spots: [{ name: "翼果樓", cuisine: "燒鯖魚素麵", hours: "10:30–15:00", note: "長濱必吃名物！", mapUrl: "https://maps.app.goo.gl/M2b1zmTJekofTqZ8A" }, { name: "96CAFE", cuisine: "黑咖哩 / 黑霜淇淋", hours: "11:00–17:30", note: "黑壁廣場名物。", mapUrl: "https://maps.app.goo.gl/MiHw3RWh5FEupBd89" }, { name: "芋平長浜店", cuisine: "芋頭金鍔燒", hours: "10:00–17:00", note: "現烤的番薯/芋頭甜點。", mapUrl: "https://maps.app.goo.gl/p9WPAwh6gVX1eSdK7" }, { name: "炭火焼うなぎ料理 ざいもん", cuisine: "鰻魚飯", hours: "11:00–14:00, 17:00–21:00", note: "關西風鰻魚飯。", mapUrl: "https://maps.app.goo.gl/2b38CdtSP6qpMFhT8" }, { name: "らうめん屋台屋", cuisine: "拉麵", hours: "", note: "當地人氣拉麵店。", mapUrl: "https://maps.app.goo.gl/N33eYkm1SyxYhyoHA" }] }]
+                },
+                {
+                    date: "12/31 (三)",
+                    dining: [{ area: "滋賀 - 近江八幡", spots: [{ name: "近江牛料理 千成亭", cuisine: "近江牛壽喜燒", hours: "10:00–17:00", note: "八幡堀旁的名店。", mapUrl: "https://maps.app.goo.gl/ZXs7qm42FVCM3xGVA" }, { name: "久ぼ多屋", cuisine: "近江牛壽喜燒", hours: "11:00–17:00", note: "提供多樣化的近江牛料理。", mapUrl: "https://maps.app.goo.gl/dTZvwTyUpaUXWVJP8" }, { name: "丸竹近江牛 西川", cuisine: "近江牛牛排", hours: "11:00–15:00, 16:00–19:00", note: "老字號精肉店直營。", mapUrl: "https://maps.app.goo.gl/2Wwx1MrNJmwFwvfw6" }, { name: "お食事処和でん", cuisine: "近江牛定食", hours: "11:00–15:00", note: "提供平價實惠的近江牛午餐定食。", mapUrl: "https://maps.app.goo.gl/3TVVaLspqCMVWAjd8" }, { name: "日牟禮乃舍", cuisine: "年輪蛋糕", hours: "09:30–17:00", note: "Club Harie 日牟禮館。", mapUrl: "https://maps.app.goo.gl/BAbfwkGY47DuMW4t8" }] }]
+                },
+                {
+                    date: "1/1 (四)",
+                    dining: [{ area: "大阪 / 神戶", spots: [{ name: "らぁ麺 鴨と葱 梅田店", cuisine: "鴨肉拉麵", hours: "11:00–23:00", note: "來自東京御徒町的名店。" }, { name: "神戶三宮 / 元町", cuisine: "中華料理", hours: "", note: "新年期間建議在三宮或元町的中華街覓食。", mapUrl: "https://maps.app.goo.gl/m2XA2WzBxvyH8tjA6" }] }],
+                    routes: [{ area: "心齋橋", spots: [{ name: "寶可夢中心 大阪店 DX", hours: "10:00–20:00", mapUrl: "https://maps.app.goo.gl/6XNEnaevDXWHBe1q9" }, { name: "CHIIKAWA LAND PARCO", hours: "10:00–20:00" }] }, { area: "梅田", spots: [{ name: "寶可夢中心 大阪大丸梅田", hours: "10:00–20:00" }, { name: "ちいかわらんど 大阪梅田店", hours: "10:00–20:00", note: "阪急三番街南館B1" }, { name: "梅田藍天大樓", hours: "09:30–22:00" }, { name: "HEP FIVE 摩天輪", hours: "11:00–22:45" }] }]
+                },
+                {
+                    date: "1/2 (五)",
+                    dining: [{ area: "奈良", spots: [{ name: "中谷堂", cuisine: "麻糬", hours: "10:00–18:00", note: "必看高速搗麻糬表演。", mapUrl: "https://maps.app.goo.gl/ZobNUwiuMZgPRVQf7" }] }, { area: "京都 - 宇治", spots: [{ name: "中村藤吉 本店", cuisine: "抹茶甜點", hours: "10:00–17:30", note: "宇治必吃名店。", mapUrl: "https://maps.app.goo.gl/2nLpsWUjFZcmLyNf7" }, { name: "伊藤久右衛門 宇治本店", cuisine: "抹茶聖代", hours: "10:00–18:00", note: "抹茶甜點種類豐富。", mapUrl: "https://maps.app.goo.gl/X52bnzuQK4Ftn7oD8" }] }]
+                },
+                {
+                    date: "1/3 (六)",
+                    dining: [{ area: "京都 - 嵐山", spots: [{ name: "嵯峨豆腐 稻 本店", cuisine: "湯豆腐", hours: "11:00–18:30", note: "嵐山名物湯豆腐。", mapUrl: "https://maps.app.goo.gl/BBCfdetuL8rNMevf7" }, { name: "嵐山よしむら", cuisine: "手打蕎麥麵", hours: "11:00–16:00", note: "位於渡月橋畔，可欣賞美景。", mapUrl: "https://maps.app.goo.gl/p47zjGPbRoUSY4Cp8" }, { name: "鯛匠 HANANA", cuisine: "鯛魚茶泡飯", hours: "11:00–16:30", note: "人氣排隊店。", mapUrl: "https://maps.app.goo.gl/5wxGFRvQ2TwzryT48" }] }]
+                }
             ],
             // [自駕指南]
             drivingGuide: {
@@ -486,7 +566,7 @@
                 </div>`;
         }
 
-        // [渲染] 人孔蓋庫存
+        // [渲染] 人孔蓋庫存 (完整內容恢復)
         function renderManholeView() {
             const rowsHtml = TRIP_DATA.manholeStock.map(item => `
                 <tr class="hover:bg-indigo-50/50 transition-colors">
@@ -528,7 +608,7 @@
             `;
         }
         
-        // [渲染] 地圖連結
+        // [渲染] 地圖連結 (完整內容恢復)
         function renderMapView() {
             const linksHtml = TRIP_DATA.mapLinks.map(link => `
                 <a href="${link.url}" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-4 bg-white/95 backdrop-blur-sm border border-stone-200 rounded-xl shadow-sm active:bg-stone-50 transition-colors">
@@ -542,7 +622,7 @@
             return `<div class="space-y-4 animate-fade-in pb-20"><h2 class="text-xl font-bold text-stone-800 px-1 flex items-center gap-2">${getIcon('map', "text-emerald-600", 24)}地圖與相關連結</h2><div class="space-y-3">${linksHtml}</div></div>`;
         }
 
-        // [渲染] 備註與餐廳
+        // [渲染] 備註與餐廳 (完整內容恢復)
         function renderNotesView() {
             const daysHtml = TRIP_DATA.notes.map(day => {
                 let content = '';
