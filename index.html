@@ -114,8 +114,8 @@
          */
         const TRIP_DATA = {
             flights: [
-                { type: "Departure", date: "2025/12/27 (六)", code: "CX564", airline: "國泰航空", route: "TPE 台北 (11:15) ➔ KIX 大阪 (14:55)", terminal: "TPE T1 / KIX T1", duration: "2h 40m", aircraft: "Airbus A330-300", class: "經濟 Q" },
-                { type: "Return", date: "2026/01/04 (日)", code: "CX565", airline: "國泰航空", route: "KIX 大阪 (16:15) ➔ TPE 台北 (18:30)", terminal: "KIX T1 / TPE T1", duration: "3h 25m", aircraft: "Airbus A330-300", class: "經濟 S" }
+                { type: "Departure", date: "2025/12/27 (六)", code: "CX564", airline: "國泰航空", route: "TPE 台北 (11:15) ➔ KIX 大阪 (14:55)", terminal: "TPE T1 / KIX T1", duration: "2h 40m", aircraft: "Airbus A330-300", class: "經濟 Q", flightUrl: "http://www.flightaware.com/live/flight/CPA564" },
+                { type: "Return", date: "2026/01/04 (日)", code: "CX565", airline: "國泰航空", route: "KIX 大阪 (16:15) ➔ TPE 台北 (18:30)", terminal: "KIX T1 / TPE T1", duration: "3h 25m", aircraft: "Airbus A330-300", class: "經濟 S", flightUrl: "http://www.flightaware.com/live/flight/CPA565" }
             ],
             hotels: [
                 { name: "草津波士頓廣場飯店", engName: "Hotel Boston Plaza Kusatsu", dates: "12/27 - 1/1 (5晚)", location: "滋賀縣草津市 (JR草津站旁)", features: ["交通便利", "美式風格", "適合自駕"], note: "作為滋賀縣人孔蓋卡收集的基地非常合適，飯店旁即有停車場與租車點。", image: "Boston.jpg" },
@@ -557,7 +557,13 @@
                         <span class="text-xs font-bold px-2 py-1 rounded ${flight.type === 'Departure' ? 'bg-indigo-100 text-indigo-700' : 'bg-orange-100 text-orange-700'}">${flight.type === 'Departure' ? '去程' : '回程'}</span>
                         <span class="font-mono font-bold text-stone-500">${flight.date}</span>
                     </div>
-                    <div class="flex justify-between items-center mb-2"><div class="text-3xl font-black text-stone-800">${flight.code}</div><div class="text-stone-300 rotate-45">${getIcon('plane', "", 24)}</div></div>
+                    <div class="flex justify-between items-center mb-2">
+                        <div class="flex items-center gap-3">
+                            <div class="text-3xl font-black text-stone-800">${flight.code}</div>
+                            ${flight.flightUrl ? `<a href="${flight.flightUrl}" target="_blank" class="p-1.5 bg-sky-50 text-sky-600 rounded-full active:scale-95 transition-transform">${getIcon('info', "", 18)}</a>` : ''}
+                        </div>
+                        <div class="text-stone-300 rotate-45">${getIcon('plane', "", 24)}</div>
+                    </div>
                     <div class="text-sm font-medium text-stone-600 mb-4">${flight.airline} • ${flight.class}</div>
                     <div class="bg-stone-50 p-4 rounded-lg text-center border border-stone-100">
                         <div class="text-lg font-bold text-stone-800 mb-1">${flight.route}</div>
