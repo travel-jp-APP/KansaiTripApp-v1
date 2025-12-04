@@ -75,7 +75,7 @@
             <div class="px-4 py-3 flex justify-between items-center">
                 <div>
                     <h1 class="text-xl font-black tracking-tighter text-indigo-900">KANSAI TRIP</h1>
-                    <p class="text-xs text-stone-400 font-medium tracking-widest">DEC 27 - JAN 04</p>
+                    <p class="text-xs text-stone-400 font-medium tracking-widest">DEC 27 - JAN 08</p>
                 </div>
                 <!-- 動態天氣/位置狀態 -->
                 <div id="header-status" class="hidden flex items-center gap-2 bg-white/50 px-3 py-1.5 rounded-full border border-stone-100"></div>
@@ -119,7 +119,8 @@
             ],
             hotels: [
                 { name: "草津波士頓廣場飯店", engName: "Hotel Boston Plaza Kusatsu", dates: "12/27 - 1/1 (5晚)", location: "滋賀縣草津市 (JR草津站旁)", features: ["交通便利", "美式風格", "適合自駕"], note: "作為滋賀縣人孔蓋卡收集的基地非常合適，飯店旁即有停車場與租車點。", image: "Boston.jpg" },
-                { name: "REF 京都八條口 by VESSEL HOTELS", engName: "REF Kyoto Hachijoguchi", dates: "1/1 - 1/4 (3晚)", location: "京都市南區 (京都站八條口)", features: ["大浴場", "現代日式", "免費迎賓飲料"], note: "靠近京都車站八條口，方便前往神戶(搭新快速)、奈良(搭近鐵)與搭乘 Haruka 回機場。", image: "Kyoto.jpg" }
+                { name: "REF 京都八條口 by VESSEL HOTELS", engName: "REF Kyoto Hachijoguchi", dates: "1/1 - 1/4 (3晚)", location: "京都市南區 (京都站八條口)", features: ["大浴場", "現代日式", "免費迎賓飲料"], note: "靠近京都車站八條口，方便前往神戶(搭新快速)、奈良(搭近鐵)與搭乘 Haruka 回機場。", image: "Kyoto.jpg" },
+                { name: "都ホテル 京都八条", engName: "Miyako Hotel Kyoto Hachijo", dates: "1/4 - 1/8 (4晚)", location: "京都市南區 (京都站八條口)", features: ["交通便利", "機場巴士直達", "老牌經典"], note: "位於京都車站八條口正對面，位置絕佳。往返關西機場方便 (利木津巴士)。", image: "Miyako.jpg", mapUrl: "https://maps.app.goo.gl/QTZgLVhm8Kupw9UM7?g_st=ipc" }
             ],
             itinerary: [
                 { id: "day1", date: "12/27", dayOfWeek: "六", location: "大阪 ➔ 滋賀", weather: "sunny", temp: "8°C", items: [
@@ -589,7 +590,7 @@
                         <div class="flex items-start gap-2 mb-4 text-sm text-stone-600">${getIcon('map-pin', "mt-0.5 text-stone-400 shrink-0", 16)}<span>${hotel.location}</span></div>
                         <div class="flex flex-wrap gap-2 mb-4">${hotel.features.map(f => `<span class="text-[10px] px-2 py-1 bg-indigo-50 text-indigo-600 rounded">${f}</span>`).join('')}</div>
                         <div class="bg-amber-50 p-3 rounded text-xs text-amber-800 border border-amber-100 flex gap-2">${getIcon('info', "shrink-0 mt-0.5", 14)}${hotel.note}</div>
-                        <a href="${getGoogleMapUrl(hotel.name)}" target="_blank" class="mt-4 block w-full py-3 bg-stone-800 text-white text-center rounded-lg text-sm font-bold active:bg-stone-900 transition active:scale-[0.98]">導航至飯店</a>
+                        <a href="${hotel.mapUrl || getGoogleMapUrl(hotel.name)}" target="_blank" class="mt-4 block w-full py-3 bg-stone-800 text-white text-center rounded-lg text-sm font-bold active:bg-stone-900 transition active:scale-[0.98]">導航至飯店</a>
                     </div>
                 </div>`).join('');
 
