@@ -75,7 +75,7 @@
             <div class="px-4 py-3 flex justify-between items-center">
                 <div>
                     <h1 class="text-xl font-black tracking-tighter text-indigo-900">KANSAI TRIP</h1>
-                    <p class="text-xs text-stone-400 font-medium tracking-widest">DEC 27 - JAN 08</p>
+                    <p class="text-xs text-stone-400 font-medium tracking-widest">DEC 27 - JAN 11</p>
                 </div>
                 <!-- 動態天氣/位置狀態 -->
                 <div id="header-status" class="hidden flex items-center gap-2 bg-white/50 px-3 py-1.5 rounded-full border border-stone-100"></div>
@@ -120,7 +120,7 @@
             hotels: [
                 { name: "草津波士頓廣場飯店", engName: "Hotel Boston Plaza Kusatsu", dates: "12/27 - 1/1 (5晚)", location: "滋賀縣草津市 (JR草津站旁)", features: ["交通便利", "美式風格", "適合自駕"], note: "作為滋賀縣人孔蓋卡收集的基地非常合適，飯店旁即有停車場與租車點。", image: "Boston.jpg" },
                 { name: "REF 京都八條口 by VESSEL HOTELS", engName: "REF Kyoto Hachijoguchi", dates: "1/1 - 1/4 (3晚)", location: "京都市南區 (京都站八條口)", features: ["大浴場", "現代日式", "免費迎賓飲料"], note: "靠近京都車站八條口，方便前往神戶(搭新快速)、奈良(搭近鐵)與搭乘 Haruka 回機場。", image: "Kyoto.jpg" },
-                { name: "都ホテル 京都八条", engName: "Miyako Hotel Kyoto Hachijo", dates: "1/4 - 1/8 (4晚)", location: "京都市南區 (京都站八條口)", features: ["交通便利", "機場巴士直達", "老牌經典"], note: "位於京都車站八條口正對面，位置絕佳。往返關西機場方便 (利木津巴士)。", image: "Miyako.JPG", mapUrl: "https://maps.app.goo.gl/QTZgLVhm8Kupw9UM7?g_st=ipc" }
+                { name: "都ホテル 京都八条", engName: "Miyako Hotel Kyoto Hachijo", dates: "1/4 - 1/8 (4晚)", location: "京都市南區 (京都站八條口)", features: ["交通便利", "機場巴士直達", "老牌經典"], note: "位於京都車站八條口正對面，位置絕佳。往返關西機場方便 (利木津巴士)。", image: "Miyako.jpg", mapUrl: "https://maps.app.goo.gl/QTZgLVhm8Kupw9UM7?g_st=ipc" }
             ],
             itinerary: [
                 { id: "day1", date: "12/27", dayOfWeek: "六", location: "大阪 ➔ 滋賀", weather: "sunny", temp: "8°C", items: [
@@ -202,22 +202,15 @@
                     { type: "visit", time: "10:00", title: "渡月橋", highlight: "嵐山地標", note: "橫跨桂川的木造橋梁，四季皆美的嵐山象徵。", videoUrl: "https://guideme24.com/products/e125" },
                     { type: "visit", time: "10:30", title: "尋找鳳王人孔蓋", tag: "收集", note: "寶可夢人孔蓋『鳳王』。位於京都西大路御池附近的公園內。", mapUrl: "https://maps.app.goo.gl/rX5RkRCimURC2yaNA" },
                     { type: "shrine", time: "13:00", title: "仁和寺", note: "皇室御願寺。雖非櫻花季，但御殿建築與庭園枯山水非常值得一看。", mapUrl: "https://maps.app.goo.gl/5YWzcadDHfKG9SeR7?g_st=ipc", goshuinUrl: "https://ninnaji.jp/lucky_charm/", videoUrl: "https://guideme24.com/products/e129-5" },
-                    { type: "shrine", time: "14:00", title: "賀茂御祖神社 (下鴨神社)", highlight: "糾之森", note: "穿越原始林「糾之森」到達神社。這裡有著名的水籤與美麗的蕾絲守。", mapUrl: "https://maps.app.goo.gl/B5SbkueV5CbZ3s3B6", goshuinUrl: "https://www.shimogamo-jinja.or.jp/omamori" },
                     { type: "shrine", time: "15:00", title: "平安神宮", note: "明治時代重現平安京大內裏的建築。巨大的紅色鳥居是地標。", videoUrl: "https://guideme24.com/products/e129-9" },
                     { type: "shop", time: "16:30", title: "Pokemon Center Kyoto (SUINA室町)", highlight: "藝妓皮卡丘", note: "位於 SUINA 室町 2F。特色是穿著和服/藝妓服裝的皮卡丘。" },
                     { type: "shop", time: "18:00", title: "吉伊卡哇 Land 京都 (四條河原町)", note: "位於 Kiddyland 內。繼續補貨京都限定商品。", mapUrl: "https://www.google.com/maps/search/?api=1&query=Kiddyland+京都" }
                 ]},
-                { id: "day9", date: "1/4", dayOfWeek: "日", location: "大阪 ➔ 台北", weather: "sunny", temp: "8°C", items: [
-                    { type: "transport", time: "08:12", title: "移動：京都 ➔ 大阪 ➔ 關西機場", note: "方案：先將行李寄放在大阪難波/天王寺，或直接帶去臨空城/機場寄放。", mapUrl: "https://maps.app.goo.gl/wZ8yJHJJo2tUD5cUA" },
-                    { type: "visit", time: "09:30", title: "ATC Green Eco Plaza (南港)", note: "位於大阪南港 ATC 大樓。兼具環保教育與觀光功能的設施。", bookingUrl: "https://www.ecoplaza.gr.jp/atc_post/n20251125/" },
-                    { type: "visit", time: "11:00", title: "堺東観光案内所", tag: "收集", note: "領取堺市人孔蓋卡。位於南海高野線堺東站。", bookingUrl: "https://www.sakai-tcb.or.jp/service/" },
-                    { type: "visit", time: "12:00", title: "岸和田站前觀光案內所", tag: "收集", note: "以「岸和田山車祭 (Danjiri)」聞名。領取人孔蓋卡。", mapUrl: "https://maps.app.goo.gl/hbFc4FkHzPWHKGkDA", bookingUrl: "https://www.city.kishiwada.lg.jp/page/36-touristinformationcenter.html" },
-                    { type: "visit", time: "13:30", title: "まちの駅 かいづか (貝塚)", tag: "收集", note: "貝塚市人孔蓋卡。位於南海本線貝塚站附近 (3F)。", mapUrl: "https://www.google.com/maps/search/?api=1&query=まちの駅かいづか", bookingUrl: "https://www.machinoeki-kaizuka.com/" },
-                    { type: "visit", time: "15:00", title: "泉佐野市観光情報センター", tag: "收集", note: "最後一站收集！位於臨空城站/泉佐野站附近。", bookingUrl: "https://www.kankou-izumisano.jp/kankoannao.html" },
-                    { type: "transport", time: "16:15", title: "搭乘 CX565 返台", note: "前往關西機場 T1 辦理登機。再見關西！預計 18:30 抵達台北。" }
+                // [新增 1/4]
+                { id: "day9", date: "1/4", dayOfWeek: "日", location: "京都/大阪", weather: "cloudy", temp: "9°C", items: [
+                    { type: "visit", time: "10:00", title: "自由活動", note: "本日為自由行程，可補齊未去的景點或購物。" }
                 ]},
-                // [下雪 Plan]
-                { id: "daySnow", date: "下雪", dayOfWeek: "❄️", location: "京都 - 洛北", weather: "snow", temp: "-1°C", items: [
+                { id: "day10", date: "1/5", dayOfWeek: "一", location: "京都 - 洛北", weather: "snow", temp: "-1°C", items: [
                     { type: "transport", time: "09:00", title: "前往出町柳轉乘叡山電鐵", note: "搭乘著名的觀景列車「Kirara」前往貴船/鞍馬區域。", mapUrl: "https://maps.app.goo.gl/FPmVS6W6woB9vjZZA" },
                     { type: "shrine", time: "10:30", title: "鞍馬寺", highlight: "源義經修練地", note: "京都屈指可數的能量景點。仁王門至本殿的參道在雪季非常壯觀。", mapUrl: "https://maps.app.goo.gl/RHCm3G9WwzATTBVc8?g_st=ipc" },
                     { type: "visit", time: "12:00", title: "鞍馬山鋼索鐵道", note: "日本最短的鐵道，可省去爬坡體力。", mapUrl: null },
@@ -225,18 +218,18 @@
                     { type: "food", time: "15:00", title: "ひろ文 (Hirobun)", note: "雖然以夏日川床流水麵聞名，但冬季的熱食與雪景也別有一番風味。", mapUrl: null },
                     { type: "transport", time: "17:35", title: "貴船公車站", note: "最後一班公車17:35下山", mapUrl: "https://maps.app.goo.gl/e2qtxnRp5p8uq1nv5", busUrl: "https://japantravel.navitime.com/zh-tw/area/jp/depArrTimeList/00056789/00056787/00016721?direction=up" }
                 ]},
-                // [和歌山 Plan]
-                { id: "dayWakayama", date: "和歌山", dayOfWeek: "🏯", location: "和歌山", weather: "sunny", temp: "9°C", items: [
-                    { type: "visit", time: "10:00", title: "和歌山歷史館", tag: "收集", note: "領取和歌山市人孔蓋卡。", mapUrl: "https://maps.app.goo.gl/rwhZCw7PzBXPR7q28?g_st=ipc", bookingUrl: "http://wakayamajo.jp/tenji/index.html" },
-                    { type: "visit", time: "11:30", title: "和歌山城", highlight: "日本百名城", note: "紀州德川家的居城。", mapUrl: "https://maps.app.goo.gl/ZqmMAHD6NhWDffE7A?g_st=ipc" }
+                // [原為 day11 (1/6 京都頁面)]
+                { id: "day11", date: "1/6", dayOfWeek: "二", location: "京都", weather: "sunny", temp: "10°C", items: [
+                    { type: "shrine", time: "06:30", title: "賀茂御祖神社 (下鴨神社)", highlight: "世界遺產", note: "營業時間：06:30–17:00。位於鴨川上游，擁有美麗的糾之森。", mapUrl: "https://maps.app.goo.gl/744P88C558j5U2Vu7?g_st=ipc", goshuinUrl: "https://www.shimogamo-jinja.or.jp/omamori" },
+                    { type: "shrine", time: "09:00", title: "晴明神社", highlight: "陰陽師", note: "營業時間：09:00–16:30。祭祀安倍晴明，除厄著名。", mapUrl: "https://maps.app.goo.gl/CdzkZyYHq4hqFrkf8?g_st=ipc", goshuinUrl: "https://www.seimeijinja.jp/omamori/" },
+                    { type: "shrine", time: "07:00", title: "北野天滿宮", highlight: "學問之神", note: "營業時間：07:00–17:00。梅花與紅葉名所。", mapUrl: "https://maps.app.goo.gl/E4WkNynSY7YmeyzT8?g_st=ipc", goshuinUrl: "https://kitanotenmangu.or.jp/amulet/" },
+                    { type: "shrine", time: "09:00", title: "金閣寺 (鹿苑寺)", highlight: "金碧輝煌", note: "營業時間：09:00–17:00。舍利殿貼滿金箔，水中倒影絕美。", mapUrl: "https://maps.app.goo.gl/4m3dXJWAiBRjhdxN8?g_st=ipc" }
                 ]},
-                // [姬路 Plan]
-                { id: "dayHimeji", date: "姬路", dayOfWeek: "🏯", location: "兵庫縣", weather: "sunny", temp: "8°C", items: [
+                { id: "day12", date: "1/7", dayOfWeek: "三", location: "兵庫縣", weather: "sunny", temp: "8°C", items: [
                     { type: "visit", time: "10:00", title: "姫路市観光案内所", tag: "收集", note: "領取姬路市人孔蓋卡 (JR姬路站中央改札口附近)。", mapUrl: "https://maps.app.goo.gl/jxpokBXhFywKXwDS6?g_st=ipc", bookingUrl: "https://www.himeji-kanko.jp/oyakudachi/11/" },
                     { type: "visit", time: "11:00", title: "姬路城", highlight: "世界遺產", note: "日本國寶，別名白鷺城。", mapUrl: "https://maps.app.goo.gl/scj7Td4A3KADXT6f9?g_st=ipc" }
                 ]},
-                // [京都卡 Plan]
-                { id: "dayKyotoCard", date: "京都卡", dayOfWeek: "🕳️", location: "京都/滋賀收集", weather: "cloudy", temp: "10°C", items: [
+                { id: "day13", date: "1/8", dayOfWeek: "四", location: "京都/滋賀收集", weather: "cloudy", temp: "10°C", items: [
                     { type: "visit", time: "09:00", title: "草津宿街道交流館", tag: "收集", note: "營業時間 09:00–17:00。", bookingUrl: "https://www.city.kusatsu.shiga.jp/kusatsujuku/index.html", mapUrl: "https://maps.app.goo.gl/WsutRnQjJNDHM4YL6?g_st=ipc" },
                     { type: "visit", time: "10:30", title: "大津市水再生中心", tag: "收集", note: "營業時間 09:00–17:00。", bookingUrl: "https://www.city.otsu.lg.jp/soshiki/080/1902/index.html", mapUrl: "https://maps.app.goo.gl/rPsp8JxNyEGP8ANi8?g_st=ipc" },
                     { type: "visit", time: "13:00", title: "琵琶湖疏水記念館", tag: "收集", note: "營業時間 09:00–17:00 (週一休)。", bookingUrl: "https://biwakososui-museum.city.kyoto.lg.jp/access/", mapUrl: "https://maps.app.goo.gl/gpJhtYyEQbV3bP5t6?g_st=ipc" },
@@ -244,6 +237,24 @@
                     { type: "visit", time: "15:30", title: "京都市上下水道局 総合庁舎", tag: "收集", note: "平日限定 (08:30-17:15)。", bookingUrl: "https://www.city.kyoto.lg.jp/suido/page/0000277176.html", mapUrl: "https://maps.app.goo.gl/TYy1uXLob5Rv5EuU8?g_st=ipc" },
                     { type: "visit", time: "16:30", title: "京都市上下水道局 太秦庁舎", tag: "收集", note: "平日限定 (08:30-17:15)。", bookingUrl: "https://www.city.kyoto.lg.jp/suido/page/0000277176.html", mapUrl: "https://maps.app.goo.gl/gZgX1yEFrti6ptKv9?g_st=ipc" },
                     { type: "shrine", time: "17:00", title: "梅宮大社", note: "貓與酒的神社。", mapUrl: "https://maps.app.goo.gl/nKQ3fBPVWNwNdPEL6?g_st=ipc" }
+                ]},
+                // [原為 day11 (1/9 和歌山), 改為 day14]
+                { id: "day14", date: "1/9", dayOfWeek: "五", location: "和歌山", weather: "sunny", temp: "9°C", items: [
+                    { type: "visit", time: "10:00", title: "和歌山歷史館", tag: "收集", note: "領取和歌山市人孔蓋卡。", mapUrl: "https://maps.app.goo.gl/rwhZCw7PzBXPR7q28?g_st=ipc", bookingUrl: "http://wakayamajo.jp/tenji/index.html" },
+                    { type: "visit", time: "11:30", title: "和歌山城", highlight: "日本百名城", note: "紀州德川家的居城。", mapUrl: "https://maps.app.goo.gl/ZqmMAHD6NhWDffE7A?g_st=ipc" }
+                ]},
+                // [新增 1/10]
+                { id: "day15", date: "1/10", dayOfWeek: "六", location: "大阪", weather: "sunny", temp: "8°C", items: [
+                    { type: "visit", time: "10:00", title: "自由活動", note: "本日為自由行程，可前往心齋橋、梅田等地購物。" }
+                ]},
+                { id: "day16", date: "1/11", dayOfWeek: "日", location: "大阪 ➔ 台北", weather: "sunny", temp: "8°C", items: [
+                    { type: "transport", time: "08:12", title: "移動：京都 ➔ 大阪 ➔ 關西機場", note: "方案：先將行李寄放在大阪難波/天王寺，或直接帶去臨空城/機場寄放。", mapUrl: "https://maps.app.goo.gl/wZ8yJHJJo2tUD5cUA" },
+                    { type: "visit", time: "09:30", title: "ATC Green Eco Plaza (南港)", note: "位於大阪南港 ATC 大樓。兼具環保教育與觀光功能的設施。", bookingUrl: "https://www.ecoplaza.gr.jp/atc_post/n20251125/" },
+                    { type: "visit", time: "11:00", title: "堺東観光案内所", tag: "收集", note: "領取堺市人孔蓋卡。位於南海高野線堺東站。", bookingUrl: "https://www.sakai-tcb.or.jp/service/" },
+                    { type: "visit", time: "12:00", title: "岸和田站前觀光案內所", tag: "收集", note: "以「岸和田山車祭 (Danjiri)」聞名。領取人孔蓋卡。", mapUrl: "https://maps.app.goo.gl/hbFc4FkHzPWHKGkDA", bookingUrl: "https://www.city.kishiwada.lg.jp/page/36-touristinformationcenter.html" },
+                    { type: "visit", time: "13:30", title: "まちの駅 かいづか (貝塚)", tag: "收集", note: "貝塚市人孔蓋卡。位於南海本線貝塚站附近 (3F)。", mapUrl: "https://www.google.com/maps/search/?api=1&query=まちの駅かいづか", bookingUrl: "https://www.machinoeki-kaizuka.com/" },
+                    { type: "visit", time: "15:00", title: "泉佐野市観光情報センター", tag: "收集", note: "最後一站收集！位於臨空城站/泉佐野站附近。", bookingUrl: "https://www.kankou-izumisano.jp/kankoannao.html" },
+                    { type: "transport", time: "16:15", title: "搭乘 CX565 返台", note: "前往關西機場 T1 辦理登機。再見關西！預計 18:30 抵達台北。" }
                 ]}
             ],
             // [人孔蓋卡庫存資訊]
@@ -842,4 +853,3 @@
     </script>
 </body>
 </html>
-
