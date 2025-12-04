@@ -2,19 +2,9 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <!-- 
-        [Viewport 設定詳解]
-        - width=device-width: 設定視口寬度等於裝置螢幕寬度。
-        - initial-scale=1.0, maximum-scale=1.0, user-scalable=no: 禁止縮放，模擬原生 App 操作手感。
-        - viewport-fit=cover: 適配 iOS 全螢幕 (瀏海/圓角) 區域。
-    -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Kansai Trip 2025-2026</title>
     
-    <!-- 
-        [PWA 設定]
-        讓網頁在 iOS Safari 加入主畫面後，能以全螢幕 App 模式執行。
-    -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Kansai Trip"> 
@@ -22,75 +12,61 @@
     <link rel="apple-touch-icon" href="Japan.jpg">
     <link rel="icon" href="Japan.jpg">
     
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
-        /* --- 全域樣式優化 --- */
+        /* --- 全域樣式 --- */
         html, body {
             width: 100%;
             height: 100%;
-            overflow: hidden; /* 鎖定外部捲動 */
+            overflow: hidden;
             position: fixed;
             font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background-color: #d6d3d1; /* stone-300 */
-            color: #1c1917; /* stone-900 */
-            overscroll-behavior: none; /* 禁止回彈 */
+            background-color: #d6d3d1;
+            color: #1c1917;
+            overscroll-behavior: none;
         }
 
-        /* 啟用 iOS 慣性捲動 */
         #main-content, #date-scroller { -webkit-overflow-scrolling: touch; }
 
-        /* 隱藏捲軸 */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* 動畫效果 */
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
         .animate-fade-in-up, .animate-fade-in { animation: fadeInUp 0.4s ease-out forwards; }
         
-        /* iOS 安全區域 */
         .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
     </style>
 </head>
 <body>
-    <!-- [App 主容器] -->
     <div class="h-[100dvh] flex flex-col md:max-w-md md:mx-auto shadow-2xl overflow-hidden relative select-none bg-stone-300">
         
-        <!-- 背景圖層 -->
         <div class="fixed inset-0 z-0 pointer-events-none md:max-w-md md:mx-auto">
             <img src="Shirahige Jinja.jpg" alt="Background" class="w-full h-full object-cover opacity-90"/>
             <div class="absolute inset-0 bg-stone-300/85 backdrop-blur-[2px]"></div>
         </div>
 
-        <!-- 頂部導航列 -->
         <div class="shrink-0 bg-white/80 backdrop-blur-md border-b border-stone-200/50 shadow-sm z-50">
             <div class="px-4 py-3 flex justify-between items-center">
                 <div>
                     <h1 class="text-xl font-black tracking-tighter text-indigo-900">KANSAI TRIP</h1>
                     <p class="text-xs text-stone-400 font-medium tracking-widest">DEC 27 - JAN 11</p>
                 </div>
-                <!-- 動態天氣/位置狀態 -->
                 <div id="header-status" class="hidden flex items-center gap-2 bg-white/50 px-3 py-1.5 rounded-full border border-stone-100"></div>
             </div>
             
-            <!-- 日期捲軸 -->
             <div id="date-scroller-container" class="hidden">
                 <div id="date-scroller" class="flex overflow-x-auto gap-3 px-4 pb-3 no-scrollbar snap-x"></div>
             </div>
         </div>
 
-        <!-- 主要內容區 -->
         <div id="main-content" class="flex-1 overflow-y-auto overflow-x-hidden p-4 space-y-4 no-scrollbar overscroll-contain relative z-10 pb-24"></div>
 
-        <!-- 底部導航欄 -->
         <div class="absolute bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-stone-200/50 pb-safe z-50 overflow-x-auto no-scrollbar">
             <div class="flex justify-between items-center h-16 min-w-max px-2" id="bottom-nav"></div>
         </div>
@@ -101,25 +77,18 @@
         // --- 1. 資料來源 (Data Source) ---
         // ==========================================
         
-        /**
-         * [排除名單]
-         * 定義不需要顯示「導航按鈕」的行程標題。
-         */
         const TITLES_WITHOUT_NAVIGATION = ["搭乘 CX564 飛往大阪", "搭乘 CX565 返台", "前往草津", "前往大阪", "移動至京都 (寄放行李) -> 神戶", "前往出町柳轉乘叡山電鐵"];
 
-        /**
-         * [行程總資料物件]
-         * 包含航班 (flights)、住宿 (hotels)、每日行程 (itinerary)、人孔蓋庫存 (manholeStock) 等資訊。
-         */
         const TRIP_DATA = {
             flights: [
                 { type: "Departure", date: "2025/12/27 (六)", code: "CX564", airline: "國泰航空", route: "TPE 台北 (11:15) ➔ KIX 大阪 (14:55)", terminal: "TPE T1 / KIX T1", duration: "2h 40m", aircraft: "Airbus A330-300", class: "經濟 Q", flightUrl: "http://www.flightaware.com/live/flight/CPA564" },
-                { type: "Return", date: "2026/01/11 (日)", code: "CX565", airline: "國泰航空", route: "KIX 大阪 (16:15) ➔ TPE 台北 (18:30)", terminal: "KIX T1 / TPE T1", duration: "3h 25m", aircraft: "Airbus A330-300", class: "經濟 S", flightUrl: "http://www.flightaware.com/live/flight/CPA565" }
+                { type: "Return", date: "2026/01/04 (日)", code: "CX565", airline: "國泰航空", route: "KIX 大阪 (16:15) ➔ TPE 台北 (18:30)", terminal: "KIX T1 / TPE T1", duration: "3h 25m", aircraft: "Airbus A330-300", class: "經濟 S", flightUrl: "http://www.flightaware.com/live/flight/CPA565" }
             ],
             hotels: [
                 { name: "草津波士頓廣場飯店", engName: "Hotel Boston Plaza Kusatsu", dates: "12/27 - 1/1 (5晚)", location: "滋賀縣草津市 (JR草津站旁)", features: ["交通便利", "美式風格", "適合自駕"], note: "作為滋賀縣人孔蓋卡收集的基地非常合適，飯店旁即有停車場與租車點。", image: "Boston.jpg" },
                 { name: "REF 京都八條口 by VESSEL HOTELS", engName: "REF Kyoto Hachijoguchi", dates: "1/1 - 1/4 (3晚)", location: "京都市南區 (京都站八條口)", features: ["大浴場", "現代日式", "免費迎賓飲料"], note: "靠近京都車站八條口，方便前往神戶(搭新快速)、奈良(搭近鐵)與搭乘 Haruka 回機場。", image: "Kyoto.jpg" },
-                { name: "都ホテル 京都八条", engName: "Miyako Hotel Kyoto Hachijo", dates: "1/4 - 1/8 (4晚)", location: "京都市南區 (京都站八條口)", features: ["交通便利", "機場巴士直達", "老牌經典"], note: "位於京都車站八條口正對面，位置絕佳。往返關西機場方便 (利木津巴士)。", image: "Miyako.jpg", mapUrl: "https://maps.app.goo.gl/QTZgLVhm8Kupw9UM7?g_st=ipc" }
+                { name: "都ホテル 京都八条", engName: "Miyako Hotel Kyoto Hachijo", dates: "1/4 - 1/8 (4晚)", location: "京都市南區 (京都站八條口)", features: ["交通便利", "機場巴士直達", "老牌經典"], note: "位於京都車站八條口正對面，位置絕佳。往返關西機場方便 (利木津巴士)。", image: "Miyako.jpg", mapUrl: "https://maps.app.goo.gl/QTZgLVhm8Kupw9UM7?g_st=ipc" },
+                { name: "大阪北濱大和Roynet飯店", engName: "Daiwa Roynet Hotel Osaka Kitahama", dates: "1/8 - 1/11 (3晚)", location: "大阪市中央區 (北濱站直結)", features: ["地鐵直結", "舒適寬敞", "交通便利"], note: "與地鐵堺筋線北濱站直結，交通便利。鄰近中之島公園與淀屋橋，環境優雅。", image: "Roynet.jpg" }
             ],
             itinerary: [
                 { id: "day1", date: "12/27", dayOfWeek: "六", location: "大阪 ➔ 滋賀", weather: "sunny", temp: "8°C", items: [
@@ -291,7 +260,6 @@
                 { name: "まちの駅かいづか", region: "大阪", hours: "10:00–19:00", url: "https://www.city.kaizuka.lg.jp/kakuka/jogesuido/gesuisuisin/topics/manholucard.html" },
                 { name: "泉佐野市観光情報センター", region: "大阪", hours: "10:00–16:00", url: "https://www.city.izumisano.lg.jp/kakuka/jogesuidokyoku/jogesui/menu/1511934914176.html" },
             ],
-            // [外部地圖連結清單]
             mapLinks: [
                 { title: "關西周遊路線圖", url: "https://www.surutto.com/kansai_rw/assets/pdf/areamap2024_tw.pdf" },
                 { title: "Osaka Metro路線圖", url: "https://subway.osakametro.co.jp/img/osakametro_rosenzu_20250404.pdf" },
@@ -308,7 +276,6 @@
                 { title: "一番賞 京都店", url: "https://maps.app.goo.gl/7jykpS5VA2N82SyN8" },
                 { title: "一番賞官網", url: "https://bandainamco-am.co.jp/chara_shop/ichibankuji-official-shop/?areaNo=6&prefNo=25" }
             ],
-            // [備註頁面資料]
             notes: [
                 {
                     date: "12/27（六）",
@@ -347,7 +314,6 @@
                     dining: [{ area: "京都 - 嵐山", spots: [{ name: "嵯峨豆腐 稻 本店", cuisine: "湯豆腐", hours: "11:00–18:30", note: "嵐山名物湯豆腐。", mapUrl: "https://maps.app.goo.gl/BBCfdetuL8rNMevf7" }, { name: "嵐山よしむら", cuisine: "手打蕎麥麵", hours: "11:00–16:00", note: "位於渡月橋畔，可欣賞美景。", mapUrl: "https://maps.app.goo.gl/p47zjGPbRoUSY4Cp8" }, { name: "鯛匠 HANANA", cuisine: "鯛魚茶泡飯", hours: "11:00–16:30", note: "人氣排隊店。", mapUrl: "https://maps.app.goo.gl/5wxGFRvQ2TwzryT48" }] }]
                 }
             ],
-            // [自駕指南與交通號誌]
             drivingGuide: {
                 tips: [
                     { title: "右駕左行", content: "日本車輛為右駕，請務必靠左行駛。口訣：「左轉小彎、右轉大彎」。" },
@@ -402,9 +368,8 @@
             }
         };
 
-        /**
-         * [輔助函數] 產生 Google Maps 搜尋連結
-         */
+        // --- 輔助函數 ---
+        // 修復: 修正字串插值語法錯誤
         const getGoogleMapUrl = (name) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name)}`;
 
         // ==========================================
@@ -420,10 +385,8 @@
         // --- 3. 組件渲染函數 (Component Renderers) ---
         // ==========================================
         
-        /** [產生圖示] */
         const getIcon = (name, classes = "", size = 24) => `<i data-lucide="${name}" class="${classes}" width="${size}" height="${size}"></i>`;
 
-        /** [繪製道路標線] */
         function renderRoadLine(type) {
             let content = '';
             switch (type) {
@@ -436,7 +399,6 @@
             return `<svg width="100%" height="40" class="rounded-md border border-stone-400 bg-zinc-600"><rect width="100%" height="100%" fill="#52525b" />${content}</svg>`;
         }
 
-        /** [繪製交通號誌] */
         function renderTrafficSign(type, limit) {
             switch(type) {
                 case 'stop': return `<svg width="80" height="80" viewBox="0 0 80 80"><polygon points="40,76 4,10 76,10" fill="#ef4444" stroke="none"/><text x="50%" y="35%" dominant-baseline="middle" text-anchor="middle" fill="white" font-size="18" font-weight="bold">止まれ</text><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" fill="white" font-size="12" font-weight="bold">STOP</text></svg>`;
@@ -453,7 +415,6 @@
             }
         }
 
-        /** [渲染天氣圖標] */
         const renderWeatherIcon = (type) => {
             const icons = {
                 'sunny': { name: 'sun', class: 'text-orange-500' },
@@ -465,15 +426,10 @@
             return getIcon(icon.name, `w-5 h-5 ${icon.class}`);
         };
 
-        /**
-         * [核心渲染] 單個行程卡片
-         * 負責根據行程類型 (item.type) 動態決定圖示、顏色與邊框樣式。
-         */
         function renderItineraryItem(item) {
             let iconName = 'map-pin', iconColor = "text-stone-400", borderColor = "border-stone-200";
             let isEmoji = false;
 
-            // 樣式設定物件
             const styles = {
                 food: { icon: 'utensils', color: 'text-red-400', border: 'border-l-red-400' },
                 shop: { icon: 'shopping-bag', color: 'text-yellow-500', border: 'border-l-yellow-500' },
@@ -489,7 +445,7 @@
             } else if (item.type === 'transport') {
                 if (item.title.includes("CX564") || item.title.includes("CX565")) { 
                     iconName = 'plane'; iconColor = "text-red-500"; borderColor = "border-l-red-500"; 
-                } else if (item.title.includes("租車") || item.title.includes("還車") || item.title.includes("駐車場") || item.title.includes("伊根灣") || item.title === "返回草津" || item.title === "抵達長濱港") {
+                } else if (item.title.includes("租車") || item.title.includes("還車") || item.title.includes("駐車場") || (item.title.includes("前往") && !item.title.includes("電車") && !item.title.includes("車站") && !item.title.includes("搭乘"))) {
                     iconName = 'car'; iconColor = "text-lime-600"; borderColor = "border-l-lime-600";
                 } else if (item.title.includes("公車") || item.title.includes("巴士")) {
                     iconName = 'bus'; iconColor = "text-teal-600"; borderColor = "border-l-teal-600";
@@ -501,7 +457,6 @@
             const isCollection = item.tag === "收集";
             if (isCollection) { iconName = 'star'; iconColor = "text-amber-500"; borderColor = "border-l-amber-500"; }
 
-            // 導航按鈕顯示邏輯
             const showNavigation = item.mapUrl || (!TITLES_WITHOUT_NAVIGATION.includes(item.title) && item.mapUrl !== null);
             const destinationUrl = item.mapUrl || getGoogleMapUrl(item.title);
             const videoIcon = item.videoUrl && (item.videoUrl.includes('youtube') || item.videoUrl.includes('youtu.be')) ? 'youtube' : 'video';
@@ -534,7 +489,6 @@
             </div>`;
         }
 
-        /** [渲染] 每日行程頁面 */
         function renderItineraryView(dayId) {
             const currentDayData = TRIP_DATA.itinerary.find(d => d.id === dayId);
             if (!currentDayData) return '';
@@ -553,7 +507,6 @@
             `;
         }
 
-        /** [渲染] 航班與住宿資訊 */
         function renderFlightsView() {
             const flightsHtml = TRIP_DATA.flights.map(flight => `
                 <div class="bg-white/95 backdrop-blur-sm rounded-xl shadow-sm border border-stone-200 overflow-hidden p-5 mb-4">
@@ -593,7 +546,6 @@
             return `<div class="space-y-4 animate-fade-in pb-20"><h2 class="text-xl font-bold text-stone-800 px-1">航班資訊</h2>${flightsHtml}<h2 class="text-xl font-bold text-stone-800 px-1 mt-8 pt-4 border-t border-stone-300/50">住宿資訊</h2>${hotelsHtml}</div>`;
         }
 
-        /** [渲染] 自駕指南 */
         function renderDrivingView() {
             const createSection = (data, renderFn, title, iconClass, borderClass) => `
                 <div><h3 class="text-lg font-bold text-stone-700 mb-3 px-1 border-l-4 ${borderClass} pl-2">${title}</h3><div class="space-y-3">${data.map(renderFn).join('')}</div></div>`;
@@ -616,7 +568,6 @@
                 </div>`;
         }
         
-        /** [渲染] 人孔蓋庫存 */
         function renderManholeView() {
             const rowsHtml = TRIP_DATA.manholeStock.map(item => `
                 <tr class="hover:bg-indigo-50/50 transition-colors">
@@ -648,7 +599,6 @@
                 </div>`;
         }
         
-        /** [渲染] 地圖連結 */
         function renderMapView() {
             const linksHtml = TRIP_DATA.mapLinks.map(link => `
                 <a href="${link.url}" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-4 bg-white/95 backdrop-blur-sm border border-stone-200 rounded-xl shadow-sm active:bg-stone-50 transition-colors">
@@ -657,7 +607,6 @@
             return `<div class="space-y-4 animate-fade-in pb-20"><h2 class="text-xl font-bold text-stone-800 px-1 flex items-center gap-2">${getIcon('map', "text-emerald-600", 24)}地圖與相關連結</h2><div class="space-y-3">${linksHtml}</div></div>`;
         }
 
-        /** [渲染] 備註與餐廳 */
         function renderNotesView() {
             const daysHtml = TRIP_DATA.notes.map(day => {
                 let content = '';
@@ -669,7 +618,6 @@
             return `<div class="space-y-6 animate-fade-in pb-20"><h2 class="text-xl font-bold text-stone-800 px-1 flex items-center gap-2">${getIcon('notebook-pen', "text-pink-500", 24)}行程備註</h2>${daysHtml}</div>`;
         }
 
-        /** [渲染] 頁尾 */
         function renderFooter() {
             return `<div class="text-center pt-8 pb-4 opacity-80 mb-16"><div class="border-t border-stone-400/30 pt-2 px-4 inline-flex items-baseline gap-2"><span class="text-sm text-stone-500 font-medium tracking-wider">Created by</span><span class="text-4xl text-stone-600" style="font-family: 'Dancing Script', cursive">Wen</span></div></div>`;
         }
@@ -678,7 +626,6 @@
         // --- 4. 主控制邏輯 (Main Controller) ---
         // ==========================================
         
-        /** [更新畫面] */
         function updateView() {
             const mainContent = document.getElementById('main-content');
             const scrollerContainer = document.getElementById('date-scroller-container');
@@ -706,7 +653,6 @@
             lucide.createIcons();
         }
 
-        /** [更新日期捲軸] */
         function updateDateScroller() {
             const scroller = document.getElementById('date-scroller');
             scroller.innerHTML = TRIP_DATA.itinerary.map(day => {
@@ -720,7 +666,6 @@
             }, 50);
         }
 
-        /** [更新底部導航欄] */
         function updateBottomNav() {
             const nav = document.getElementById('bottom-nav');
             const tabs = [
@@ -753,4 +698,3 @@
     </script>
 </body>
 </html>
-
