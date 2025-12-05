@@ -81,8 +81,44 @@
 
         const TRIP_DATA = {
             flights: [
-                { type: "Departure", date: "2025/12/27 (六)", code: "CX564", airline: "國泰航空", route: "TPE 台北 (11:15) ➔ KIX 大阪 (14:55)", terminal: "TPE T1 / KIX T1", duration: "2h 40m", aircraft: "Airbus A330-300", class: "經濟 Q", flightUrl: "http://www.flightaware.com/live/flight/CPA564" },
-                { type: "Return", date: "2026/01/11 (日)", code: "CX565", airline: "國泰航空", route: "KIX 大阪 (16:15) ➔ TPE 台北 (18:30)", terminal: "KIX T1 / TPE T1", duration: "3h 25m", aircraft: "Airbus A330-300", class: "經濟 S", flightUrl: "http://www.flightaware.com/live/flight/CPA565" }
+                { 
+                    type: "Departure", 
+                    date: "2025/12/27 (六)", 
+                    code: "CX564", 
+                    airline: "國泰航空", 
+                    route: "TPE 台北 (11:15) ➔ KIX 大阪 (14:55)", 
+                    terminal: "TPE T1 / KIX T1", 
+                    duration: "2h 40m", 
+                    aircraft: "Airbus A330-300", 
+                    class: "經濟 Q", 
+                    flightUrl: "http://www.flightaware.com/live/flight/CPA564",
+                    seatNotes: [
+                        "座位 43A、K 及 59A、K 為無景觀座位，座位旁並無窗口",
+                        "座位 59A、K 為無景觀座位，座位旁並無窗口",
+                        "座位 31A 為無景觀座位，座位旁並無窗口",
+                        "座位 46A、K、 49A、K 及 54A、K 為無景觀座位，座位旁並無窗口"
+                    ],
+                    seatUrl: "https://www.cathaypacific.com/cx/zh_TW/flying-with-us/aircraft-and-fleet/boeing-777/300.html#77k"
+                },
+                { 
+                    type: "Return", 
+                    date: "2026/01/11 (日)", 
+                    code: "CX565", 
+                    airline: "國泰航空", 
+                    route: "KIX 大阪 (16:15) ➔ TPE 台北 (18:30)", 
+                    terminal: "KIX T1 / TPE T1", 
+                    duration: "3h 25m", 
+                    aircraft: "Airbus A330-300", 
+                    class: "經濟 S", 
+                    flightUrl: "http://www.flightaware.com/live/flight/CPA565",
+                    seatNotes: [
+                        "座位 43A、K 及 59A、K 為無景觀座位，座位旁並無窗口",
+                        "座位 59A、K 為無景觀座位，座位旁並無窗口",
+                        "座位 31A 為無景觀座位，座位旁並無窗口",
+                        "座位 46A、K、 49A、K 及 54A、K 為無景觀座位，座位旁並無窗口"
+                    ],
+                    seatUrl: "https://www.cathaypacific.com/cx/zh_TW/flying-with-us/aircraft-and-fleet/boeing-777/300.html#77k"
+                }
             ],
             hotels: [
                 { name: "草津波士頓廣場飯店", engName: "Hotel Boston Plaza Kusatsu", dates: "12/27 - 1/1 (5晚)", location: "滋賀縣草津市 (JR草津站旁)", features: ["交通便利", "美式風格", "適合自駕"], note: "作為滋賀縣人孔蓋卡收集的基地非常合適，飯店旁即有停車場與租車點。", image: "Boston.jpg" },
@@ -539,6 +575,14 @@
                         <div class="text-lg font-bold text-stone-800 mb-1">${flight.route}</div>
                         <div class="text-xs text-stone-500">${flight.terminal} • ${flight.duration} • ${flight.aircraft}</div>
                     </div>
+                    ${flight.seatNotes ? `
+                    <div class="mt-3 p-3 bg-orange-50 rounded-lg border border-orange-100 text-xs text-orange-800">
+                        <div class="font-bold mb-1 flex items-center gap-1">${getIcon('triangle-alert', "w-3 h-3")} 無景觀座位提示：</div>
+                        <ul class="list-disc list-inside space-y-0.5 opacity-90">
+                            ${flight.seatNotes.map(n => `<li>${n}</li>`).join('')}
+                        </ul>
+                        ${flight.seatUrl ? `<a href="${flight.seatUrl}" target="_blank" class="block mt-2 text-orange-600 underline hover:text-orange-800">資料來源：Cathay Pacific</a>` : ''}
+                    </div>` : ''}
                 </div>`).join('');
 
             const hotelsHtml = TRIP_DATA.hotels.map(hotel => `
@@ -711,10 +755,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
