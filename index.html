@@ -305,6 +305,18 @@
                 { name: "まちの駅かいづか", region: "大阪", hours: "10:00–19:00", url: "https://www.city.kaizuka.lg.jp/kakuka/jogesuido/gesuisuisin/topics/manholucard.html" },
                 { name: "泉佐野市観光情報センター", region: "大阪", hours: "10:00–16:00", url: "https://www.city.izumisano.lg.jp/kakuka/jogesuidokyoku/jogesui/menu/1511934914176.html" },
             ],
+            manholeStockExtra: [
+                { name: "大津市水再生センター", region: "滋賀", hours: "09:00–17:00 (平日)", url: "https://www.city.otsu.lg.jp/soshiki/080/1901/g/manhole/1499746928377.html" },
+                { name: "琵琶湖疏水記念館", region: "京都", hours: "09:00–17:00 (週一休)", url: "https://www.city.kyoto.lg.jp/suido/page/0000277176.html" },
+                { name: "京都市上下水道局 総合庁舎", region: "京都", hours: "08:30–17:15 (平日)", url: "https://www.city.kyoto.lg.jp/suido/page/0000277176.html" },
+                { name: "京都市上下水道局 太秦庁舎", region: "京都", hours: "08:30–17:15 (平日)", url: "https://www.city.kyoto.lg.jp/suido/page/0000277176.html" },
+                { name: "姫路市観光案内所", region: "兵庫", hours: "08:30–18:30", url: "https://www.city.himeji.lg.jp/kurashi/0000000319.html" },
+                { name: "クリアウォーターＯＳＡＫＡ", region: "大阪", hours: "09:00–17:30 (平日)", url: "https://www.clearwater-osaka.jp/%e3%83%9e%e3%83%b3%e3%83%9b%e3%83%bc%e3%83%ab%e3%82%ab%e3%83%bc%e3%83%89%e3%81%ae%e9%85%8d%e5%b8%83%e3%81%ab%e3%81%a4%e3%81%84%e3%81%a6/" },
+                { name: "堺利晶之杜", region: "大阪", hours: "09:00–18:00", url: "https://water.city.sakai.lg.jp/about/kouhou/1522311572373.html" },
+                { name: "田尻町役場別館", region: "大阪", hours: "08:45–17:15 (平日)", url: "tel:0724665007", textColor: "text-stone-700" },
+                { name: "大阪広域水道企業団 (阪南)", region: "大阪", hours: "08:45–17:15 (平日)", url: "https://www.city.hannan.lg.jp/kakuka/toshi/gesuido/6682.html" },
+                { name: "わかやま歴史館", region: "和歌山", hours: "09:00–17:30", url: "https://www.city.wakayama.wakayama.jp/suido/1033947/1034215/1034046.html" }
+            ],
             mapLinks: [
                 { title: "關西周遊路線圖", url: "https://www.surutto.com/kansai_rw/assets/pdf/areamap2024_tw.pdf" },
                 { title: "Osaka Metro路線圖", url: "https://subway.osakametro.co.jp/img/osakametro_rosenzu_20250404.pdf" },
@@ -626,23 +638,22 @@
         }
         
         function renderManholeView() {
-            const rowsHtml = TRIP_DATA.manholeStock.map(item => `
-                <tr class="hover:bg-indigo-50/50 transition-colors">
-                    <td class="px-2 py-3 whitespace-nowrap text-lg font-medium text-stone-900" style="font-family: 'Microsoft JhengHei', 'Heiti TC', sans-serif;">${item.region}</td>
-                    <td class="px-2 py-3">
-                        <a href="${item.url}" target="_blank" rel="noopener noreferrer" 
-                           class="text-lg font-bold block ${item.textColor ? item.textColor : (item.highlight ? 'text-red-600' : 'text-indigo-600')}"
-                           style="font-family: 'Microsoft JhengHei', 'Heiti TC', sans-serif;">
-                            ${item.name}
-                        </a>
-                    </td>
-                    <td class="px-2 py-3 whitespace-nowrap text-base text-emerald-600 font-bold">${item.hours}</td>
-                </tr>
-            `).join('');
+            const renderTable = (data) => {
+                const rowsHtml = data.map(item => `
+                    <tr class="hover:bg-indigo-50/50 transition-colors">
+                        <td class="px-2 py-3 whitespace-nowrap text-lg font-medium text-stone-900" style="font-family: 'Microsoft JhengHei', 'Heiti TC', sans-serif;">${item.region}</td>
+                        <td class="px-2 py-3">
+                            <a href="${item.url}" target="_blank" rel="noopener noreferrer" 
+                               class="text-lg font-bold block ${item.textColor ? item.textColor : (item.highlight ? 'text-red-600' : 'text-indigo-600')}"
+                               style="font-family: 'Microsoft JhengHei', 'Heiti TC', sans-serif;">
+                                ${item.name}
+                            </a>
+                        </td>
+                        <td class="px-2 py-3 whitespace-nowrap text-base text-emerald-600 font-bold">${item.hours}</td>
+                    </tr>
+                `).join('');
 
-            return `
-                <div class="animate-fade-in space-y-4 pb-20">
-                    <h2 class="text-xl font-bold text-stone-800 px-1 flex items-center gap-2">${getIcon('credit-card', "text-amber-500", 24)}マンホールカード 在庫狀況</h2>
+                return `
                     <div class="bg-white/95 backdrop-blur-sm rounded-xl shadow-sm border border-stone-200 overflow-hidden p-0">
                         <div class="overflow-x-auto">
                             <table class="min-w-full divide-y divide-stone-200">
@@ -652,7 +663,18 @@
                                 <tbody class="bg-white divide-y divide-stone-100">${rowsHtml}</tbody>
                             </table>
                         </div>
-                    </div>
+                    </div>`;
+            };
+
+            return `
+                <div class="animate-fade-in space-y-4 pb-20">
+                    <h2 class="text-xl font-bold text-stone-800 px-1 flex items-center gap-2">${getIcon('credit-card', "text-amber-500", 24)}マンホールカード 在庫狀況</h2>
+                    ${renderTable(TRIP_DATA.manholeStock)}
+
+                    <h3 class="text-lg font-bold text-stone-700 px-1 mt-6 mb-2 flex items-center gap-2 border-t border-stone-300/50 pt-6">
+                        ${getIcon('plus-circle', "text-indigo-500", 20)} 追加地點
+                    </h3>
+                    ${renderTable(TRIP_DATA.manholeStockExtra)}
                 </div>`;
         }
         
